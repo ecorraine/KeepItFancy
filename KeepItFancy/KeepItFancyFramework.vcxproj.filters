@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="!Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="#Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="#Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="1Renderer">
+      <UniqueIdentifier>{60a507d1-0df8-4213-a4c6-ce94d1237b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1System">
+      <UniqueIdentifier>{99d3cc72-1a77-4768-8d30-c31be63a4a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game">
+      <UniqueIdentifier>{7e3fed7a-771a-4491-b9d5-e988c74d251b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\Scenes">
+      <UniqueIdentifier>{47831339-363d-40d1-9064-0d8cdbba585d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\0Base">
+      <UniqueIdentifier>{b885ee68-0203-4a39-9b9a-a3a4d9bf5648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\Cameras">
+      <UniqueIdentifier>{3114c53b-dc8e-42c9-bf97-d7542a60af0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0AppHandler">
+      <UniqueIdentifier>{45abedd8-17ed-480a-b0af-b813f3d0bdad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0AssetBank">
+      <UniqueIdentifier>{01965c87-062d-4316-95fb-e0c858fef991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline">
+      <UniqueIdentifier>{6daf1e03-5762-4f69-a69e-13d7ee1b04b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\0CBuffers">
+      <UniqueIdentifier>{6fae32f1-2b02-46dc-85d8-764056b0bb66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\1Vertex">
+      <UniqueIdentifier>{819b61c7-0011-42d8-a800-4a23a5f72936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\5Pixel">
+      <UniqueIdentifier>{447d5c87-ce3f-43b1-bae3-ecf0bdd4cc04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\2Hull">
+      <UniqueIdentifier>{f39328d8-f5d4-442c-a7a1-8ded388915bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\3Domain">
+      <UniqueIdentifier>{ee741b4b-a200-4e59-bc1b-3aca7b0782ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\4Geometry">
+      <UniqueIdentifier>{a1af7519-390c-481a-9bc9-8aa535a58c4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\Primitives">
+      <UniqueIdentifier>{878c5e31-a925-47a6-be66-af9c6a62d71a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\6Compute">
+      <UniqueIdentifier>{490ca38e-4108-4bab-a4f1-1e928950258d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>1Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>1Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>1Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>0AppHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyInput.cpp">
+      <Filter>1System</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffers.cpp">
+      <Filter>1Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>2Game</Filter>
+    </ClCompile>
+    <ClCompile Include="RootScene.cpp">
+      <Filter>2Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="BScene.cpp">
+      <Filter>2Game\0Base</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>2Game\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11.cpp">
+      <Filter>1Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>#Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>1System</Filter>
+    </ClCompile>
+    <ClCompile Include="BCamera.cpp">
+      <Filter>2Game\0Base</Filter>
+    </ClCompile>
+    <ClCompile Include="BMesh.cpp">
+      <Filter>2Game\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="MPrimitives.cpp">
+      <Filter>2Game\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="ScTitle.cpp">
+      <Filter>2Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Waves.cpp">
+      <Filter>#Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Renderer.h">
+      <Filter>1Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>1Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>1Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>#Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>0AppHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyInput.h">
+      <Filter>1System</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffers.h">
+      <Filter>1Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>2Game</Filter>
+    </ClInclude>
+    <ClInclude Include="RootScene.h">
+      <Filter>2Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>2Game\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="BScene.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11.h">
+      <Filter>1Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>#Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="srgba.hpp">
+      <Filter>#Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>1System</Filter>
+    </ClInclude>
+    <ClInclude Include="BCamera.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BMesh.h">
+      <Filter>2Game\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="MPrimitives.h">
+      <Filter>2Game\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="myUtilities.hpp">
+      <Filter>#Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BLight.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ScTitle.h">
+      <Filter>2Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Waves.h">
+      <Filter>#Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="!KeepItFancy-ClassDiagram.cd" />
+    <None Include="HLSL\BUF_Light.hlsli">
+      <Filter>1ShaderPipeline\0CBuffers</Filter>
+    </None>
+    <None Include="HLSL\BUF_WVPMatrix.hlsli">
+      <Filter>1ShaderPipeline\0CBuffers</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
+      <Filter>1ShaderPipeline\6Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\VS_WorldPosition.hlsl">
+      <Filter>1ShaderPipeline\1Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_BlinnPhong.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_FlatColor.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_Lambert.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

@@ -217,7 +217,7 @@
     <FxCompile Include="HLSL\PS_FlatColor.hlsl">
       <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="HLSL\PS_Lambert.hlsl">
+    <FxCompile Include="HLSL\PS_HalfLambert.hlsl">
       <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
   </ItemGroup>

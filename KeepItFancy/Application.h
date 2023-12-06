@@ -1,10 +1,8 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <chrono>
 #include <memory>
 #include "defines.h"
-
 
 const auto CLASS_NAME = TEXT("DX11 | [2023]Keep It Fancy");
 const auto WINDOW_NAME = TEXT("DX11 | [2023]Keep It Fancy");

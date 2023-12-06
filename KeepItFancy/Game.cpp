@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Profiler.h"
 #include "Texture.h"
 #include "RootScene.h"
 
@@ -21,6 +22,10 @@ void GAME::InitGame(APPLICATION* pApp)
 
 	KEYINPUT::InitKeyInput();
 
+	TIME::InitTimer();
+	FPS::InitFPS();
+	CPU::InitCPU();
+
 	// シーンを作成して初期化
 	g_pScene = std::make_shared<RootScene>();
 	g_pScene->Init();
@@ -35,6 +40,8 @@ void GAME::InitGame(APPLICATION* pApp)
 
 void GAME::ReleaseGame()
 {
+	CPU::EndQuery();
+
 	g_pScene->Release();
 	g_pScene.reset();
 
@@ -45,6 +52,12 @@ void GAME::ReleaseGame()
 
 void GAME::UpdateGame(float tick)
 {
+	g_fElapsedTime += TIME::GetFrameTime() * 0.001f;
+	TIME::CalculateFrames();
+	FPS::CountFrames();
+	CPU::CountFrames();
+	printf_s("%d FPS | CPU Usage: %d(%) | Run Time: %.2f | %.3f (ms)\n", FPS::GetFPSCount(), CPU::GetCpuPercentage(),  g_fElapsedTime, tick);
+
 	g_pScene->_update(tick);
 
 	KEYINPUT::UpdateKeyInput();

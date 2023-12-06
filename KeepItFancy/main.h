@@ -7,18 +7,17 @@
 #include <functional>
 #include <clocale>
 
+#include <mmsystem.h>
 #pragma comment (lib,"winmm.lib")
-
-#define		_CRT_SECURE_NO_WARNINGS
 
 #pragma warning(push)
 #pragma warning(disable:4005)
 #pragma warning(pop)
 
-//#include <d3d11.h>
 #include <iostream>
 //#include <cassert>
 //#include <string>
 
+#define		_CRT_SECURE_NO_WARNINGS
 
 #endif // !MAIN_H

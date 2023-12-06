@@ -1,6 +1,9 @@
 // Constants
-#define DIV_X 32
-#define DIV_Y 32
+#define DIV_X 16
+#define DIV_Y 16
+#define DIV_Z 2
+
+#define XM_PI 3.141592654f
 
 // Buffers
 cbuffer MeshData : register(b0)
@@ -13,7 +16,7 @@ cbuffer MeshData : register(b0)
 
 RWByteAddressBuffer g_Vertices : register(u0);
 
-[numthreads(DIV_X, 1, DIV_Y)]
+[numthreads(DIV_X, DIV_Y, DIV_Z)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
 	uint index = DTid.z * divX + DTid.x + DTid.z;
@@ -23,13 +26,14 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	float4 color = asfloat(g_Vertices.Load4(vbInIndex + 12));
 	float3 normal = asfloat(g_Vertices.Load3(vbInIndex + 28));
 
-	float time = 0.0f;
-	time = g_time;
+	float time = g_time;
 	float frequency = 1.0f;
 	float amplitude = 0.1f;
 
-	float waveHeight = amplitude * sin(time * frequency + pos.x);
-	// Update the Y component of the position
+	// Compute wave displacement
+	float waveHeight = amplitude * sin(2 * XM_PI * frequency * pos.x + time);
+
+	// Apply wave displacement to the Y-coordinate of the position
 	pos.y += waveHeight;
 
 	const uint vbOutIndex = vbInIndex;

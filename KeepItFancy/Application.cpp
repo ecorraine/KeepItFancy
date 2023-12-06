@@ -22,11 +22,8 @@ int APPLICATION::MainLoop()
 	MSG msg = {};
 	ZeroMemory(&msg, sizeof(msg));
 
-	uint64_t nowTime = 0;
-	uint64_t lastTime = 0;
-
 	timeBeginPeriod(1);
-	lastTime = timeGetTime();
+	uint64_t lastTime = timeGetTime();
 
 	while (true)
 	{
@@ -44,15 +41,14 @@ int APPLICATION::MainLoop()
 		}
 		else
 		{
-			nowTime = timeGetTime();
-			g_DeltaTime = (nowTime - lastTime);
+			uint64_t nowTime = timeGetTime();
+			double timeDiff = static_cast<double>(nowTime - lastTime);
 
 			// 1/60秒判定
-			if (g_DeltaTime >= 1000.0f / 60)
+			if (timeDiff >= 1.0 / g_FrameRateCap)
 			{
-				g_Tick = (float)(g_DeltaTime * 0.001f);
-
-				GAME::UpdateGame(g_Tick);
+				float tick = static_cast<float>(timeDiff);
+				GAME::UpdateGame(tick);
 				GAME::DrawGame();
 
 				lastTime = nowTime;
@@ -149,23 +145,25 @@ LRESULT APPLICATION::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 
-	//case WM_KEYDOWN:
-	//	switch (wParam)
-	//	{
-	//	case VK_ESCAPE:
-	//	{
-	//		int msgBox = MessageBoxA(hWnd, "Exit Application?\n終了しますか?", "Exit", MB_YESNO | MB_ICONINFORMATION);
-	//		if (msgBox == IDYES)
-	//			PostMessage(hWnd, WM_CLOSE, wParam, lParam);
-	//	}
-	//	break;
-	//	}
-	//case WM_KEYUP:
-	//	break;
+	/*
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_ESCAPE:
+		{
+			int msgBox = MessageBoxA(hWnd, "Exit Application?\n終了しますか?", "Exit", MB_YESNO | MB_ICONINFORMATION);
+			if (msgBox == IDYES)
+				PostMessage(hWnd, WM_CLOSE, wParam, lParam);
+		}
+		break;
+		}
+	case WM_KEYUP:
+		break;
 
-	//case WM_CLOSE:
-	//	DestroyWindow(hWnd);
-	//	break;
+	case WM_CLOSE:
+		DestroyWindow(hWnd);
+		break;
+	*/
 
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);

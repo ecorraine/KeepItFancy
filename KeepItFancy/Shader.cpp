@@ -12,7 +12,7 @@ HRESULT SHADER::LoadShader(const char* fileName)
 	int fileSize = 0;
 	char* pData = nullptr;
 
-	std::cout << "Attempting to read file: " << fileName << std::endl;
+	//std::cout << "Attempting to read file: " << fileName << std::endl;
 	FILE* fp;
 	fopen_s(&fp, fileName, "rb");	// read file in binary: disables special handling of '\n' and '\x1A'
 	if (!fp) { return hr; }

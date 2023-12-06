@@ -17,6 +17,8 @@ void ScTitle::Update(float tick)
 {
 	Waves* pWaves = GetObj<Waves>("Waves");
 	pWaves->Update(tick);
+
+	//printf_s("tick: %.3f | ", tick);
 }
 
 void ScTitle::Draw()

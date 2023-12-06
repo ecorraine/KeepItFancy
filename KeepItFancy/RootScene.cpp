@@ -28,7 +28,7 @@ void RootScene::Release()
 
 void RootScene::Update(float tick)
 {
-	m_Time += tick;
+	m_fTime += tick;
 
 	int idx = (int)m_eSceneIndex;
 	/*

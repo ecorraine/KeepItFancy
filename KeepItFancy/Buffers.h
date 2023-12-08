@@ -175,12 +175,13 @@ HRESULT CreateStructuredBuffer
 ///--------------------------------------------------
 //! Create Staging Buffer
 ///--------------------------------------------------
-//! \fn ID3D11Buffer* CreateStagingBuffer(ID3D11Buffer* pBuffer)
-/*! \brief Copy Structured Buffer for staging
- *  \param pBuffer	: the Structured Buffer to copy
+//! \fn HRESULT CreateStagingBuffer(unsigned int size, ID3D11Buffer** ppBuffer)
+/*! \brief Creates Buffer for Staging which size is equal to that of an existing Struct data
+ *  \param size		: buffer size to allot, usually size of the data [sizeof(struct) * vertex num]
+ *  \param ppBuffer	: the Buffer to use for staging
  *  \return ID3D11Buffer*
  */
-ID3D11Buffer* CreateStagingBuffer(ID3D11Buffer* pBuffer);
+HRESULT CreateStagingBuffer(unsigned int size, ID3D11Buffer** ppBuffer);
 
 
 

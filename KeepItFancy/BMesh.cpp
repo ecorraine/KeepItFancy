@@ -32,15 +32,17 @@ void MESH::BindIndices()
 
 void MESH::Draw(RasterType cullmode)
 {
+	BindComputeShaders();
+
 	// 頂点バッファをセットする
 	unsigned int stride = sizeof(VERTEX);
 	unsigned offset = 0;
-	DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
-	
 	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
+	
+	DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	BindShaders();
+	BindCommonShaders();
 
 	SetCulling(cullmode);
 

@@ -55,5 +55,5 @@ void RootScene::Draw()
 	FreeCamera::GetCamera()->DrawCamera();
 
 	Sphere* pSky = GetObj<Sphere>("Sky");
-	pSky->Draw(/*RasterType::CULL_FRONT*/);
+	pSky->Draw(RasterType::CULL_FRONT);
 }

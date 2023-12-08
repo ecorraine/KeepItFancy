@@ -205,9 +205,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
-      <Filter>1ShaderPipeline\6Compute</Filter>
-    </FxCompile>
     <FxCompile Include="HLSL\VS_WorldPosition.hlsl">
       <Filter>1ShaderPipeline\1Vertex</Filter>
     </FxCompile>
@@ -219,6 +216,9 @@
     </FxCompile>
     <FxCompile Include="HLSL\PS_HalfLambert.hlsl">
       <Filter>1ShaderPipeline\5Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
+      <Filter>1ShaderPipeline\6Compute</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

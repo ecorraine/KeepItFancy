@@ -156,29 +156,27 @@ HRESULT CreateStructuredBuffer(unsigned int stride, unsigned int num, void* pDat
 	return hr;
 }
 
-ID3D11Buffer* CreateStagingBuffer(ID3D11Buffer* pBuffer)
+HRESULT CreateStagingBuffer(unsigned int size, ID3D11Buffer** ppBuffer)
 {
 	HRESULT hr = E_FAIL;
-	ID3D11Buffer* CloneBuffer = nullptr;
+	//ID3D11Buffer* CloneBuffer = nullptr;
 
-	// Structuredバッファ生成
 	D3D11_BUFFER_DESC bufferDesc = {};
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-
-	pBuffer->GetDesc(&bufferDesc);
-
-	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	//pBuffer->GetDesc(&bufferDesc);
+	bufferDesc.ByteWidth = size;
 	bufferDesc.Usage = D3D11_USAGE_STAGING;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	bufferDesc.BindFlags = 0;
 	bufferDesc.MiscFlags = 0;
 
-	hr = DirectX11::GetDevice()->CreateBuffer(&bufferDesc, nullptr, &CloneBuffer);
-	if (SUCCEEDED(hr))
-	{
-		DirectX11::GetContext()->CopyResource(CloneBuffer, pBuffer);
-	}
+	hr = DirectX11::GetDevice()->CreateBuffer(&bufferDesc, nullptr, ppBuffer);
+	//if (SUCCEEDED(hr))
+	//{
+	//	DirectX11::GetContext()->CopyResource(CloneBuffer, pBuffer);
+	//}
 
-	return CloneBuffer;
+	return hr;
 }
 
 

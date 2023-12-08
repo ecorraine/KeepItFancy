@@ -25,8 +25,6 @@ class MESH : public GameObject
 protected:
 public:
 	MESH() :
-		m_pVS(nullptr),
-		m_pPS(nullptr),
 		m_iDivX(0),
 		m_iDivY(0),
 		m_iDivZ(0)
@@ -46,11 +44,11 @@ protected:
 		unsigned int idx[3];
 	};
 
-	VertexShader*	m_pVS;
-	PixelShader*	m_pPS;
+	VertexShader*	m_pVS = nullptr;
+	PixelShader*	m_pPS = nullptr;
 
-	ComPtr<ID3D11Buffer>				m_cpVertexBuf;
-	ComPtr<ID3D11Buffer>				m_cpIndexBuf;
+	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
+	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
 	ComPtr<ID3D11ShaderResourceView>	m_cpSRV;			//!< テクスチャ
 
 	std::vector<VERTEX>					m_Vertices;
@@ -96,10 +94,8 @@ protected:
 		LoadDefaultShaders();
 	}
 
-	void BindShaders()
+	void BindCommonShaders()
 	{
-		BindComputeShaders();
-
 		SetWVPMatrix(m_pVS);
 		m_pVS->BindShader();
 
@@ -108,8 +104,8 @@ protected:
 		SetLight(m_pPS);
 		m_pPS->BindShader();
 	}
-	virtual void BindComputeShaders() {}
 	virtual void ProcessTessellation() {}
+	virtual void BindComputeShaders() {}
 
 public:
 	static void SetCulling(RasterType cullmode)

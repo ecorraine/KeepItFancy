@@ -12,7 +12,6 @@ HRESULT SHADER::LoadShader(const char* fileName)
 	int fileSize = 0;
 	char* pData = nullptr;
 
-	//std::cout << "Attempting to read file: " << fileName << std::endl;
 	FILE* fp;
 	fopen_s(&fp, fileName, "rb");	// read file in binary: disables special handling of '\n' and '\x1A'
 	if (!fp) { return hr; }
@@ -29,6 +28,7 @@ HRESULT SHADER::LoadShader(const char* fileName)
 		pData = new char[fileSize];
 		fread(pData, fileSize, 1, fp);
 		fclose(fp);
+
 	}
 	else
 	{
@@ -164,7 +164,17 @@ HRESULT SHADER::CompileShader(const char* fileName)
 		&cpErrorBlob);
 	*/
 	
-	if (FAILED(hr)) { return hr; }
+	if (FAILED(hr))
+	{
+		if (cpErrorBlob)
+		{
+			// Output the error message
+			//OutputDebugStringA(static_cast<const char*>(cpErrorBlob->GetBufferPointer()));
+			LogToFile(static_cast<const char*>(cpErrorBlob->GetBufferPointer()));
+			cpErrorBlob->Release();
+		}
+		return hr;
+	}
 
 	// シェーダ作成
 	hr = CreateShader(cpShaderBlob->GetBufferPointer(), (UINT)cpShaderBlob->GetBufferSize());
@@ -231,9 +241,9 @@ HRESULT VertexShader::CreateShader(void* pData, UINT fileSize)
 	// 識別子が登録済→再利用、なければ新規作成
 	// https://blog.techlab-xe.net/dxc-shader-reflection/
 	ID3D11ShaderReflection* pReflection;
-	D3D11_SHADER_DESC				shaderDesc;
+	D3D11_SHADER_DESC shaderDesc;
 	D3D11_INPUT_ELEMENT_DESC* pInputLayout;
-	D3D11_SIGNATURE_PARAMETER_DESC	sigDesc;
+	D3D11_SIGNATURE_PARAMETER_DESC sigDesc;
 
 	hr = D3DReflect(pData, fileSize, IID_PPV_ARGS(&pReflection));
 	if (FAILED(hr)) { return hr; }
@@ -358,9 +368,9 @@ HRESULT ComputeShader::CreateShader(void* pData, UINT fileSize)
 	return DirectX11::GetDevice()->CreateComputeShader(pData, fileSize, nullptr, &m_d11ComputeShader);
 }
 
-void ComputeShader::BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView* pUAV)
+void ComputeShader::BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV)
 {
-	DirectX11::GetContext()->CSSetUnorderedAccessViews(bufferSlot, 1, &pUAV, 0);
+	DirectX11::GetContext()->CSSetUnorderedAccessViews(bufferSlot, 1, pUAV, 0);
 }
 
 void ComputeShader::BindShader()
@@ -368,6 +378,11 @@ void ComputeShader::BindShader()
 	DirectX11::GetContext()->CSSetShader(m_d11ComputeShader.Get(), nullptr, 0);
 	//DirectX11::GetContext()->Dispatch(4, 1, 1);
 	for (int i = 0; i < m_pBuffers.size(); i++)
-		DirectX11::GetContext()->CSSetConstantBuffers(i, 1, &m_pBuffers[i]);
+	{
+		D3D11_BUFFER_DESC bufferDesc = {};
+		m_pBuffers[i]->GetDesc(&bufferDesc);
+		if (bufferDesc.MiscFlags == 0)
+			DirectX11::GetContext()->CSSetConstantBuffers(i, 1, &m_pBuffers[i]);
+	}
 }
 

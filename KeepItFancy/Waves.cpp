@@ -32,49 +32,59 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 	BindVertices(color);
 	MESH::BindIndices();
 
-	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), &m_cpStagingBuffer));
-	CHECK_HR(CreateUnorderAccessView(m_cpStagingBuffer.Get(), &m_cpVertexBufUAV));
-	m_pCS->BindUAV(0, m_cpVertexBufUAV.Get());
-
-	CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), &m_cpIndexBuf));
-
 	m_pCS = AddComponent<ComputeShader>();
 	m_pCS->LoadShader(SHADER_PATH("CS_GerstnerWaves.cso"));
+
+	CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), &m_cpVertexBuf));
+	CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), &m_cpIndexBuf));
 
 	m_pVS = AddComponent<VertexShader>();
 	m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
 
 	m_pPS = AddComponent<PixelShader>();
 	m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
+
+	// Create staging buffer for reading back data from GPU;
+	CHECK_HR(CreateStagingBuffer(sizeof(VERTEX) * m_Vertices.size(), &m_cpStagingBuffer));
+
+	// Set up shader resources and UAV
+	//CHECK_HR(CreateStructuredBuffer(sizeof(VERTEX), m_Vertices.size(), m_Vertices.data(), &pInputBuffer));
+	//CHECK_HR(CreateShaderResourceView(pInputBuffer.Get(), &pInputBufferSRV));
+
+	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), &pOutputBuffer));
+	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), &pOutputBufferUAV));
+
+	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, color), offsetof(VERTEX, normal), sizeof(VERTEX) };
+	cbData[0] = structOffsetSize;
+	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(m_Vertices.size()) };
 }
 
 void Waves::BindComputeShaders()
 {
 	m_pCS->BindShader();
-	DirectX11::GetContext()->Dispatch(m_iDivX, 1, m_iDivY);
+	//DirectX11::GetContext()->CSSetShaderResources(0, 1, pInputBufferSRV.GetAddressOf());
+	DirectX11::GetContext()->CSSetUnorderedAccessViews(0, 1, pOutputBufferUAV.GetAddressOf(), 0);
 
-	m_cpVertexBuf = CreateStagingBuffer(m_cpStagingBuffer.Get());
+	DirectX11::GetContext()->Dispatch(m_Vertices.size(), 1, 1);
+
+	DirectX11::GetContext()->CopyResource(m_cpStagingBuffer.Get(), pOutputBuffer.Get());
 
 	D3D11_MAPPED_SUBRESOURCE resource;
-	std::vector<VERTEX> m_NewVertices;
-	m_NewVertices.clear();
-	DirectX11::GetContext()->Map(m_cpVertexBuf.Get(), 0, D3D11_MAP_READ, 0, &resource);
+	std::vector<VERTEX> UpdatedVertices;
+	UpdatedVertices.clear();
+	UpdatedVertices.resize(m_Vertices.size());
+	DirectX11::GetContext()->Map(m_cpStagingBuffer.Get(), 0, D3D11_MAP_READ, 0, &resource);
 	if (resource.pData)
 	{
-		VERTEX* resultVtx = {};
-		resultVtx = (VERTEX*)resource.pData;
-		for (int i = 0; i < m_Vertices.size(); ++i)
-		{
-			m_NewVertices.emplace_back(resultVtx[i]);
-		}
+		memcpy(UpdatedVertices.data(), resource.pData, sizeof(VERTEX) * m_Vertices.size());
 	}
-
-	DirectX11::GetContext()->Unmap(m_cpVertexBuf.Get(), 0);
+	DirectX11::GetContext()->Unmap(m_cpStagingBuffer.Get(), 0);
+	
+	DirectX11::GetContext()->CopyResource(m_cpVertexBuf.Get(), m_cpStagingBuffer.Get());
 }
 
 void Waves::Update(float tick)
 {
-	XMFLOAT4 cbdata = { (float)m_iDivX, (float)m_iDivY, tick, 0.0f };
-	m_pCS->SendToBuffer(0, &cbdata);
+	cbData[2] = { tick, 0.0f, 0.0f, 0.0f };
+	m_pCS->SendToBuffer(0, &cbData);
 }
-

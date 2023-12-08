@@ -60,3 +60,9 @@ static float		g_fElapsedTime;
 	} while (0)
 
 
+#define SHOW_ERROR( header, fileName ) \
+	do { \
+		static char buf[256]; \
+		sprintf_s(buf, sizeof(buf), "Failed to load\n %s", fileName); \
+		MessageBoxA(nullptr, buf, header, MB_OK | MB_ICONWARNING); \
+	} while (0)

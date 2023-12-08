@@ -56,7 +56,7 @@ void GAME::UpdateGame(float tick)
 	TIME::CalculateFrames();
 	FPS::CountFrames();
 	CPU::CountFrames();
-	printf_s("%d FPS | CPU Usage: %d(%) | Run Time: %.2f | %.3f (ms)\n", FPS::GetFPSCount(), CPU::GetCpuPercentage(),  g_fElapsedTime, tick);
+	printf_s("%d FPS | CPU Usage: %d | Run Time: %.2f secs | %.3f (ms)\n", FPS::GetFPSCount(), CPU::GetCpuPercentage(),  g_fElapsedTime, tick * 1000);
 
 	g_pScene->_update(tick);
 

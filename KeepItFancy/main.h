@@ -15,6 +15,7 @@
 #pragma warning(pop)
 
 #include <iostream>
+#include <ctime>
 //#include <cassert>
 //#include <string>
 

@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include <thread>
-#include <ctime>
 
 #include <pdh.h>
 #pragma comment(lib, "pdh.lib")

@@ -123,6 +123,14 @@
       <ShaderModel>5.0</ShaderModel>
       <HeaderFileOutput>$(ProjectDir)assets\shaders\%(Filename).h</HeaderFileOutput>
     </FxCompile>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,6 +153,14 @@
       <ShaderModel>5.0</ShaderModel>
       <HeaderFileOutput>$(ProjectDir)assets\shaders\%(Filename).h</HeaderFileOutput>
     </FxCompile>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

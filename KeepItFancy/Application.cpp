@@ -45,9 +45,9 @@ int APPLICATION::MainLoop()
 			double timeDiff = static_cast<double>(nowTime - lastTime);
 
 			// 1/60秒判定
-			if (timeDiff >= 1.0 / g_FrameRateCap)
+			if (timeDiff >= 1000.0 / g_FrameRateCap)
 			{
-				float tick = static_cast<float>(timeDiff);
+				float tick = static_cast<float>(timeDiff) * 0.001f;
 				GAME::UpdateGame(tick);
 				GAME::DrawGame();
 

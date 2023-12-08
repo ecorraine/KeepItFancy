@@ -162,7 +162,7 @@ public:
 		SHADER(ShaderType::ComputeS),
 		m_d11ComputeShader(nullptr)
 	{}
-	void BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView* pUAV);
+	void BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV);
 	void BindShader();
 
 protected:

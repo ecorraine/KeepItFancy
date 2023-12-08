@@ -28,8 +28,6 @@ void RootScene::Release()
 
 void RootScene::Update(float tick)
 {
-	m_fTime += tick;
-
 	int idx = (int)m_eSceneIndex;
 	/*
 	if (KEYINPUT::KeyPress(VK_LEFT))

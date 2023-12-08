@@ -23,6 +23,7 @@ protected:
 	SCENE*	m_pParent;
 	SCENE*	m_pSubScene;
 	Items	m_Items;
+	float	m_fTime;
 
 public:
 	SCENE() :

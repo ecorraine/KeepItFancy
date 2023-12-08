@@ -36,7 +36,6 @@ public:
 	void Draw();
 
 private:
-	float			m_fTime = 0;
 };
 
 #endif // !ROOTSCENE_H

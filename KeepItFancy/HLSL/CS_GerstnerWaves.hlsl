@@ -3,6 +3,7 @@
 #define Thread_Z (1)
 
 #define XM_PI 3.141592653589793238
+#define XM_TWOPI (2 * XM_PI)
 
 struct VERTEX
 {
@@ -18,6 +19,11 @@ cbuffer MeshData : register(b0)
 	float4 g_time;
 };
 
+float rand(float2 uv)
+{
+	return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+}
+
 //StructuredBuffer<VERTEX> inputVertices : register(t0);
 RWByteAddressBuffer outputVertices : register(u0);
 
@@ -29,15 +35,20 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	const uint offset = index * 40;
 
 	float time = g_time.x;
-	float frequency = 1.0f;
-	float amplitude = 0.1f;
+	float frequency = 5.0f;
+	float amplitude = 0.0005f;
 
 	float3 pos = asfloat(outputVertices.Load3(offset + 0));
 	float4 color = asfloat(outputVertices.Load4(offset + 12));
 	float3 normal = asfloat(outputVertices.Load3(offset + 28));
 
+	// Compute radial wave displacement
+	float radialDistance = sqrt(pos.x * pos.x + pos.z * pos.z);
+
+	// add random offset to wave
+	float randomOffset = XM_TWOPI * frac(sin(radialDistance) * 143758.5453);
 	// Compute wave displacement
-	float waveHeight = amplitude * sin(2 * XM_PI * frequency * pos.x + time);
+	float waveHeight = amplitude * sin(XM_TWOPI * frequency * radialDistance + time + randomOffset);
 
 	// Apply wave displacement to the Y-coordinate of the position
 	pos.y += waveHeight;

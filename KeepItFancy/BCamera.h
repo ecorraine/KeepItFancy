@@ -18,6 +18,13 @@ class Cube;
 class CAMERA
 {
 public:
+	~CAMERA()
+	{
+
+	}
+
+	static CAMERA g_Camera;
+
 	//! \fn static CAMERA* GetCamera()
 	/*! \brief Camera Instance
 	 *  \brief カメラインスタンス
@@ -25,10 +32,7 @@ public:
 	 */
 	static CAMERA* GetCamera()
 	{
-		static CAMERA instance;
-		instance.InitCamera();
-
-		return &instance;
+		return &g_Camera;
 	}
 
 	//! \fn XMFLOAT4X4& GetCameraViewMatrix()
@@ -58,18 +62,17 @@ public:
 	const DirectX::XMFLOAT3 GetPosition() const { return m_xmfCameraPos; }
 
 private:
-	DirectX::XMFLOAT4X4		m_xmfViewMatrix;		//!< カメラビュー行列
-	DirectX::XMFLOAT4X4		m_xmfPerspectiveProj;
-	DirectX::XMFLOAT4X4		m_xmfOrthographicProj;
-	DirectX::XMFLOAT4X4		m_xmfProjectionMtx;		//!< 投影行列
+	DirectX::XMFLOAT4X4		m_xmfViewMatrix = {};		//!< カメラビュー行列
+	DirectX::XMFLOAT4X4		m_xmfPerspectiveProj = {};
+	DirectX::XMFLOAT4X4		m_xmfOrthographicProj = {};
+	DirectX::XMFLOAT4X4		m_xmfProjectionMtx = {};	//!< 投影行列
 
 protected:
-	DirectX::XMFLOAT3		m_xmfCameraPos;
-	DirectX::XMFLOAT3		m_xmfLookAt;
-	DirectX::XMFLOAT3		m_xmfUpVector;
+	DirectX::XMFLOAT3		m_xmfCameraPos = {};
+	DirectX::XMFLOAT3		m_xmfLookAt = {};
+	DirectX::XMFLOAT3		m_xmfUpVector = {};
 
-	Cube* m_pHost;
-	void InitCamera();
+	Cube* m_pHost = nullptr;
 
 	float					m_fZoom = 0.0f;						//!< カメラの拡大縮小
 	float					m_fTilt = 0.0f;						//!< カメラのティルト
@@ -83,6 +86,8 @@ private:
 	float					m_fFarClip = 1000.0f;				//!< ファークリップ
 
 public:
+	void InitCamera();
+
 	//! \fn void SetCamPos(const XMFLOAT3& xmfCameraPosition)
 	/*! \brief
 	 *  \brief カメラの位置を設置 ｜ LookAtと同じ座標はダメ

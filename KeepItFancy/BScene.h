@@ -28,9 +28,11 @@ protected:
 public:
 	SCENE() :
 		m_pParent(nullptr),
-		m_pSubScene(nullptr)
+		m_pSubScene(nullptr),
+		m_fTime(0.0f)
 	{}
 	virtual ~SCENE();
+
 	// シーン操作関数
 	template<class T> T* AddSubScene();
 	void RemoveSubScene();

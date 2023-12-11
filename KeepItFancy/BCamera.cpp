@@ -1,6 +1,8 @@
 #include "BCamera.h"
 #include "MPrimitives.h"
 
+CAMERA CAMERA::g_Camera;
+
 void CAMERA::InitCamera()
 {
 	// プロジェクションを作成
@@ -18,9 +20,9 @@ void CAMERA::InitCamera()
 	SetUpVector(XMFLOAT3(0.0f, 1.0f, 0.0f));
 	CreateViewMatrix();
 
-	Cube* host = new Cube();
-	host->Create(0.1f, 0.1f, 0.1f);
-	m_pHost = host;
+	//Cube* host = new Cube();
+	//host->Create(0.1f, 0.1f, 0.1f);
+	//m_pHost = host;
 }
 
 void CAMERA::UpdateCamera()
@@ -31,7 +33,7 @@ void CAMERA::UpdateCamera()
 void CAMERA::DrawCamera()
 {
 #ifdef _DEBUG
-	m_pHost->Draw(RasterType::WIREFRAME_CULL_BACK);
+	//m_pHost->Draw(RasterType::WIREFRAME_CULL_BACK);
 #endif // _DEBUG
 }
 

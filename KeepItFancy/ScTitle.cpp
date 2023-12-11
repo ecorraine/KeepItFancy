@@ -11,6 +11,7 @@ void ScTitle::Init()
 
 void ScTitle::Release()
 {
+	DestroyObj("Waves");
 }
 
 void ScTitle::Update(float tick)

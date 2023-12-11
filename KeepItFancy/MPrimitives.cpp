@@ -48,7 +48,7 @@ void Sphere::BindVertices(sRGBA color)
 
 	// 方位角と仰角から球メッシュの頂点データを作成
 	for (unsigned int y = 0; y <= m_iDivY; y++) {
-		elevation = (XM_PI * (float)y) / (float)m_iDivY;			// 仰角をセット
+		elevation = (XM_PI * (float)y) / (float)m_iDivY;		// 仰角をセット
 		float r = m_fRadius * sinf(elevation);					// 仰角に応じた半径を計算
 
 		for (unsigned int x = 0; x <= m_iDivX; x++) {

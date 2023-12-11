@@ -22,19 +22,21 @@
 class TEXTURE : public COMPONENT
 {
 protected:
-	ComPtr<ID3D11ShaderResourceView>	m_cpSRV;
-	ComPtr<ID3D11Texture2D>				m_cpTextureBuffer;
+	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;
+	ComPtr<ID3D11Texture2D>				m_cpTextureBuffer = nullptr;
 	uint32_t							m_width;
 	uint32_t							m_height;
 
 public:
 	TEXTURE() :
-		m_cpSRV(nullptr),
-		m_cpTextureBuffer(nullptr),
 		m_width(0),
 		m_height(0)
 	{}
-	virtual ~TEXTURE() {}
+	virtual ~TEXTURE()
+	{
+		//SAFE_RELEASE(m_cpTextureBuffer);
+		//SAFE_RELEASE(m_cpSRV);
+	}
 
 	ID3D11ShaderResourceView* GetSRV() const { return m_cpSRV.Get(); };
 	HRESULT CreateTexture(const char* pFileName);
@@ -59,12 +61,14 @@ protected:
 class RenderTarget : public TEXTURE
 {
 private:
-	ComPtr<ID3D11RenderTargetView>		m_cpRTV;
+	ComPtr<ID3D11RenderTargetView>		m_cpRTV = nullptr;
 
 public:
-	RenderTarget() :
-		m_cpRTV(nullptr)
-	{}
+	RenderTarget() {}
+	~RenderTarget()
+	{
+		//SAFE_RELEASE(m_cpRTV);
+	}
 
 	ID3D11RenderTargetView* GetRTV() const { return m_cpRTV.Get(); }
 	HRESULT CreateRTV();
@@ -87,12 +91,15 @@ protected:
 class DepthStencil : public TEXTURE
 {
 private:
-	ComPtr<ID3D11DepthStencilView>		m_cpDSV;
+	ComPtr<ID3D11DepthStencilView>		m_cpDSV = nullptr;
 
 public:
-	DepthStencil() :
-		m_cpDSV(nullptr)
-	{}
+	DepthStencil() {}
+
+	~DepthStencil()
+	{
+		//SAFE_RELEASE(m_cpDSV);
+	}
 
 	ID3D11DepthStencilView* GetDSV() const { return m_cpDSV.Get(); }
 	HRESULT CreateDSV(bool useStencil);

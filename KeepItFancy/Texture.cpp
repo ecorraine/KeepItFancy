@@ -25,7 +25,7 @@ HRESULT TEXTURE::CreateTexture(const char* pFileName)
 	}
 
 	// シェーダリソース生成
-	hr = CreateShaderResourceView(DirectX11::GetDevice(), image.GetImages(), image.GetImageCount(), mdata, &m_cpSRV);
+	hr = CreateShaderResourceView(DirectX11::GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_cpSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = (UINT)mdata.width;
@@ -45,7 +45,6 @@ D3D11_TEXTURE2D_DESC TEXTURE::CreateTextureDesc(DXGI_FORMAT _format)
 {
 	//---------- Create a Texture Resource ----------//
 	D3D11_TEXTURE2D_DESC texDesc = {};
-	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.Width		= DirectX11::GetScreenWidth();
 	texDesc.Height		= DirectX11::GetScreenHeight();
 	texDesc.MipLevels	= 1;
@@ -65,9 +64,9 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 
 	// テクスチャ作成
 	D3D11_SUBRESOURCE_DATA data = {};
-	data.pSysMem					= pData;
-	data.SysMemPitch				= texDesc.Width * 4;
-	hr = DirectX11::GetDevice()->CreateTexture2D(&texDesc, pData ? &data : nullptr, &m_cpTextureBuffer);
+	data.pSysMem = pData;
+	data.SysMemPitch = texDesc.Width * 4;
+	hr = DirectX11::GetDevice()->CreateTexture2D(&texDesc, pData ? &data : nullptr, m_cpTextureBuffer.GetAddressOf());
 	if (FAILED(hr))
 	{
 		MessageBoxA(NULL, "Failed to create Texture Buffer!\nテクスチャバッファ作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
@@ -76,8 +75,6 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 
 	//---------- Create a Shader Resource View ----------//
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	ZeroMemory(&srvDesc, sizeof(srvDesc));
-
 	switch (texDesc.Format)
 	{
 	default:
@@ -87,10 +84,10 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
 		break;
 	}
-	srvDesc.ViewDimension			= D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels		= 1;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
 	// 生成
-	hr = DirectX11::GetDevice()->CreateShaderResourceView(m_cpTextureBuffer.Get(), &srvDesc, &m_cpSRV);
+	hr = DirectX11::GetDevice()->CreateShaderResourceView(m_cpTextureBuffer.Get(), &srvDesc, m_cpSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = texDesc.Width;
@@ -117,16 +114,16 @@ HRESULT RenderTarget::CreateRTVFromScreen()
 
 	// バックバッファのポインタを取得
 	ComPtr<ID3D11Texture2D> cpBackBuffer = nullptr;
-	hr = DirectX11::GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_cpTextureBuffer);
+	hr = DirectX11::GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)m_cpTextureBuffer.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
 	//---------- Create Render Target View Using Back Buffer----------//
 	// バックバッファへのポインタを指定してレンダーターゲットビューを作成
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	rtvDesc.ViewDimension		= D3D11_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format				= DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	rtvDesc.Texture2D.MipSlice	= 0;
-	hr = DirectX11::GetDevice()->CreateRenderTargetView(m_cpTextureBuffer.Get(), &rtvDesc, &m_cpRTV);
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.Texture2D.MipSlice = 0;
+	hr = DirectX11::GetDevice()->CreateRenderTargetView(m_cpTextureBuffer.Get(), &rtvDesc, m_cpRTV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		D3D11_TEXTURE2D_DESC desc = {};
@@ -153,10 +150,10 @@ HRESULT RenderTarget::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* 
 
 	//---------- Create Render Target View ----------//
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	rtvDesc.Format			= texDesc.Format;
-	rtvDesc.ViewDimension	= D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = texDesc.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
-	return DirectX11::GetDevice()->CreateRenderTargetView(m_cpTextureBuffer.Get(), &rtvDesc, &m_cpRTV);
+	return DirectX11::GetDevice()->CreateRenderTargetView(m_cpTextureBuffer.Get(), &rtvDesc, m_cpRTV.GetAddressOf());
 }
 
 
@@ -165,8 +162,8 @@ HRESULT RenderTarget::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* 
 ///--------------------------------------------------
 HRESULT DepthStencil::CreateDSV(bool useStencil)
 {
-	D3D11_TEXTURE2D_DESC texDesc	= CreateTextureDesc(useStencil ? DXGI_FORMAT_R24G8_TYPELESS : DXGI_FORMAT_R32_TYPELESS);
-	texDesc.BindFlags				|= D3D11_BIND_DEPTH_STENCIL;
+	D3D11_TEXTURE2D_DESC texDesc = CreateTextureDesc(useStencil ? DXGI_FORMAT_R24G8_TYPELESS : DXGI_FORMAT_R32_TYPELESS);
+	texDesc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
 
 	return CreateResource(texDesc);
 }
@@ -190,8 +187,8 @@ HRESULT DepthStencil::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* 
 
 	//---------- Create Depth Stencil View ----------//
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format			= useStencil ? DXGI_FORMAT_D24_UNORM_S8_UINT : DXGI_FORMAT_D32_FLOAT;
-	dsvDesc.ViewDimension	= D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Format = useStencil ? DXGI_FORMAT_D24_UNORM_S8_UINT : DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-	return DirectX11::GetDevice()->CreateDepthStencilView(m_cpTextureBuffer.Get(), &dsvDesc, &m_cpDSV);
+	return DirectX11::GetDevice()->CreateDepthStencilView(m_cpTextureBuffer.Get(), &dsvDesc, m_cpDSV.GetAddressOf());
 }

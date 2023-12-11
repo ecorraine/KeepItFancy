@@ -9,18 +9,17 @@ HRESULT SHADER::LoadShader(const char* fileName)
 {
 	HRESULT hr = E_FAIL;
 
-	int fileSize = 0;
-	char* pData = nullptr;
-
-	FILE* fp;
+	FILE* fp = nullptr;
 	fopen_s(&fp, fileName, "rb");	// read file in binary: disables special handling of '\n' and '\x1A'
 	if (!fp) { return hr; }
 
 	// check file size | ファイルのサイズを調べる
 	fseek(fp, 0, SEEK_END);
+	int fileSize = 0;
 	fileSize = ftell(fp);
 
 	std::string extname = GetFileExtension(fileName);
+	char* pData = nullptr;
 	if (extname == "cso")
 	{
 		// | メモリに読み込み
@@ -37,9 +36,11 @@ HRESULT SHADER::LoadShader(const char* fileName)
 
 	// create buffer |定数バッファ作成
 	hr = CreateBuffer(pData, fileSize);
+	if (pData)
+	{
+		delete[] pData;
+	}
 
-	// 終了処理
-	if (pData) { delete[] pData; }
 	return hr;
 }
 
@@ -48,21 +49,24 @@ HRESULT SHADER::CreateBuffer(void* pData, UINT fileSize, unsigned int stride)
 	HRESULT hr = E_FAIL;
 
 	// 解析用のリフレクター作成
-	ID3D11ShaderReflection* cpReflection = nullptr;
-	hr = D3DReflect(pData, fileSize, IID_PPV_ARGS(&cpReflection));
+	ComPtr<ID3D11ShaderReflection> cpReflection = nullptr;
+	hr = D3DReflect(pData, fileSize, IID_PPV_ARGS(cpReflection.GetAddressOf()));
 	if (FAILED(hr)) { return hr; }
 
 	// 定数バッファ作成
 	D3D11_SHADER_DESC shaderDesc = {};
+	ZeroMemory(&shaderDesc, sizeof(shaderDesc));
+
 	cpReflection->GetDesc(&shaderDesc);
 	m_pBuffers.resize(shaderDesc.ConstantBuffers, nullptr);
-	for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
+	for (unsigned int i = 0; i < shaderDesc.ConstantBuffers; ++i)
 	{
 		// シェーダーの定数バッファの情報を取得
 		ID3D11ShaderReflectionConstantBuffer* cpBuf = cpReflection->GetConstantBufferByIndex(i);
 		D3D11_SHADER_BUFFER_DESC shaderBufDesc = {};
-		cpBuf->GetDesc(&shaderBufDesc);
+		ZeroMemory(&shaderBufDesc, sizeof(shaderBufDesc));
 
+		cpBuf->GetDesc(&shaderBufDesc);
 		switch (shaderBufDesc.Type)
 		{
 		case _D3D_CBUFFER_TYPE::D3D_CT_CBUFFER:
@@ -134,9 +138,8 @@ HRESULT SHADER::CompileShader(const char* fileName)
 #endif // _DEBUG
 
 	wchar_t wFileName[512];
-	// char -> wcharに変換
 	setlocale(LC_ALL, "Japanese_Japan.932");
-	mbstowcs_s(nullptr, wFileName, 512, fileName, _TRUNCATE);
+	mbstowcs_s(nullptr, wFileName, 512, fileName, _TRUNCATE);	// char -> wcharに変換
 
 	hr = D3DCompileFromFile(
 		wFileName,							// wFileName LPCWST pFileName
@@ -178,6 +181,7 @@ HRESULT SHADER::CompileShader(const char* fileName)
 
 	// シェーダ作成
 	hr = CreateShader(cpShaderBlob->GetBufferPointer(), (UINT)cpShaderBlob->GetBufferSize());
+	cpShaderBlob->Release();
 
 	return hr;
 }
@@ -192,7 +196,7 @@ void SHADER::MapToBuffer(UINT bufferSlot, void* pData)
 {
 	if (bufferSlot < m_pBuffers.size())
 	{
-		D3D11_MAPPED_SUBRESOURCE data;
+		D3D11_MAPPED_SUBRESOURCE data = {};
 		HRESULT hr = DirectX11::GetContext()->Map(m_pBuffers[bufferSlot], 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 		if (SUCCEEDED(hr))
 		{
@@ -206,25 +210,26 @@ void SHADER::MapToBuffer(UINT bufferSlot, void* pData)
 void SHADER::SetSRV(UINT bufferSlot, ID3D11ShaderResourceView* pSRV)
 {
 	if (!pSRV) { return; }
-	ComPtr<ID3D11ShaderResourceView> cpTex = pSRV;
+	ComPtr<ID3D11ShaderResourceView> cpSRV = pSRV;
 	switch (m_eShaderType)
 	{
 	case VertexS:
-		DirectX11::GetContext()->VSSetShaderResources(bufferSlot, 1, &cpTex);
+		DirectX11::GetContext()->VSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	case HullS:
-		DirectX11::GetContext()->HSSetShaderResources(bufferSlot, 1, &cpTex);
+		DirectX11::GetContext()->HSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	case DomainS:
-		DirectX11::GetContext()->DSSetShaderResources(bufferSlot, 1, &cpTex);
+		DirectX11::GetContext()->DSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	case PixelS:
-		DirectX11::GetContext()->PSSetShaderResources(bufferSlot, 1, &cpTex);
+		DirectX11::GetContext()->PSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	case ComputeS:
-		DirectX11::GetContext()->CSSetShaderResources(bufferSlot, 1, &cpTex);
+		DirectX11::GetContext()->CSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	}
+	cpSRV->Release();
 }
 
 //--------------------------------------------------
@@ -233,22 +238,23 @@ void SHADER::SetSRV(UINT bufferSlot, ID3D11ShaderResourceView* pSRV)
 HRESULT VertexShader::CreateShader(void* pData, UINT fileSize)
 {
 	HRESULT hr = E_FAIL;
-	hr = DirectX11::GetDevice()->CreateVertexShader(pData, fileSize, nullptr, &m_d11VertexShader);
+
+	hr = DirectX11::GetDevice()->CreateVertexShader(pData, fileSize, nullptr, m_d11VertexShader.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
 	// シェーダ作成時にシェーダリフレクションを通してインプットレイアウトを取得
 	// セマンティクスの配置などから識別子を作成
 	// 識別子が登録済→再利用、なければ新規作成
 	// https://blog.techlab-xe.net/dxc-shader-reflection/
-	ID3D11ShaderReflection* pReflection;
-	D3D11_SHADER_DESC shaderDesc;
-	D3D11_INPUT_ELEMENT_DESC* pInputLayout;
-	D3D11_SIGNATURE_PARAMETER_DESC sigDesc;
-
-	hr = D3DReflect(pData, fileSize, IID_PPV_ARGS(&pReflection));
+	ComPtr<ID3D11ShaderReflection> cpReflection = nullptr;
+	hr = D3DReflect(pData, fileSize, IID_PPV_ARGS(cpReflection.GetAddressOf()));
 	if (FAILED(hr)) { return hr; }
 
-	pReflection->GetDesc(&shaderDesc);
+	D3D11_SHADER_DESC shaderDesc = {};
+	ZeroMemory(&shaderDesc, sizeof(shaderDesc));
+	cpReflection->GetDesc(&shaderDesc);
+
+	D3D11_INPUT_ELEMENT_DESC* pInputLayout = {};
 	pInputLayout = new D3D11_INPUT_ELEMENT_DESC[shaderDesc.InputParameters];
 
 	DXGI_FORMAT formats[][4] =
@@ -271,9 +277,11 @@ HRESULT VertexShader::CreateShader(void* pData, UINT fileSize)
 		},
 	};
 
-	for (UINT i = 0; i < shaderDesc.InputParameters; ++i)
+	D3D11_SIGNATURE_PARAMETER_DESC sigDesc = {};
+	ZeroMemory(&sigDesc, sizeof(sigDesc));
+	for (unsigned int i = 0; i < shaderDesc.InputParameters; ++i)
 	{
-		pReflection->GetInputParameterDesc(i, &sigDesc);
+		cpReflection->GetInputParameterDesc(i, &sigDesc);
 		pInputLayout[i].SemanticName = sigDesc.SemanticName;
 		pInputLayout[i].SemanticIndex = sigDesc.SemanticIndex;
 
@@ -300,10 +308,11 @@ HRESULT VertexShader::CreateShader(void* pData, UINT fileSize)
 		pInputLayout[i].InstanceDataStepRate = 0;
 	}
 
-	hr = DirectX11::GetDevice()->CreateInputLayout(
-		pInputLayout, shaderDesc.InputParameters, pData, fileSize, &m_d11InputLayout);
+	hr = DirectX11::GetDevice()->CreateInputLayout(pInputLayout, shaderDesc.InputParameters, pData, fileSize, m_d11InputLayout.GetAddressOf());
 
 	delete[] pInputLayout;
+	//cpReflection->Release();
+
 	return hr;
 }
 
@@ -320,7 +329,7 @@ void VertexShader::BindShader()
 //--------------------------------------------------
 HRESULT HullShader::CreateShader(void* pData, UINT fileSize)
 {
-	return DirectX11::GetDevice()->CreateHullShader(pData, fileSize, nullptr, &m_d11HullShader);
+	return DirectX11::GetDevice()->CreateHullShader(pData, fileSize, nullptr, m_d11HullShader.GetAddressOf());
 }
 
 void HullShader::BindShader()
@@ -335,7 +344,7 @@ void HullShader::BindShader()
 //--------------------------------------------------
 HRESULT DomainShader::CreateShader(void* pData, UINT fileSize)
 {
-	return DirectX11::GetDevice()->CreateDomainShader(pData, fileSize, nullptr, &m_d11DomainShader);
+	return DirectX11::GetDevice()->CreateDomainShader(pData, fileSize, nullptr, m_d11DomainShader.GetAddressOf());
 }
 
 void DomainShader::BindShader()
@@ -350,7 +359,7 @@ void DomainShader::BindShader()
 //--------------------------------------------------
 HRESULT PixelShader::CreateShader(void* pData, UINT fileSize)
 {
-	return DirectX11::GetDevice()->CreatePixelShader(pData, fileSize, nullptr, &m_d11PixelShader);
+	return DirectX11::GetDevice()->CreatePixelShader(pData, fileSize, nullptr, m_d11PixelShader.GetAddressOf());
 }
 
 void PixelShader::BindShader()
@@ -365,7 +374,7 @@ void PixelShader::BindShader()
 //--------------------------------------------------
 HRESULT ComputeShader::CreateShader(void* pData, UINT fileSize)
 {
-	return DirectX11::GetDevice()->CreateComputeShader(pData, fileSize, nullptr, &m_d11ComputeShader);
+	return DirectX11::GetDevice()->CreateComputeShader(pData, fileSize, nullptr, m_d11ComputeShader.GetAddressOf());
 }
 
 void ComputeShader::BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV)
@@ -380,6 +389,7 @@ void ComputeShader::BindShader()
 	for (int i = 0; i < m_pBuffers.size(); i++)
 	{
 		D3D11_BUFFER_DESC bufferDesc = {};
+		ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 		m_pBuffers[i]->GetDesc(&bufferDesc);
 		if (bufferDesc.MiscFlags == 0)
 			DirectX11::GetContext()->CSSetConstantBuffers(i, 1, &m_pBuffers[i]);

@@ -3,7 +3,7 @@
   <Class Name="Waves" Collapsed="true">
     <Position X="3" Y="7.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAABAACAAAAAAAAAAECAAAAAAAAAUAE=</HashCode>
+      <HashCode>AAQAAEAAoAAAAAAAAAEEAAACAAAAAEAQAAAAAABAQAE=</HashCode>
       <FileName>Waves.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -15,56 +15,56 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DirectX11" Collapsed="true">
-    <Position X="23" Y="0.5" Width="1.5" />
+    <Position X="24.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AOAAAAgAAAgBAQAQAAAAAACAAAABIIgDACgAAAAAEAQ=</HashCode>
       <FileName>DirectX11.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RENDERER" Collapsed="true">
-    <Position X="21.25" Y="2.5" Width="1.5" />
+    <Position X="19.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAEAAAAgAAAAAQAAAAAAAAIAAABAAAAAAAAAA=</HashCode>
       <FileName>Renderer.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SHADER" Collapsed="true">
-    <Position X="12.5" Y="1.75" Width="1.5" />
+    <Position X="10.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAEAAAAAEACAIAAgAAAEEAAAABQAAAABAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="VertexShader" Collapsed="true">
-    <Position X="10.25" Y="3.25" Width="1.5" />
+    <Position X="8" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAEAAAAAAAABAAABAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HullShader" Collapsed="true">
-    <Position X="12.5" Y="3.25" Width="1.5" />
+    <Position X="10.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAIAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DomainShader" Collapsed="true">
-    <Position X="14.75" Y="3.25" Width="1.5" />
+    <Position X="12.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAEAAAAAAAgAAAAAIAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PixelShader" Collapsed="true">
-    <Position X="17" Y="3.25" Width="1.5" />
+    <Position X="14.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAEAAAAAAABAAAAAAAAAACAAAAAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ComputeShader" Collapsed="true">
-    <Position X="8" Y="3.25" Width="1.5" />
+    <Position X="5.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAABAAAAEAAAAAAAAABAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Shader.h</FileName>
@@ -92,21 +92,35 @@
     </TypeIdentifier>
   </Class>
   <Class Name="KEYINPUT" Collapsed="true">
-    <Position X="21.25" Y="1.5" Width="1.5" />
+    <Position X="23" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAACAAAAAEAAQAAAQQAAAAAAQAQABA=</HashCode>
       <FileName>KeyInput.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Profiler" Collapsed="true">
-    <Position X="19.5" Y="2.5" Width="1.5" />
+  <Class Name="TIME" Collapsed="true">
+    <Position X="21.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>BAAAAAAAAAgAAAAAACAAAAAAAQQAAgAAAAAAAAACQAA=</HashCode>
+      <FileName>Profiler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FPS" Collapsed="true">
+    <Position X="19.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAICAAAAAQAAABABEQAAAAAAAAgAA=</HashCode>
+      <FileName>Profiler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPU" Collapsed="true">
+    <Position X="23" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAIAEAAATAAAAACAAEAAAQAAQAAAE=</HashCode>
       <FileName>Profiler.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GAME" Collapsed="true">
-    <Position X="19.5" Y="1.5" Width="1.5" />
+    <Position X="21.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACIABAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Game.h</FileName>
@@ -122,7 +136,7 @@
   <Class Name="RootScene" Collapsed="true">
     <Position X="2.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABQAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAACABAAAgA=</HashCode>
+      <HashCode>AAQAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAACABAAAgA=</HashCode>
       <FileName>RootScene.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -134,7 +148,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="LIGHT" Collapsed="true">
-    <Position X="23" Y="1.5" Width="1.5" />
+    <Position X="24.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAGAABAAAAEAAAAAAAAIAAAKgAAAQAAAAAAA=</HashCode>
       <FileName>BLight.h</FileName>
@@ -143,7 +157,7 @@
   <Class Name="SCENE" Collapsed="true">
     <Position X="1.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QASAAAAAQAAAAsEAEACIAgAAAAAAAAIgAAACABAAAAA=</HashCode>
+      <HashCode>QASAAAAAQAEAAsEAEACIAgAAAAAAAAIgAAACABAAAAA=</HashCode>
       <FileName>BScene.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -162,7 +176,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="TComponent&lt;T&gt;" Collapsed="true">
-    <Position X="5.75" Y="1.75" Width="1.5" />
+    <Position X="17" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAIAAAAAAAAAACAAAAAAAAAAAAAAAAAAACAA=</HashCode>
       <FileName>Component.h</FileName>
@@ -178,28 +192,28 @@
   <Class Name="MESH" Collapsed="true">
     <Position X="4" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IQw4AAAAlAEAAgAIAAAAAAABAAAAAEgAAADAAAAAACA=</HashCode>
+      <HashCode>IQh4AAAAlAAAAgAIAIAAAAABAAAAAEgQAADBAABAACA=</HashCode>
       <FileName>BMesh.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Plane" Collapsed="true">
-    <Position X="5.25" Y="7.25" Width="1.5" />
+    <Position X="0.75" Y="7.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAABAAAAAAAAAAAAAECAAAIAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAAAAAAAAAEAAAAAAAAAEAAQAIAAAAAAAA=</HashCode>
       <FileName>MPrimitives.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Sphere" Collapsed="true">
-    <Position X="7.5" Y="7.25" Width="1.5" />
+    <Position X="5.25" Y="7.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAIAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAAAAAAgAAAAAAAAAQAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
       <FileName>MPrimitives.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Cube" Collapsed="true">
-    <Position X="0.75" Y="7.25" Width="1.5" />
+    <Position X="7.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAggAAAAAABAAAAAAAAAAAAAkCAAAAAAAAAACA=</HashCode>
+      <HashCode>AAIAAAAgoAAAAAAAAAAEAAAAAAAAAEAAQAAAAAAAACA=</HashCode>
       <FileName>MPrimitives.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -225,7 +239,7 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="RasterType" Collapsed="true">
-    <Position X="19.5" Y="5.75" Width="1.5" />
+    <Position X="24.75" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQAgAAAAIAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAE=</HashCode>
       <FileName>DirectX11.h</FileName>
@@ -246,14 +260,14 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="SceneList" Collapsed="true">
-    <Position X="21.25" Y="5.75" Width="1.5" />
+    <Position X="19.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAgAAAAAAAAAAAgAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>RootScene.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="TopologyType" Collapsed="true">
-    <Position X="23" Y="5.75" Width="1.5" />
+    <Position X="21.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAABAAAAAAAQAAAAAAA=</HashCode>
       <FileName>BMesh.h</FileName>

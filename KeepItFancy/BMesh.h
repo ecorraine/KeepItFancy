@@ -29,7 +29,16 @@ public:
 		m_iDivY(0),
 		m_iDivZ(0)
 	{}
-	~MESH() {}
+	~MESH()
+	{
+		delete m_pPS;
+		delete m_pVS;
+
+		m_Vertices.erase(m_Vertices.begin(), m_Vertices.end());
+		m_Vertices.clear();
+		m_Faces.erase(m_Faces.begin(), m_Faces.end());
+		m_Faces.clear();
+	}
 
 	struct VERTEX
 	{
@@ -49,7 +58,7 @@ protected:
 
 	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
-	ComPtr<ID3D11ShaderResourceView>	m_cpSRV;			//!< テクスチャ
+	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
 
 	std::vector<VERTEX>					m_Vertices;
 	std::vector<FACE>					m_Faces;
@@ -75,8 +84,8 @@ protected:
 
 	void CreateDefaultBuffers()
 	{
-		CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), &m_cpVertexBuf, true));
-		CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), &m_cpIndexBuf));
+		CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpVertexBuf.GetAddressOf()));
+		CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), m_cpIndexBuf.GetAddressOf()));
 	}
 
 	virtual void LoadDefaultShaders()

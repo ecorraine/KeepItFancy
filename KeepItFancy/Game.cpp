@@ -48,6 +48,12 @@ void GAME::ReleaseGame()
 	KEYINPUT::ReleaseKeyInput();
 
 	DirectX11::ReleaseDirectX();
+
+#ifdef _DEBUG
+	ComPtr<IDXGIDebug> debugDev = nullptr;
+	CHECK_HR(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debugDev)));
+	CHECK_HR(debugDev->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL));
+#endif // _DEBUG
 }
 
 void GAME::UpdateGame(float tick)

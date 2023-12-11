@@ -10,6 +10,9 @@ using Microsoft::WRL::ComPtr;
 #ifdef _WIN64
 #ifdef _DEBUG
 #pragma comment(lib, "DirectX_Files/DirectXTK/Lib/x64/Debug/DirectXTK.lib")
+#pragma comment(lib,"dxguid.lib")
+#include <dxgidebug.h>
+#include <dxgi1_3.h>
 #else
 #pragma comment(lib, "DirectX_Files/DirectXTK/Lib/x64/Release/DirectXTK.lib")
 #endif
@@ -52,11 +55,11 @@ enum class BlendType
 };
 
 ///--------------------------------------------------
-//! \enum FilterType
+//! \enum SamplerType
 /*! \brief List of Sampling Types
  *  \brief 使用するサンプリングの列挙型
  */
-enum class FilterType
+enum class SamplerType
 {
 	POINT,				//!< ポイント サンプリング
 	LINEAR,				//!< 線形補間
@@ -76,18 +79,22 @@ class DirectX11
 private:
 	static APPLICATION* g_App;
 
-	static ID3D11Device* g_d11Device;
-	static IDXGISwapChain* g_dxSwapChain;
-	static ID3D11DeviceContext* g_d11DeviceContext;
+	static ComPtr<ID3D11Device> g_d11Device;
+	static ComPtr<ID3D11Debug> g_d11Debug;
+	static ComPtr<IDXGISwapChain> g_dxSwapChain;
+	static ComPtr<ID3D11DeviceContext> g_d11DeviceContext;
 
 public:
-	static ID3D11Device* GetDevice() { return g_d11Device; }
-	static IDXGISwapChain* GetSwapChain() { return g_dxSwapChain; }
-	static ID3D11DeviceContext* GetContext() { return g_d11DeviceContext; }
+	static ID3D11Device* GetDevice() { return g_d11Device.Get(); }
+	static ID3D11Debug* GetDebugDevice() { return g_d11Debug.Get(); }
+	static IDXGISwapChain* GetSwapChain() { return g_dxSwapChain.Get(); }
+	static ID3D11DeviceContext* GetContext() { return g_d11DeviceContext.Get(); }
 
 	static ID3D11RasterizerState* g_d11RasterState[(int)RasterType::MAX_RASTERTYPE];
 	static ID3D11BlendState* g_d11BlendState[(int)BlendType::MAX_BLENDTYPE];
-	static ID3D11SamplerState* g_d11SamplerState[(int)FilterType::MAX_SAMPLING_TYPE];
+	static ID3D11SamplerState* g_d11SamplerState[(int)SamplerType::MAX_SAMPLING_TYPE];
+
+	//static std::vector<ComPtr<ID3D11SamplerState>> test;
 
 	static uint32_t GetScreenWidth() { return g_App->GetScreenWidth(); }
 	static uint32_t GetScreenHeight() { return g_App->GetScreenHeight(); }
@@ -96,17 +103,30 @@ public:
 
 	static void ReleaseDirectX()
 	{
-		for (int i = 0; i < (int)FilterType::MAX_SAMPLING_TYPE; i++)
+		for (int i = 0; i < (int)SamplerType::MAX_SAMPLING_TYPE; i++)
 			SAFE_RELEASE(g_d11SamplerState[i]);
 		for (int i = 0; i < (int)BlendType::MAX_BLENDTYPE; i++)
 			SAFE_RELEASE(g_d11BlendState[i]);
 		for (int i = 0; i < (int)RasterType::MAX_RASTERTYPE; i++)
 			SAFE_RELEASE(g_d11RasterState[i]);
 
-		SAFE_RELEASE(g_d11DeviceContext);
-		g_dxSwapChain->SetFullscreenState(false, NULL);
-		SAFE_RELEASE(g_dxSwapChain);
-		SAFE_RELEASE(g_d11Device);
+		//if (g_d11DeviceContext)
+		//	g_d11DeviceContext->Release();
+
+		if (g_dxSwapChain)
+		{
+			g_dxSwapChain->SetFullscreenState(false, NULL);
+			g_dxSwapChain->Release();
+		}
+
+		if (g_d11Debug)
+		{
+			HRESULT hr = DirectX11::GetDebugDevice()->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+			g_d11Debug->Release();
+		}
+
+		if (g_d11Device)
+			g_d11Device->Release();
 	}
 
 	//! \fn static void SetRenderTargets(UINT num, RenderTarget** ppRTV, DepthStencil* pDSV)
@@ -153,26 +173,26 @@ public:
 		GetContext()->OMSetBlendState(g_d11BlendState[(int)eBlendType], blendFactor, 0xffffffff);
 	}
 
-	//! \fn static void SetSamplerState(FilterType eFilterType)
+	//! \fn static void SetSamplerState(SamplerType eFilterType)
 	/*! \brief Indicate the Sampling State to use
 	 *  \brief 使用するサンプリングを設定
-	 *  \param eFilterType : enum class FilterType
+	 *  \param eFilterType : enum class SamplerType
 	 */
-	static void SetSamplerState(FilterType eFilterType)
+	static void SetSamplerState(SamplerType eFilterType)
 	{
 		switch (eFilterType)
 		{
-		case FilterType::POINT:
-			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)FilterType::POINT]);
+		case SamplerType::POINT:
+			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)SamplerType::POINT]);
 			break;
-		case FilterType::LINEAR:
-			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)FilterType::LINEAR]);
+		case SamplerType::LINEAR:
+			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)SamplerType::LINEAR]);
 			break;
-		case FilterType::ANISOTROPIC:
-			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)FilterType::ANISOTROPIC]);
+		case SamplerType::ANISOTROPIC:
+			GetContext()->PSSetSamplers(0, 1, &g_d11SamplerState[(int)SamplerType::ANISOTROPIC]);
 			break;
 		default:
-			FilterType::POINT;
+			SamplerType::POINT;
 			break;
 		}
 	}

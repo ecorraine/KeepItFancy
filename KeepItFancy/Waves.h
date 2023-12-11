@@ -12,6 +12,7 @@ private:
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
 
 	XMFLOAT4 cbData[3] = {};
+
 	float								m_fWidth;
 	float								m_fDepth;
 
@@ -20,6 +21,13 @@ public:
 		m_fWidth(0),
 		m_fDepth(0)
 	{}
+	~Waves()
+	{
+		delete m_pCS;
+		//SAFE_RELEASE(pOutputBuffer);
+		//SAFE_RELEASE(pOutputBufferUAV);
+		//SAFE_RELEASE(m_cpStagingBuffer);
+	}
 
 protected:
 	void BindVertices(sRGBA color);

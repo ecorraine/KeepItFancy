@@ -10,11 +10,11 @@ void APPLICATION::Shutdown()
 
 void APPLICATION::TermWindow()
 {
+	m_hWnd = nullptr;
+
 	if (m_hInst != nullptr)
 		UnregisterClass(CLASS_NAME, m_hInst);
-
 	m_hInst = nullptr;
-	m_hWnd = nullptr;
 }
 
 int APPLICATION::MainLoop()
@@ -27,9 +27,9 @@ int APPLICATION::MainLoop()
 
 	while (true)
 	{
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
 		{
-			if (msg.message == WM_QUIT)
+			if (!GetMessage(&msg, nullptr, 0, 0))
 			{
 				break;
 			}
@@ -145,7 +145,6 @@ LRESULT APPLICATION::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 
-	/*
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
@@ -163,12 +162,7 @@ LRESULT APPLICATION::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		DestroyWindow(hWnd);
 		break;
-	*/
-
-	default:
-		return DefWindowProc(hWnd, msg, wParam, lParam);
-		break;
 	}
 
-	return 0;
+	return DefWindowProc(hWnd, msg, wParam, lParam);
 }

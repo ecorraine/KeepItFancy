@@ -16,25 +16,27 @@ void RootScene::ChangeScene()
 
 void RootScene::Init()
 {
-	Sphere* pSky = CreateObj<Sphere>("Sky");
-	pSky->Create(50.0f, 500);
+	CAMERA::g_Camera.InitCamera();
+
+	//Sphere* pSky = CreateObj<Sphere>("Sky");
+	//pSky->Create(50.0f, 500);
 
 	ChangeScene();
 }
 
 void RootScene::Release()
 {
+	//DestroyObj("Sky");
 }
 
 void RootScene::Update(float tick)
 {
-	int idx = (int)m_eSceneIndex;
 	/*
+	int idx = (int)m_eSceneIndex;
 	if (KEYINPUT::KeyPress(VK_LEFT))
 		--idx;
 	if (KEYINPUT::KeyPress(VK_RIGHT))
 		++idx;
-	*/
 	if (idx < 0) idx = (int)SceneList::SCENE_MAX - 1;
 	if (idx >= (int)SceneList::SCENE_MAX) idx = 0;
 
@@ -44,14 +46,15 @@ void RootScene::Update(float tick)
 		RemoveSubScene();
 		ChangeScene();
 	}
+	*/
 
-	FreeCamera::GetCamera()->UpdateCamera();
+	CAMERA::GetCamera()->UpdateCamera();
 }
 
 void RootScene::Draw()
 {
-	FreeCamera::GetCamera()->DrawCamera();
+	CAMERA::GetCamera()->DrawCamera();
 
-	Sphere* pSky = GetObj<Sphere>("Sky");
-	pSky->Draw(RasterType::CULL_FRONT);
+	//Sphere* pSky = GetObj<Sphere>("Sky");
+	//pSky->Draw(RasterType::CULL_FRONT);
 }

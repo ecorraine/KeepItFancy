@@ -1,5 +1,4 @@
 #include "DirectX11.h"
-#include <Windows.h>
 
 #pragma comment(lib,"dxgi.lib")
 
@@ -7,28 +6,29 @@
 
 APPLICATION* DirectX11::g_App;
 
-ID3D11Device* DirectX11::g_d11Device;
-IDXGISwapChain* DirectX11::g_dxSwapChain;
-ID3D11DeviceContext* DirectX11::g_d11DeviceContext;
+ComPtr<ID3D11Device> DirectX11::g_d11Device;
+ComPtr<ID3D11Debug> DirectX11::g_d11Debug;
+ComPtr<IDXGISwapChain> DirectX11::g_dxSwapChain;
+ComPtr<ID3D11DeviceContext> DirectX11::g_d11DeviceContext;
 
 ID3D11RasterizerState* DirectX11::g_d11RasterState[(int)RasterType::MAX_RASTERTYPE];
 ID3D11BlendState* DirectX11::g_d11BlendState[(int)BlendType::MAX_BLENDTYPE];
-ID3D11SamplerState* DirectX11::g_d11SamplerState[(int)FilterType::MAX_SAMPLING_TYPE];
+ID3D11SamplerState* DirectX11::g_d11SamplerState[(int)SamplerType::MAX_SAMPLING_TYPE];
 
 HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 {
 	g_App = pApp;
 
 	HRESULT hr = E_FAIL;
-	D3D_FEATURE_LEVEL	level;
+	D3D_FEATURE_LEVEL level;
 
-	IDXGIFactory* factory;					// factory
-	IDXGIAdapter* adapter;					// video card
-	IDXGIOutput* adapterOutput;				// monitor
-	unsigned int		numerator = 60;		// 分子
-	unsigned int		denominator = 1;		// 分母
-	//unsigned int		numModes;
-	//DXGI_MODE_DESC*		displayModeList;
+	ComPtr<IDXGIFactory> factory = nullptr;
+	ComPtr<IDXGIAdapter> adapter = nullptr;
+	ComPtr<IDXGIOutput> adapterOutput = nullptr;	// monitor
+	unsigned int numerator = 60;					// 分子
+	unsigned int denominator = 1;					// 分母
+	//unsigned int numModes;
+	//DXGI_MODE_DESC* displayModeList;
 
 	// ドライバの種類
 	D3D_DRIVER_TYPE driverTypes[] =
@@ -59,17 +59,17 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
 	// create a DirectX graphics interface factory
-	hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)factory.GetAddressOf());
 	if (FAILED(hr))
 		throw hr;
 
 	// use the factory to create an adpter for the primary graphics interface(video card)
-	hr = factory->EnumAdapters(0, &adapter);
+	hr = factory->EnumAdapters(0, adapter.GetAddressOf());
 	if (FAILED(hr))
 		throw hr;
 
 	// enumerrate primary adapter output(monitor)
-	hr = adapter->EnumOutputs(0, &adapterOutput);
+	hr = adapter->EnumOutputs(0, adapterOutput.GetAddressOf());
 	if (FAILED(hr))
 		throw hr;
 
@@ -102,16 +102,16 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 
 	delete[] displayModeList;
 	displayModeList = NULL;
+
+	if (adapterOutput)
+		adapterOutput->Release();
+
+	if (adapter)
+		adapter->Release();
+
+	if (factory)
+		factory->Release();
 	*/
-
-	adapterOutput->Release();
-	adapterOutput = NULL;
-
-	adapter->Release();
-	adapter = NULL;
-
-	factory->Release();
-	factory = NULL;
 
 	//--------------------------------------------------
 	// Swap Chain
@@ -120,23 +120,21 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	//--------------------------------------------------
 	DXGI_SWAP_CHAIN_DESC scDesc = {};
 	ZeroMemory(&scDesc, sizeof(scDesc));
-
-	scDesc.BufferDesc.Width = g_App->GetScreenWidth();					// バックバッファの幅
-	scDesc.BufferDesc.Height = g_App->GetScreenHeight();					// バックバッファの高さ
-	scDesc.BufferDesc.RefreshRate.Numerator = numerator;								// リフレッシュレート（分母）
-	scDesc.BufferDesc.RefreshRate.Denominator = denominator;								// リフレッシュレート（分子）
+	scDesc.BufferDesc.Width = g_App->GetScreenWidth();
+	scDesc.BufferDesc.Height = g_App->GetScreenHeight();
+	scDesc.BufferDesc.RefreshRate.Numerator = numerator;				// リフレッシュレート（分母）
+	scDesc.BufferDesc.RefreshRate.Denominator = denominator;			// リフレッシュレート（分子）
 	scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;				// バックバッファフォーマット(R,G,B,A 範囲０.０から１.０)
 	scDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	scDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	scDesc.SampleDesc.Count = 1;										// マルチサンプルの数
 	scDesc.SampleDesc.Quality = 0;										// マルチサンプルのクオリティ
-	scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;			// バックバッファの使用方法
-	scDesc.BufferCount = 1;										// バックバッファの数
-	scDesc.OutputWindow = g_App->GetWindow();						// 関連付けるウインドウ
-	// ウインドウモードを設定
-	scDesc.Windowed = isFullscreen ? FALSE : TRUE;
+	scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;				// バックバッファの使用方法
+	scDesc.BufferCount = 1;												// バックバッファの数
+	scDesc.OutputWindow = g_App->GetWindow();							// 関連付けるウインドウ
+	scDesc.Windowed = isFullscreen ? FALSE : TRUE;						// ウインドウモードを設定
 	scDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// モードの自動切り替え
+	scDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;				// モードの自動切り替え
 
 	for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
 	{
@@ -151,13 +149,16 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 			numFeatureLevels,
 			D3D11_SDK_VERSION,				// 
 			&scDesc,						// スワップチェインの設定
-			&g_dxSwapChain,
-			&g_d11Device,
+			g_dxSwapChain.GetAddressOf(),
+			g_d11Device.GetAddressOf(),
 			&level,							// サポートされている機能レベル
-			&g_d11DeviceContext
+			g_d11DeviceContext.GetAddressOf()
 		);
 		if (SUCCEEDED(hr))
+		{
+			g_d11Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(g_d11Debug.GetAddressOf()));
 			break;
+		}
 	}
 	if (FAILED(hr))
 	{
@@ -170,6 +171,8 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	// initialize the raster description which will determine how and what polygons will be drawn
 	//--------------------------------------------------
 	D3D11_RASTERIZER_DESC rasterDesc = {};
+	ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+
 	/*
 	rasterDesc.FrontCounterClockwise	= false;
 	rasterDesc.DepthBias				= 0;
@@ -182,9 +185,9 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	*/
 	// culling types
 	D3D11_CULL_MODE culling[] = {
-	D3D11_CULL_NONE,								// no culling: draw all triangles
-	D3D11_CULL_FRONT,								// do not draw front-facing triangles
-	D3D11_CULL_BACK	 								// do not draw back-facing triangles
+	D3D11_CULL_NONE,					// no culling: draw all triangles
+	D3D11_CULL_FRONT,					// do not draw front-facing triangles
+	D3D11_CULL_BACK	 					// do not draw back-facing triangles
 	};
 	// create individual raster state per culling type
 	for (int i = 0; i <= (int)RasterType::CULL_BACK; i++)
@@ -206,7 +209,8 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 		MessageBoxA(g_App->GetWindow(), "Failed to create Raster State!\nラスタライザー作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
 		throw hr;
 	}
-	// set the rasterizer state
+
+	// initialize the default rasterizer state
 	SetRasterState(RasterType::CULL_BACK);
 
 	//--------------------------------------------------
@@ -220,6 +224,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
 	// create individual blend state per blend type
 	for (int i = 0; i < (int)BlendType::MAX_BLENDTYPE; i++)
 	{
@@ -300,58 +305,62 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 		break;
 		}
 	}
-	// set bland state
+	// initialize default bland state
 	SetBlendState(BlendType::NORMAL);
 
 	//--------------------------------------------------
 	// Texture Sampler
 	//--------------------------------------------------
 	D3D11_SAMPLER_DESC samplerDesc = {};
-	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
 	D3D11_FILTER filter[] = {
 		D3D11_FILTER_MIN_MAG_MIP_POINT,		// point sampling
 		D3D11_FILTER_MIN_MAG_MIP_LINEAR,	// linear interpolation
 		D3D11_FILTER_ANISOTROPIC			// anisotropic interpolation
 	};
 	// create individual sampler state per filter type
-	for (int i = 0; i < (int)FilterType::ANISOTROPIC; i++)
+	for (int i = 0; i < (int)SamplerType::ANISOTROPIC; i++)
 	{
 		samplerDesc.Filter = filter[i];
 		hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[i]);
-		if (FAILED(hr))
-		{
-			MessageBoxA(g_App->GetWindow(), "Failed to create Texture Sampler State!\nサンプラーステート作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
-			throw hr;
-		}
+
 	}
+
 	// create for anisotropic filter
-	samplerDesc.Filter = filter[(int)FilterType::ANISOTROPIC];
-	//samplerDesc.MipLODBias		= 0.0f;
+	samplerDesc.Filter = filter[(int)SamplerType::ANISOTROPIC];
+	//samplerDesc.MipLODBias = 0.0f;
 	samplerDesc.MaxAnisotropy = 4;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[(int)FilterType::ANISOTROPIC]);
+	hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[(int)SamplerType::ANISOTROPIC]);
+
 	if (FAILED(hr))
 	{
 		MessageBoxA(g_App->GetWindow(), "Failed to create Texture Sampler State!\nサンプラーステート作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
 		throw hr;
 	}
-	// set sampler state
-	SetSamplerState(FilterType::POINT);
+
+	// initialize default sampler state
+	SetSamplerState(SamplerType::POINT);
 
 	return hr;
 }
 
 void DirectX11::SetRenderTargets(UINT num, RenderTarget** ppRTV, DepthStencil* pDSV)
 {
-	static ID3D11RenderTargetView* rtvs[4];
-
-	if (num > 4) num = 4;
+	static ComPtr<ID3D11RenderTargetView> rtvs[4] = { nullptr };
+	if (num > 4)
+	{
+		num = 4;
+	}
 	for (UINT i = 0; i < num; ++i)
+	{
 		rtvs[i] = ppRTV[i]->GetRTV();
-	g_d11DeviceContext->OMSetRenderTargets(num, rtvs, pDSV ? pDSV->GetDSV() : nullptr);
+	}
+	g_d11DeviceContext->OMSetRenderTargets(num, rtvs->GetAddressOf(), pDSV ? pDSV->GetDSV() : nullptr);
 
 	// ビューポートの設定
 	D3D11_VIEWPORT viewport;

@@ -45,7 +45,13 @@ void MESH::Draw(RasterType cullmode)
 	//DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	SetTopology(TopologyType::TRIANGLELIST);
 
-	BindCommonShaders();
+	SetWVPMatrix(m_pVS);
+	m_pVS->BindShader();
+
+	ProcessTessellation();
+
+	SetLight(m_pPS);
+	m_pPS->BindShader();
 
 	// render
 	SetCulling(cullmode);

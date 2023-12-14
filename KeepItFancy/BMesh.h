@@ -117,23 +117,6 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
 	}
 
-	virtual void Create()
-	{
-		CreateDefaultBuffers();
-		LoadDefaultShaders();
-	}
-
-	void BindCommonShaders()
-	{
-		SetWVPMatrix(m_pVS);
-		m_pVS->BindShader();
-
-		ProcessTessellation();
-
-		SetLight(m_pPS);
-		m_pPS->BindShader();
-	}
-
 	virtual void ProcessTessellation() {}
 	virtual void BindComputeShaders() {}
 

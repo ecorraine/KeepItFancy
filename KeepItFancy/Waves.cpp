@@ -32,6 +32,8 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 	BindVertices(color);
 	MESH::BindIndices();
 
+	const rsize_t vertexSize = m_Vertices.size();
+
 	m_pCS = AddComponent<ComputeShader>();
 	m_pCS->LoadShader(SHADER_PATH("CS_GerstnerWaves.cso"));
 
@@ -56,7 +58,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 
 	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, color), offsetof(VERTEX, normal), sizeof(VERTEX) };
 	cbData[0] = structOffsetSize;
-	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(m_Vertices.size()) };
+	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(vertexSize) };
 }
 
 void Waves::BindComputeShaders()

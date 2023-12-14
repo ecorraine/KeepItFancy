@@ -48,13 +48,10 @@ void RootScene::Update(float tick)
 	}
 	*/
 
-	CAMERA::GetCamera()->UpdateCamera();
 }
 
 void RootScene::Draw()
 {
-	CAMERA::GetCamera()->DrawCamera();
-
 	//Sphere* pSky = GetObj<Sphere>("Sky");
 	//pSky->Draw(RasterType::CULL_FRONT);
 }

@@ -9,9 +9,9 @@
  */
 enum class SceneList
 {
-	TITLE,
-	DEBUG,
-	STAGE,
+	DEBUG = 0,
+	TITLE = 1,
+	STAGE = 2,
 	SCENE_MAX
 };
 
@@ -25,7 +25,7 @@ enum class SceneList
 class RootScene : public SCENE
 {
 private:
-	SceneList		m_eSceneIndex;
+	SceneList		m_eSceneIndex = SceneList::TITLE;
 
 	void ChangeScene();
 

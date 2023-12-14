@@ -85,6 +85,8 @@ private:
 	static ComPtr<ID3D11DeviceContext> g_d11DeviceContext;
 
 public:
+	~DirectX11() {}
+
 	static ID3D11Device* GetDevice() { return g_d11Device.Get(); }
 	static ID3D11Debug* GetDebugDevice() { return g_d11Debug.Get(); }
 	static IDXGISwapChain* GetSwapChain() { return g_dxSwapChain.Get(); }

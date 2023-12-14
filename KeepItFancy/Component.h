@@ -35,8 +35,8 @@ class TComponent : public COMPONENT
 public:
 	std::shared_ptr<T> m_pObj;
 
-	TComponent(std::shared_ptr<T> ptr)
-		: m_pObj(ptr)
+	TComponent(std::shared_ptr<T> ptr) :
+		m_pObj(ptr)
 	{}
 	virtual ~TComponent() {}
 };

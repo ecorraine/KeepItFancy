@@ -6,10 +6,15 @@
 #include "srgba.hpp"
 #include "myUtilities.hpp"
 
+///--------------------------------------------------
+//! \enum Topology Type
+/*! \brief List of Topology Type on how vertices are connected
+ *  \brief 頂点がどのように接続されているかのトポロジータイプのr列挙型
+ */
 enum class TopologyType
 {
 	TRIANGLELIST,
-	TRIANGLESTRIP,
+	LINELIST,
 	MAX_TOPOLOGY_TYPE
 };
 
@@ -72,15 +77,30 @@ protected:
 		DXVec3Normalize(normal, vector);
 	}
 
+	void SetTopology(TopologyType type)
+	{
+		switch (type)
+		{
+		case TopologyType::TRIANGLELIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			break;
+		case TopologyType::LINELIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		default:
+			TopologyType::TRIANGLELIST;
+			break;
+		}
+	}
+
 	virtual void BindVertices(sRGBA) = 0;
+	virtual void BindIndices();
 	//! \fn void GenerateIndices(int SideToDivide, int offset)
 	/*! \brief generate indices according offset
 	 *  \brief オフセットによるインデックス生成
 	 *  \param SideToDivide : side where division is applied | 分割を適用する方向
 	 *  \param offset : offset count per division | 分割毎のオフセット
 	 */
-	void GenerateIndices(int SideToDivide, int offset);
-	virtual void BindIndices();
+	virtual void GenerateIndices(int SideToDivide, int offset);
 
 	void CreateDefaultBuffers()
 	{
@@ -113,6 +133,7 @@ protected:
 		SetLight(m_pPS);
 		m_pPS->BindShader();
 	}
+
 	virtual void ProcessTessellation() {}
 	virtual void BindComputeShaders() {}
 

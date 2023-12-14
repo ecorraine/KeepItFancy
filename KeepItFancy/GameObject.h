@@ -22,8 +22,10 @@ using namespace DirectX;
 //! GameObject
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! \class GameObject GameObject.h "GameObject.h"
-/*! \brief GameObject Class
- *  \brief ゲーム内で使うオブジェクトのクラス
+/*! \brief Parent class for game objects that uses position, rotation and scale
+ *  \brief can attach child objects and components
+ *  \brief 位置、回転、拡大縮小情報を使用するゲームオブジェクトの親クラス
+ *  \brief 子オブジェクトとコンポーネントを付けることができる
  */
 class GameObject
 {
@@ -142,11 +144,11 @@ public:
 
 	const DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
 
-	//! \fn void SetWVPMatrix(SHADER* shader)
+	//! \fn void SetWVPMatrix(SHADER* pShader)
 	/*! \brief bind World Matrix to Vertex Shader
 	 *  \brief
 	 */
-	void SetWVPMatrix(SHADER* shader)
+	void SetWVPMatrix(SHADER* pShader)
 	{
 		XMFLOAT4X4 wvp[3];
 		XMStoreFloat4x4(&wvp[0], XMMatrixTranspose(GetWorldMatrix()));
@@ -163,7 +165,7 @@ public:
 			wvp[2] = CAMERA::GetCamera()->GetProjectioneMatrix();
 		}
 
-		shader->SendToBuffer(0, wvp);
+		pShader->SendToBuffer(0, wvp);
 	}
 
 	void SetLight(SHADER* shader)
@@ -180,10 +182,8 @@ public:
 		}
 	}
 
-	virtual void Draw() {}
-	virtual void Update(float tick)
-	{
-	}
+	virtual void Draw() {};
+	virtual void Update(float tick) {};
 
 	bool useCanvas = false;
 	bool useLight = true;

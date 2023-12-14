@@ -42,7 +42,7 @@ public:
 		m_pBuffers.clear();
 	}
 
-	std::vector<ID3D11Buffer*> m_pBuffers;
+	std::vector<ID3D11Buffer*> m_pBuffers;			// Container for Constant Buffers | 定数バッファ
 
 	HRESULT LoadShader(const char* fileName);
 	HRESULT CompileShader(const char* fileName);
@@ -73,11 +73,7 @@ public:
 	VertexShader() :
 		SHADER(ShaderType::VertexS)
 	{}
-	~VertexShader()
-	{
-		//SAFE_RELEASE(m_d11VertexShader);
-		//SAFE_RELEASE(m_d11InputLayout);
-	}
+	~VertexShader() {}
 	void BindShader();
 
 protected:
@@ -94,15 +90,12 @@ protected:
 class HullShader : public SHADER
 {
 private:
-	ComPtr<ID3D11HullShader> m_d11HullShader = nullptr;
+	ComPtr<ID3D11HullShader>	m_d11HullShader = nullptr;
 public:
 	HullShader() :
 		SHADER(ShaderType::HullS)
 	{}
-	~HullShader()
-	{
-		//SAFE_RELEASE(m_d11HullShader);
-	}
+	~HullShader() {}
 	void BindShader();
 
 protected:
@@ -119,17 +112,13 @@ protected:
 class DomainShader : public SHADER
 {
 private:
-	ComPtr<ID3D11DomainShader> m_d11DomainShader = nullptr;
+	ComPtr<ID3D11DomainShader>	m_d11DomainShader = nullptr;
 
 public:
 	DomainShader() :
 		SHADER(ShaderType::DomainS)
-		//m_d11DomainShader(nullptr)
 	{}
-	~DomainShader()
-	{
-		//SAFE_RELEASE(m_d11DomainShader);
-	}
+	~DomainShader() {}
 	void BindShader();
 
 protected:
@@ -152,10 +141,7 @@ public:
 	PixelShader() :
 		SHADER(ShaderType::PixelS)
 	{}
-	~PixelShader()
-	{
-		//SAFE_RELEASE(m_d11PixelShader);
-	}
+	~PixelShader() {}
 	void BindShader();
 
 protected:
@@ -172,16 +158,13 @@ protected:
 class ComputeShader : public SHADER
 {
 private:
-	ComPtr<ID3D11ComputeShader>			m_d11ComputeShader = nullptr;
+	ComPtr<ID3D11ComputeShader>	m_d11ComputeShader = nullptr;
 
 public:
 	ComputeShader() :
 		SHADER(ShaderType::ComputeS)
 	{}
-	~ComputeShader()
-	{
-		//SAFE_RELEASE(m_d11ComputeShader);
-	}
+	~ComputeShader() {}
 	void BindShader();
 	void BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV);
 

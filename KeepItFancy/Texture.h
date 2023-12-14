@@ -65,10 +65,7 @@ private:
 
 public:
 	RenderTarget() {}
-	~RenderTarget()
-	{
-		//SAFE_RELEASE(m_cpRTV);
-	}
+	~RenderTarget() {}
 
 	ID3D11RenderTargetView* GetRTV() const { return m_cpRTV.Get(); }
 	HRESULT CreateRTV();
@@ -95,11 +92,7 @@ private:
 
 public:
 	DepthStencil() {}
-
-	~DepthStencil()
-	{
-		//SAFE_RELEASE(m_cpDSV);
-	}
+	~DepthStencil() {}
 
 	ID3D11DepthStencilView* GetDSV() const { return m_cpDSV.Get(); }
 	HRESULT CreateDSV(bool useStencil);

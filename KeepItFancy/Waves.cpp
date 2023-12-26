@@ -30,32 +30,22 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 	m_iDivY = divY;
 
 	BindVertices(color);
-	MESH::BindIndices();
-
-	const rsize_t vertexSize = m_Vertices.size();
+	BindIndices();
 
 	m_pCS = AddComponent<ComputeShader>();
-	m_pCS->LoadShader(SHADER_PATH("CS_GerstnerWaves.cso"));
+	m_pCS->LoadShader(SHADER_PATH("CS_NoiseWave.cso"));
 
-	CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpVertexBuf.GetAddressOf()));
-	CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), m_cpIndexBuf.GetAddressOf()));
-
-	m_pVS = AddComponent<VertexShader>();
-	m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
-
-	m_pPS = AddComponent<PixelShader>();
-	m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
+	CreateDefaultBuffers();
+	LoadDefaultShaders();
 
 	// Create staging buffer for reading back data from GPU;
 	CHECK_HR(CreateStagingBuffer(sizeof(VERTEX) * m_Vertices.size(), m_cpStagingBuffer.GetAddressOf()));
 
 	// Set up shader resources and UAV
-	//CHECK_HR(CreateStructuredBuffer(sizeof(VERTEX), m_Vertices.size(), m_Vertices.data(), &pInputBuffer));
-	//CHECK_HR(CreateShaderResourceView(pInputBuffer.Get(), &pInputBufferSRV));
-
 	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), pOutputBuffer.GetAddressOf()));
 	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), pOutputBufferUAV.GetAddressOf()));
 
+	const rsize_t vertexSize = m_Vertices.size();
 	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, color), offsetof(VERTEX, normal), sizeof(VERTEX) };
 	cbData[0] = structOffsetSize;
 	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(vertexSize) };
@@ -89,4 +79,5 @@ void Waves::Update(float tick)
 {
 	cbData[2] = { tick, 0.0f, 0.0f, 0.0f };
 	m_pCS->SendToBuffer(0, &cbData);
+	m_pPS->SendToBuffer(0, &cbData[2]);
 }

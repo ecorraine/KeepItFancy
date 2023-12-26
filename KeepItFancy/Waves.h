@@ -29,12 +29,26 @@ public:
 		//SAFE_RELEASE(m_cpStagingBuffer);
 	}
 
-protected:
-	void BindVertices(sRGBA color);
-
-public:
 	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA color = sRGBA(135, 206, 235));
 	void BindComputeShaders();
 	void Update(float tick);
+
+protected:
+	void CreateDefaultBuffers()
+	{
+		CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpVertexBuf.GetAddressOf()));
+		CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), m_cpIndexBuf.GetAddressOf()));
+	}
+
+	virtual void LoadDefaultShaders()
+	{
+		m_pVS = AddComponent<VertexShader>();
+		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
+
+		m_pPS = AddComponent<PixelShader>();
+		m_pPS->LoadShader(SHADER_PATH("PS_SimpleCaustics.cso"));
+	}
+
+	void BindVertices(sRGBA color);
 };
 

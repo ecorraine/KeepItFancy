@@ -1,7 +1,3 @@
-
-Texture2D		tex		: register(t0);
-SamplerState	samp	: register(s0);
-
 struct PS_IN
 {
 	float4	pos		: SV_POSITION;

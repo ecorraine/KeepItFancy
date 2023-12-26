@@ -1,6 +1,6 @@
 #include "BCamera.h"
 #include "FreeCamera.h"
-#include "MPrimitives.h"
+#include "MPrimitive3D.h"
 
 CAMERA* FreeCamera::m_Camera = nullptr;
 

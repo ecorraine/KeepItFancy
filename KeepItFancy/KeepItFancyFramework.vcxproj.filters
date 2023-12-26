@@ -111,7 +111,7 @@
     <ClCompile Include="BMesh.cpp">
       <Filter>2Game\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="MPrimitives.cpp">
+    <ClCompile Include="MPrimitive2D.cpp">
       <Filter>2Game\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="ScTitle.cpp">
@@ -119,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Waves.cpp">
       <Filter>#Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MPrimitive3D.cpp">
+      <Filter>2Game\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,7 +182,7 @@
     <ClInclude Include="BMesh.h">
       <Filter>2Game\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="MPrimitives.h">
+    <ClInclude Include="MPrimitive2D.h">
       <Filter>2Game\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="myUtilities.hpp">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Waves.h">
       <Filter>#Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPrimitive3D.h">
+      <Filter>2Game\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -217,8 +223,14 @@
     <FxCompile Include="HLSL\PS_HalfLambert.hlsl">
       <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="HLSL\CS_NoiseWave.hlsl">
+      <Filter>1ShaderPipeline\6Compute</Filter>
+    </FxCompile>
     <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
       <Filter>1ShaderPipeline\6Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_SimpleCaustics.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

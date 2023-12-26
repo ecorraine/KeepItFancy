@@ -27,7 +27,34 @@ enum class TopologyType
  */
 class MESH : public GameObject
 {
+public:
+	struct VERTEX
+	{
+		XMFLOAT3 pos;
+		XMFLOAT4 color;
+		XMFLOAT3 normal;
+	};
+
 protected:
+	struct FACE
+	{
+		unsigned int idx[3];
+	};
+
+	VertexShader* m_pVS = nullptr;
+	PixelShader* m_pPS = nullptr;
+
+	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
+	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
+	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
+
+	std::vector<VERTEX>					m_Vertices;
+	std::vector<FACE>					m_Faces;
+
+	unsigned int						m_iDivX;			//!< X方向の分割数
+	unsigned int						m_iDivY;			//!< Y方向の分割数
+	unsigned int						m_iDivZ;			//!< Z方向の分割数
+
 public:
 	MESH() :
 		m_iDivX(0),
@@ -45,33 +72,7 @@ public:
 		m_Faces.clear();
 	}
 
-	struct VERTEX
-	{
-		XMFLOAT3 pos;
-		XMFLOAT4 color;
-		XMFLOAT3 normal;
-	};
-
 protected:
-	struct FACE
-	{
-		unsigned int idx[3];
-	};
-
-	VertexShader*	m_pVS = nullptr;
-	PixelShader*	m_pPS = nullptr;
-
-	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
-	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
-	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
-
-	std::vector<VERTEX>					m_Vertices;
-	std::vector<FACE>					m_Faces;
-
-	unsigned int						m_iDivX;			//!< X方向の分割数
-	unsigned int						m_iDivY;			//!< Y方向の分割数
-	unsigned int						m_iDivZ;			//!< Z方向の分割数
-
 	void NormalizeVectors(XMFLOAT3 vector, XMFLOAT3& normal)
 	{
 		DXVec3Normalize(normal, vector);
@@ -92,7 +93,6 @@ protected:
 		}
 	}
 
-	virtual void BindVertices(sRGBA) = 0;
 	virtual void BindIndices();
 	//! \fn void GenerateIndices(int SideToDivide, int offset)
 	/*! \brief generate indices according offset
@@ -102,20 +102,9 @@ protected:
 	 */
 	virtual void GenerateIndices(int SideToDivide, int offset);
 
-	void CreateDefaultBuffers()
-	{
-		CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpVertexBuf.GetAddressOf()));
-		CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), m_cpIndexBuf.GetAddressOf()));
-	}
-
-	virtual void LoadDefaultShaders()
-	{
-		m_pVS = AddComponent<VertexShader>();
-		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
-
-		m_pPS = AddComponent<PixelShader>();
-		m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
-	}
+	virtual void BindVertices(sRGBA) = 0;
+	virtual void CreateDefaultBuffers() = 0;
+	virtual void LoadDefaultShaders() = 0;
 
 	virtual void ProcessTessellation() {}
 	virtual void BindComputeShaders() {}

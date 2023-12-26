@@ -1,6 +1,6 @@
 #include "RootScene.h"
 #include "FreeCamera.h"
-#include "MPrimitives.h"
+#include "MPrimitive3D.h"
 #include "ScTitle.h"
 
 void RootScene::ChangeScene()
@@ -18,15 +18,15 @@ void RootScene::Init()
 {
 	CAMERA::g_Camera.InitCamera();
 
-	//Sphere* pSky = CreateObj<Sphere>("Sky");
-	//pSky->Create(50.0f, 500);
+	Sphere* pSky = CreateObj<Sphere>("Sky");
+	pSky->useLight = false;
+	pSky->Create(50.0f, 500);
 
 	ChangeScene();
 }
 
 void RootScene::Release()
 {
-	//DestroyObj("Sky");
 }
 
 void RootScene::Update(float tick)
@@ -52,6 +52,6 @@ void RootScene::Update(float tick)
 
 void RootScene::Draw()
 {
-	//Sphere* pSky = GetObj<Sphere>("Sky");
-	//pSky->Draw(RasterType::CULL_FRONT);
+	Sphere* pSky = GetObj<Sphere>("Sky");
+	pSky->Draw(RasterType::CULL_FRONT);
 }

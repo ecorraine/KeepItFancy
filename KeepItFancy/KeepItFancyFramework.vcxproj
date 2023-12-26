@@ -170,7 +170,8 @@
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="BMesh.cpp" />
-    <ClCompile Include="MPrimitives.cpp" />
+    <ClCompile Include="MPrimitive2D.cpp" />
+    <ClCompile Include="MPrimitive3D.cpp" />
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="Renderer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -203,7 +204,8 @@
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="BMesh.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="MPrimitives.h" />
+    <ClInclude Include="MPrimitive2D.h" />
+    <ClInclude Include="MPrimitive3D.h" />
     <ClInclude Include="myUtilities.hpp" />
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="Renderer.h">
@@ -234,6 +236,16 @@
   <ItemGroup>
     <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="HLSL\CS_NoiseWave.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
     </FxCompile>
     <FxCompile Include="HLSL\PS_BlinnPhong.hlsl">
@@ -245,6 +257,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="HLSL\PS_HalfLambert.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_SimpleCaustics.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

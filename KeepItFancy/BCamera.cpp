@@ -1,5 +1,4 @@
 #include "BCamera.h"
-#include "MPrimitives.h"
 
 CAMERA CAMERA::g_Camera;
 

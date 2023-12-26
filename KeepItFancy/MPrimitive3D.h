@@ -36,7 +36,7 @@ protected:
 		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
 
 		m_pPS = AddComponent<PixelShader>();
-		m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
+		m_pPS->LoadShader(SHADER_PATH("PS_BlinnPhong.cso"));
 	}
 
 	void BindVertices(sRGBA color);

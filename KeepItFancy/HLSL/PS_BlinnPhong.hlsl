@@ -16,9 +16,15 @@ float4 main(PS_IN pin) : SV_TARGET
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(-lightDir.xyz);
+	float3 viewDir = normalize(cameraPos.xyz - pin.pos.xyz);
+	float3 halfDir = normalize(viewDir + light);
+	
 	float diffuse = saturate(dot(normal, light));
 
-	color.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;
+	float NdotH = saturate(dot(normal, halfDir));
+	float3 specular = pow(NdotH, 16);
+	
+	color.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb + specular;
 
 	return color;
 }

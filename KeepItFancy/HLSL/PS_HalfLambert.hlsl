@@ -15,7 +15,8 @@ float4 main(PS_IN pin) : SV_TARGET
 	float4 color = pin.color;
 
 	float3 normal = normalize(pin.normal.xyz);
-	float3 light = normalize(-lightDir.xyz);
+	float3 light = normalize(lightDir.xyz);
+	light = -light;
 	float diffuse = saturate(dot(normal, light));
 
 	color.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;

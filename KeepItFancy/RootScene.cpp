@@ -17,6 +17,8 @@ void RootScene::ChangeScene()
 void RootScene::Init()
 {
 	CAMERA::g_Camera.InitCamera();
+	FreeCamera* pCamera = CreateObj<FreeCamera>("Camera");
+	pCamera->SetCamera(CAMERA::g_Camera);
 
 	Sphere* pSky = CreateObj<Sphere>("Sky");
 	pSky->useLight = false;
@@ -52,6 +54,9 @@ void RootScene::Update(float tick)
 
 void RootScene::Draw()
 {
+	FreeCamera* pCamera = GetObj<FreeCamera>("Camera");
+	pCamera->Draw();
+
 	Sphere* pSky = GetObj<Sphere>("Sky");
 	pSky->Draw(RasterType::CULL_FRONT);
 }

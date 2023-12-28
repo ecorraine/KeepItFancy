@@ -46,6 +46,7 @@ public:
 	{
 		T* ptr = new T();
 		m_Component.push_back(ptr);
+
 		return ptr;
 	}
 

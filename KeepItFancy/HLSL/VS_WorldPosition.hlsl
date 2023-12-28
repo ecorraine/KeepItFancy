@@ -3,6 +3,7 @@
 struct VS_IN
 {
 	float3 pos		: POSITION0;
+	float2 uv		: TEXCOORD0;
 	float4 color	: COLOR0;
 	float3 normal	: NORMAL0;
 };
@@ -10,6 +11,7 @@ struct VS_IN
 struct VS_OUT
 {
 	float4 pos		: SV_POSITION;
+	float2 uv		: TEXCOORD0;
 	float4 color	: COLOR0;
 	float3 normal	: NORMAL0;
 	float3 worldPos : POSITION0;
@@ -31,6 +33,7 @@ VS_OUT main(VS_IN vin)
 	vout.normal		= normalize(mul(vin.normal, (float3x3) world));
 
 	vout.color		= vin.color;
+	vout.uv			= vin.uv;
 	
 	return vout;
 }

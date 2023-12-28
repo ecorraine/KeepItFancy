@@ -123,6 +123,9 @@
     <ClCompile Include="MPrimitive3D.cpp">
       <Filter>2Game\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="MeshCommons.cpp">
+      <Filter>#Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="MPrimitive3D.h">
       <Filter>2Game\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCommons.h">
+      <Filter>#Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

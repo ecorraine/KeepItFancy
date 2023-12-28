@@ -11,6 +11,9 @@ void Waves::BindVertices(sRGBA color)
 			vtx.pos.y = 0.0f;
 			vtx.pos.z = -m_fDepth / 2.0f + y * m_fDepth / m_iDivY;
 
+			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
+
 			vtx.color = { color.r, color.g, color.b, color.a };
 
 			vtx.normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
@@ -46,7 +49,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), pOutputBufferUAV.GetAddressOf()));
 
 	const rsize_t vertexSize = m_Vertices.size();
-	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, color), offsetof(VERTEX, normal), sizeof(VERTEX) };
+	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, uv), offsetof(VERTEX, color), offsetof(VERTEX, normal) };
 	cbData[0] = structOffsetSize;
 	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(vertexSize) };
 }
@@ -54,7 +57,6 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 void Waves::BindComputeShaders()
 {
 	m_pCS->BindShader();
-	//DirectX11::GetContext()->CSSetShaderResources(0, 1, pInputBufferSRV.GetAddressOf());
 	DirectX11::GetContext()->CSSetUnorderedAccessViews(0, 1, pOutputBufferUAV.GetAddressOf(), 0);
 
 	DirectX11::GetContext()->Dispatch(m_Vertices.size(), 1, 1);

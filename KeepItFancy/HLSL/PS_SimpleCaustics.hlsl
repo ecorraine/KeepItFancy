@@ -12,9 +12,10 @@ SamplerState	samp	: register(s0);
 
 struct PS_IN
 {
-	float4	pos		: SV_POSITION;
-	float4	color	: COLOR0;
-	float3	normal	: NORMAL0;
+	float4 pos		: SV_POSITION;
+	float2 uv		: TEXCOORD0;
+	float4 color	: COLOR0;
+	float3 normal	: NORMAL0;
 };
 
 float4 main(PS_IN pin) : SV_TARGET
@@ -31,7 +32,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	color.rgb *= diffuse * lightDiffuse.rgb + lightAmbient.rgb;
 
 	// Caustics effect
-	float caustics = 0.5 + 0.5 * sin(g_time * 5.0); // Adjust frequency and amplitude
+	float caustics = 0.5 + 0.5 * sin(g_time * 5.0);
 	color.rgb *= caustics;
 
 	float bloom = 1.5f;

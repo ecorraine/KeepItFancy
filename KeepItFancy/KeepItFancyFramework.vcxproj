@@ -170,6 +170,7 @@
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="BMesh.cpp" />
+    <ClCompile Include="MeshCommons.cpp" />
     <ClCompile Include="MPrimitive2D.cpp" />
     <ClCompile Include="MPrimitive3D.cpp" />
     <ClCompile Include="Profiler.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="BMesh.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MeshCommons.h" />
     <ClInclude Include="MPrimitive2D.h" />
     <ClInclude Include="MPrimitive3D.h" />
     <ClInclude Include="myUtilities.hpp" />

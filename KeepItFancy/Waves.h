@@ -1,14 +1,13 @@
 #pragma once
-#include "BMesh.h"
+#include "MeshCommons.h"
 
-class Waves : public MESH
+class Waves : public TRIANGLEBASE
 {
 private:
 	ComputeShader*						m_pCS = nullptr;
 
 	ComPtr<ID3D11Buffer>				pOutputBuffer = nullptr;
 	ComPtr<ID3D11UnorderedAccessView>	pOutputBufferUAV = nullptr;
-
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
 
 	XMFLOAT4 cbData[3] = {};
@@ -34,12 +33,6 @@ public:
 	void Update(float tick);
 
 protected:
-	void CreateDefaultBuffers()
-	{
-		CHECK_HR(CreateVertexBuffer(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpVertexBuf.GetAddressOf()));
-		CHECK_HR(CreateIndexBuffer(m_Faces.size() * 3, m_Faces.data(), m_cpIndexBuf.GetAddressOf()));
-	}
-
 	virtual void LoadDefaultShaders()
 	{
 		m_pVS = AddComponent<VertexShader>();

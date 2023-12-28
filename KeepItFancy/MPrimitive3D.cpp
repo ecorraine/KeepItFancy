@@ -24,6 +24,9 @@ void Sphere::BindVertices(sRGBA color)
 			vtx.pos.y = m_fRadius * cosf(elevation);
 			vtx.pos.z = r * cosf(azimuth);
 
+			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
+
 			vtx.color = { color.r, color.g, color.b, color.a };
 
 			NormalizeVectors(vtx.pos, locNormal);
@@ -48,6 +51,8 @@ void Sphere::Create(float radius, int divisions, sRGBA color)
 	LoadDefaultShaders();
 }
 
+
+
 ///--------------------------------------------------
 //! Cube Class
 ///--------------------------------------------------
@@ -69,6 +74,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
 					vtx.pos.z = -m_fDepth / 2.0f;
 
+					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
+
 					vtx.color = { color.r, color.g, color.b, color.a };
 
 					locNormal = XMFLOAT3(0.0f, 0.0f, -1.0f);
@@ -87,6 +95,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.x = -m_fWidth / 2.0f + x * m_fWidth / m_iDivX;
 					vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
 					vtx.pos.z = m_fDepth / 2.0f;
+
+					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
 					vtx.color = { color.r, color.g, color.b, color.a };
 
@@ -107,6 +118,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
 					vtx.pos.z = -m_fDepth / 2.0f + z * m_fDepth / m_iDivZ;
 
+					vtx.uv.x = static_cast<float>(z) / static_cast<float>(m_iDivZ);
+					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
+
 					vtx.color = { color.r, color.g, color.b, color.a };
 
 					locNormal = XMFLOAT3(-1.0f, 0.0f, 0.0f);
@@ -125,6 +139,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.x = m_fWidth / 2.0f;
 					vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
 					vtx.pos.z = -m_fDepth / 2.0f + z * m_fDepth / m_iDivZ;
+
+					vtx.uv.x = static_cast<float>(z) / static_cast<float>(m_iDivZ);
+					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
 					vtx.color = { color.r, color.g, color.b, color.a };
 
@@ -145,6 +162,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.y = m_fHeight / 2.0f;
 					vtx.pos.z = -m_fDepth / 2.0f + z * m_fDepth / m_iDivZ;
 
+					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+					vtx.uv.y = static_cast<float>(z) / static_cast<float>(m_iDivZ);
+
 					vtx.color = { color.r, color.g, color.b, color.a };
 
 					locNormal = XMFLOAT3(0.0f, 1.0f, 0.0f);
@@ -163,6 +183,9 @@ void Cube::BindVertices(sRGBA color)
 					vtx.pos.x = -m_fWidth / 2.0f + x * m_fWidth / m_iDivX;
 					vtx.pos.y = -m_fHeight / 2.0f;
 					vtx.pos.z = -m_fDepth / 2.0f + z * m_fDepth / m_iDivZ;
+
+					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
+					vtx.uv.y = static_cast<float>(z) / static_cast<float>(m_iDivZ);
 
 					vtx.color = { color.r, color.g, color.b, color.a };
 
@@ -191,7 +214,7 @@ void Cube::BindIndices()
 				for (unsigned int x = 0; x < m_iDivX; x++) {
 					offset = ((m_iDivX + 1) * (m_iDivY + 1) * currentFace) + ((m_iDivX + 1) * y) + x;
 
-					MESH::GenerateIndices(m_iDivX, offset);
+					GenerateIndices(m_iDivX, offset);
 				}
 			}
 		}
@@ -201,7 +224,7 @@ void Cube::BindIndices()
 				for (unsigned int z = 0; z < m_iDivZ; z++) {
 					offset = ((m_iDivZ + 1) * (m_iDivY + 1) * currentFace) + ((m_iDivZ + 1) * y) + z;
 
-					MESH::GenerateIndices(m_iDivZ, offset);
+					GenerateIndices(m_iDivZ, offset);
 				}
 			}
 		}
@@ -211,7 +234,7 @@ void Cube::BindIndices()
 				for (unsigned int x = 0; x < m_iDivX; x++) {
 					offset = ((m_iDivX + 1) * (m_iDivZ + 1) * currentFace) + ((m_iDivX + 1) * z) + x;
 
-					MESH::GenerateIndices(m_iDivZ, offset);
+					GenerateIndices(m_iDivZ, offset);
 				}
 			}
 		}

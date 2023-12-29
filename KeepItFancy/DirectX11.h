@@ -45,7 +45,7 @@ enum class RasterType
  */
 enum class BlendType
 {
-	NORMAL,				//!< アルファ合成
+	ALPHA,				//!< アルファ合成
 	ADDITION,			//!< 加算合成
 	ADDITION_APLHA,		//!< 加算(透過あり)合成
 	SUBTRACTION,		//!< 減算合成
@@ -171,8 +171,16 @@ public:
 	 */
 	static void SetBlendState(BlendType eBlendType)
 	{
-		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		GetContext()->OMSetBlendState(g_d11BlendState[(int)eBlendType], blendFactor, 0xffffffff);
+		float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		UINT sampleMask = 0xFFFFFFFF;
+		GetContext()->OMSetBlendState(g_d11BlendState[(int)eBlendType], blendFactor, sampleMask);
+	}
+
+	static void ClearBlendState()
+	{
+		float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		UINT sampleMask = 0xFFFFFFFF;
+		GetContext()->OMSetBlendState(nullptr, blendFactor, sampleMask);
 	}
 
 	//! \fn static void SetSamplerState(SamplerType eFilterType)

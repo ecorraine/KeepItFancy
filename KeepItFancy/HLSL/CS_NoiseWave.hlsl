@@ -1,8 +1,10 @@
+#include "F_Noise.hlsli"
+
 #define Thread_X (1)
 #define Thread_Y (1)
 #define Thread_Z (1)
 
-#define XM_PI 3.141592653589793238
+#define XM_PI 3.141592653589793238f
 #define XM_TWOPI (2 * XM_PI)
 
 struct VERTEX
@@ -19,11 +21,6 @@ cbuffer MeshData : register(b0)
 	float4 count;
 	float4 g_time;
 };
-
-float rand(float2 uv)
-{
-	return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
-}
 
 //StructuredBuffer<VERTEX> inputVertices : register(t0);
 RWByteAddressBuffer outputVertices : register(u0);
@@ -48,13 +45,13 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	float radialDistance = sqrt(pos.x * pos.x + pos.z * pos.z);
 
 	// add random offset to wave
-	float randomOffset = XM_TWOPI * frac(sin(radialDistance) * 143758.5453);
+	float randomOffset = XM_TWOPI * frac(sin(radialDistance) * 143758.5453f);
 	// Compute wave displacement
 	float waveHeight = amplitude * sin(XM_TWOPI * frequency * radialDistance + time + randomOffset);
 
 	// Apply wave displacement to the Y-coordinate of the position
 	pos.y += waveHeight;
-
+	
 	// Write the updated vertex back to the buffer
 	outputVertices.Store3(offset + 0, asuint(pos));
 	outputVertices.Store2(offset + 12, asuint(uv));

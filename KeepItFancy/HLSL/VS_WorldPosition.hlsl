@@ -17,8 +17,8 @@ struct VS_OUT
 	float3 worldPos : POSITION0;
 };
 
-// 頂点シェーダーのmain処理
-// この処理を頂点毎に実行している
+
+
 VS_OUT main(VS_IN vin)
 {
 	VS_OUT vout = (VS_OUT)0;
@@ -30,10 +30,10 @@ VS_OUT main(VS_IN vin)
 	vout.pos		= mul(vout.pos, view);
 	vout.pos		= mul(vout.pos, proj);
 
-	vout.normal		= normalize(mul(vin.normal, (float3x3) world));
-
-	vout.color		= vin.color;
 	vout.uv			= vin.uv;
+	vout.color		= vin.color;
+
+	vout.normal		= normalize(mul(vin.normal, (float3x3) world));
 	
 	return vout;
 }

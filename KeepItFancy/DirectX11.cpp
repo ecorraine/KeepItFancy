@@ -230,11 +230,11 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	{
 		switch (i)
 		{
-		case (int)BlendType::NORMAL:			// alpha blending
+		case (int)BlendType::ALPHA:			// alpha blending
 		{
 			blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 			blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-			hr = g_d11Device->CreateBlendState(&blendDesc, &g_d11BlendState[(int)BlendType::NORMAL]);
+			hr = g_d11Device->CreateBlendState(&blendDesc, &g_d11BlendState[(int)BlendType::ALPHA]);
 			if (FAILED(hr))
 			{
 				MessageBoxA(g_App->GetWindow(), "Failed to create NORMAL Blend State!\nブレンドステート作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
@@ -306,7 +306,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 		}
 	}
 	// initialize default bland state
-	SetBlendState(BlendType::NORMAL);
+	SetBlendState(BlendType::NONE);
 
 	//--------------------------------------------------
 	// Texture Sampler

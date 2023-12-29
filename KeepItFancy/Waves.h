@@ -28,7 +28,7 @@ public:
 		//SAFE_RELEASE(m_cpStagingBuffer);
 	}
 
-	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA color = sRGBA(135, 206, 235));
+	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA color = sRGBA(173, 216, 230, 24));
 	void BindComputeShaders();
 	void Update(float tick);
 

@@ -11,8 +11,9 @@ ComPtr<ID3D11Debug> DirectX11::g_d11Debug;
 ComPtr<IDXGISwapChain> DirectX11::g_dxSwapChain;
 ComPtr<ID3D11DeviceContext> DirectX11::g_d11DeviceContext;
 
-ID3D11RasterizerState* DirectX11::g_d11RasterState[(int)RasterType::MAX_RASTERTYPE];
-ID3D11BlendState* DirectX11::g_d11BlendState[(int)BlendType::MAX_BLENDTYPE];
+ID3D11RasterizerState* DirectX11::g_d11RasterState[(int)RasterType::MAX_RASTER_TYPE];
+ID3D11DepthStencilState* DirectX11::g_d11DepthStencilState[(int)DepthStencilState::MAX_DEPTHSTENCIL_STATE];
+ID3D11BlendState* DirectX11::g_d11BlendState[(int)BlendType::MAX_BLEND_TYPE];
 ID3D11SamplerState* DirectX11::g_d11SamplerState[(int)SamplerType::MAX_SAMPLING_TYPE];
 
 HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
@@ -214,6 +215,42 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	SetRasterState(RasterType::CULL_BACK);
 
 	//--------------------------------------------------
+	// Depth Stencil State
+	//--------------------------------------------------
+	// https://tositeru.github.io/ImasaraDX11/part/ZBuffer-and-depth-stencil
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	ZeroMemory(&dsDesc, sizeof(dsDesc));
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDesc.StencilEnable = true;
+	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	// front facing
+	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
+	// back facing
+	dsDesc.BackFace = dsDesc.FrontFace;
+	bool dsPattern[] = { false, true, true };
+	D3D11_DEPTH_WRITE_MASK maskPattern[] =
+	{
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+		D3D11_DEPTH_WRITE_MASK_ALL
+	};
+	for (int i = 0; i < (int)DepthStencilState::MAX_DEPTHSTENCIL_STATE; ++i)
+	{
+		dsDesc.DepthEnable = dsDesc.StencilEnable = dsPattern[i];
+		dsDesc.DepthWriteMask = maskPattern[i];
+		hr = g_d11Device->CreateDepthStencilState(&dsDesc, &g_d11DepthStencilState[i]);
+		if (FAILED(hr)) { return hr; }
+	}
+	// initialize default depth stencil state
+	SetDepthStencilState(DepthStencilState::DEPTH_STENCIL_WRITE);
+
+	//--------------------------------------------------
 	// Blend State
 	//--------------------------------------------------
 	D3D11_BLEND_DESC blendDesc = {};
@@ -226,7 +263,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	// create individual blend state per blend type
-	for (int i = 0; i < (int)BlendType::MAX_BLENDTYPE; i++)
+	for (int i = 0; i < (int)BlendType::MAX_BLEND_TYPE; i++)
 	{
 		switch (i)
 		{

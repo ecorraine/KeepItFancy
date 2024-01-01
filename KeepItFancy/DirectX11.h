@@ -35,7 +35,20 @@ enum class RasterType
 	CULL_BACK,				//!< 背面向きの三角形を描画しない
 	WIREFRAME_NO_CULL,		//!< 全ての線のみを描画
 	WIREFRAME_CULL_BACK,	//!< 背面向きの線のみを描画
-	MAX_RASTERTYPE
+	MAX_RASTER_TYPE
+};
+
+///--------------------------------------------------
+/// \enum DepthStencilState
+/*! \brief List of DepthStencil States
+ *  \brief 使用する深度ステンシルステートの列挙型
+ */
+enum class DepthStencilState
+{
+	DEPTH_STENCIL_DISABLED,	//!< 深度ステンシルステート
+	DEPTH_STENCIL_READ,		//!< 深度ステンシル読み取りステート
+	DEPTH_STENCIL_WRITE,	//!< 深度ステンシル書き込みステート
+	MAX_DEPTHSTENCIL_STATE
 };
 
 ///--------------------------------------------------
@@ -45,13 +58,13 @@ enum class RasterType
  */
 enum class BlendType
 {
-	ALPHA,				//!< アルファ合成
-	ADDITION,			//!< 加算合成
-	ADDITION_APLHA,		//!< 加算(透過あり)合成
-	SUBTRACTION,		//!< 減算合成
-	SCREEN,				//!< スクリーン合成
+	ALPHA,					//!< アルファ合成
+	ADDITION,				//!< 加算合成
+	ADDITION_APLHA,			//!< 加算(透過あり)合成
+	SUBTRACTION,			//!< 減算合成
+	SCREEN,					//!< スクリーン合成
 	NONE,
-	MAX_BLENDTYPE
+	MAX_BLEND_TYPE
 };
 
 ///--------------------------------------------------
@@ -61,9 +74,9 @@ enum class BlendType
  */
 enum class SamplerType
 {
-	POINT,				//!< ポイント サンプリング
-	LINEAR,				//!< 線形補間
-	ANISOTROPIC,		//!< 異方性補間
+	POINT,					//!< ポイント サンプリング
+	LINEAR,					//!< 線形補間
+	ANISOTROPIC,			//!< 異方性補間
 	MAX_SAMPLING_TYPE
 };
 
@@ -92,8 +105,9 @@ public:
 	static IDXGISwapChain* GetSwapChain() { return g_dxSwapChain.Get(); }
 	static ID3D11DeviceContext* GetContext() { return g_d11DeviceContext.Get(); }
 
-	static ID3D11RasterizerState* g_d11RasterState[(int)RasterType::MAX_RASTERTYPE];
-	static ID3D11BlendState* g_d11BlendState[(int)BlendType::MAX_BLENDTYPE];
+	static ID3D11RasterizerState* g_d11RasterState[(int)RasterType::MAX_RASTER_TYPE];
+	static ID3D11DepthStencilState* g_d11DepthStencilState[(int)DepthStencilState::MAX_DEPTHSTENCIL_STATE];
+	static ID3D11BlendState* g_d11BlendState[(int)BlendType::MAX_BLEND_TYPE];
 	static ID3D11SamplerState* g_d11SamplerState[(int)SamplerType::MAX_SAMPLING_TYPE];
 
 	//static std::vector<ComPtr<ID3D11SamplerState>> test;
@@ -107,9 +121,11 @@ public:
 	{
 		for (int i = 0; i < (int)SamplerType::MAX_SAMPLING_TYPE; i++)
 			SAFE_RELEASE(g_d11SamplerState[i]);
-		for (int i = 0; i < (int)BlendType::MAX_BLENDTYPE; i++)
+		for (int i = 0; i < (int)BlendType::MAX_BLEND_TYPE; i++)
 			SAFE_RELEASE(g_d11BlendState[i]);
-		for (int i = 0; i < (int)RasterType::MAX_RASTERTYPE; i++)
+		for (int i = 0; i < (int)DepthStencilState::MAX_DEPTHSTENCIL_STATE; i++)
+			SAFE_RELEASE(g_d11DepthStencilState[i]);
+		for (int i = 0; i < (int)RasterType::MAX_RASTER_TYPE; i++)
 			SAFE_RELEASE(g_d11RasterState[i]);
 
 		//if (g_d11DeviceContext)
@@ -160,6 +176,30 @@ public:
 			GetContext()->RSSetState(g_d11RasterState[(int)RasterType::WIREFRAME_CULL_BACK]);
 		default:
 			RasterType::SOLID_NO_CULL;
+			break;
+		}
+	}
+
+	//! \fn static void SetDepthStencilState(DepthStencilState eDepthStencilState)
+	/*! \brief Indicate the DepthStencil State to use
+	 *  \brief 使用する深度ステンシルステートを設定
+	 *  \param eDepthStencilState : enum class DepthStencilState
+	 */
+	static void SetDepthStencilState(DepthStencilState eDepthStencilState)
+	{
+		switch (eDepthStencilState)
+		{
+		case DepthStencilState::DEPTH_STENCIL_DISABLED:
+			GetContext()->OMSetDepthStencilState(g_d11DepthStencilState[(int)DepthStencilState::DEPTH_STENCIL_DISABLED], 0);
+			break;
+		case DepthStencilState::DEPTH_STENCIL_READ:
+			GetContext()->OMSetDepthStencilState(g_d11DepthStencilState[(int)DepthStencilState::DEPTH_STENCIL_READ], 0);
+			break;
+		case DepthStencilState::DEPTH_STENCIL_WRITE:
+			GetContext()->OMSetDepthStencilState(g_d11DepthStencilState[(int)DepthStencilState::DEPTH_STENCIL_WRITE], 0);
+			break;
+		default:
+			DepthStencilState::DEPTH_STENCIL_DISABLED;
 			break;
 		}
 	}

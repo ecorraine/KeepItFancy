@@ -8,7 +8,7 @@
 //! SCENE Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! \class SCENE BScene.h "BScene.h"
-/*! \brief More detailed description.
+/*! \brief Base Scene Class.
  *  \brief 
  */
 class SCENE
@@ -20,15 +20,13 @@ private:
 	static Objects	m_objects;
 
 protected:
-	SCENE*	m_pParent;
-	SCENE*	m_pSubScene;
+	SCENE*	m_pParent = nullptr;
+	SCENE*	m_pSubScene = nullptr;
 	Items	m_Items;
 	float	m_fTime;
 
 public:
 	SCENE() :
-		m_pParent(nullptr),
-		m_pSubScene(nullptr),
 		m_fTime(0.0f)
 	{}
 	virtual ~SCENE();

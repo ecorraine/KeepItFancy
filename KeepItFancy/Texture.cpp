@@ -24,7 +24,6 @@ HRESULT TEXTURE::CreateTexture(const char* pFileName)
 		return hr;
 	}
 
-	// シェーダリソース生成
 	hr = CreateShaderResourceView(DirectX11::GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_cpSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
@@ -43,7 +42,7 @@ HRESULT TEXTURE::CreateTexture(const void* _pData)
 
 D3D11_TEXTURE2D_DESC TEXTURE::CreateTextureDesc(DXGI_FORMAT _format)
 {
-	//---------- Create a Texture Resource ----------//
+	// Create a Texture Resource
 	D3D11_TEXTURE2D_DESC texDesc = {};
 	texDesc.Width		= DirectX11::GetScreenWidth();
 	texDesc.Height		= DirectX11::GetScreenHeight();
@@ -62,7 +61,6 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 {
 	HRESULT hr = E_FAIL;
 
-	// テクスチャ作成
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = pData;
 	data.SysMemPitch = texDesc.Width * 4;
@@ -73,7 +71,7 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 		return hr;
 	}
 
-	//---------- Create a Shader Resource View ----------//
+	// Create a Shader Resource View
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	switch (texDesc.Format)
 	{
@@ -86,7 +84,7 @@ HRESULT TEXTURE::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* pData
 	}
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	// 生成
+
 	hr = DirectX11::GetDevice()->CreateShaderResourceView(m_cpTextureBuffer.Get(), &srvDesc, m_cpSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
@@ -117,8 +115,7 @@ HRESULT RenderTarget::CreateRTVFromScreen()
 	hr = DirectX11::GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)m_cpTextureBuffer.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
-	//---------- Create Render Target View Using Back Buffer----------//
-	// バックバッファへのポインタを指定してレンダーターゲットビューを作成
+	// Create Render Target View Using Back Buffer
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -148,7 +145,7 @@ HRESULT RenderTarget::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* 
 		return hr;
 	}
 
-	//---------- Create Render Target View ----------//
+	// Create Render Target View
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 	rtvDesc.Format = texDesc.Format;
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
@@ -185,7 +182,7 @@ HRESULT DepthStencil::CreateResource(D3D11_TEXTURE2D_DESC& texDesc, const void* 
 	HRESULT hr = TEXTURE::CreateResource(texDesc, nullptr);
 	if (FAILED(hr)) { return hr; }
 
-	//---------- Create Depth Stencil View ----------//
+	// Create Depth Stencil View
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = useStencil ? DXGI_FORMAT_D24_UNORM_S8_UINT : DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;

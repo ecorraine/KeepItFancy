@@ -18,10 +18,10 @@ void RootScene::Init()
 {
 	CAMERA::g_Camera.InitCamera();
 	FreeCamera* pCamera = CreateObj<FreeCamera>("Camera");
-	pCamera->SetCamera(CAMERA::g_Camera);
+	pCamera->Create();
 
 	Sphere* pSky = CreateObj<Sphere>("Sky");
-	pSky->useLight = false;
+	//pSky->useLight = false;
 	pSky->Create(50.0f, 500);
 
 	ChangeScene();
@@ -33,6 +33,8 @@ void RootScene::Release()
 
 void RootScene::Update(float tick)
 {
+	FreeCamera* pCamera = GetObj<FreeCamera>("Camera");
+	pCamera->Update(tick);
 	/*
 	int idx = (int)m_eSceneIndex;
 	if (KEYINPUT::KeyPress(VK_LEFT))

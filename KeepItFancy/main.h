@@ -2,6 +2,10 @@
 #define MAIN_H
 
 #undef		UNICODE
+#define		_CRT_SECURE_NO_WARNINGS
+#pragma warning(push)
+#pragma warning(disable:4005)
+#pragma warning(pop)
 
 #include <Windows.h>
 #include <functional>
@@ -10,15 +14,9 @@
 #include <mmsystem.h>
 #pragma comment (lib,"winmm.lib")
 
-#pragma warning(push)
-#pragma warning(disable:4005)
-#pragma warning(pop)
-
 #include <iostream>
 #include <ctime>
 //#include <cassert>
 //#include <string>
-
-#define		_CRT_SECURE_NO_WARNINGS
 
 #endif // !MAIN_H

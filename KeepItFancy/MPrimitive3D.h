@@ -3,6 +3,32 @@
 
 #include "MeshCommons.h"
 
+class SSphere : public LINEBASE
+{
+protected:
+	float		m_fRadius;
+
+public:
+	SSphere() :
+		m_fRadius(1.0f)
+	{}
+	~SSphere() {}
+
+	void Create(float radius = 1.0f, int segments = 32, sRGBA _color = sRGBA(1.0f, 1.0f, 1.0f));
+
+protected:
+	virtual void LoadDefaultShaders()
+	{
+		m_pVS = AddComponent<VertexShader>();
+		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
+
+		m_pPS = AddComponent<PixelShader>();
+		m_pPS->LoadShader(SHADER_PATH("PS_FlatColor.cso"));
+	}
+
+	void BindVertices(sRGBA);
+};
+
 ///--------------------------------------------------
 //! Sphere Class
 ///--------------------------------------------------
@@ -12,7 +38,7 @@
  */
 class Sphere : public TRIANGLEBASE
 {
-private:
+protected:
 	float		m_fRadius;
 
 public:
@@ -21,7 +47,7 @@ public:
 	{}
 	~Sphere() {}
 
-	void Create(float radius, int divisions = 8, sRGBA color = sRGBA());
+	void Create(float radius, int divisions = 8, sRGBA _color = sRGBA());
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -33,7 +59,7 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_BlinnPhong.cso"));
 	}
 
-	void BindVertices(sRGBA color);
+	void BindVertices(sRGBA);
 };
 
 ///--------------------------------------------------
@@ -56,6 +82,7 @@ private:
 		END
 	};
 
+protected:
 	float		m_fWidth;
 	float		m_fHeight;
 	float		m_fDepth;
@@ -68,7 +95,7 @@ public:
 	{}
 	~Cube() {}
 
-	void Create(float width = 1.0f, float height = 1.0f, float depth = 1.0f, int divisions = 1, sRGBA color = sRGBA());
+	void Create(float width = 1.0f, float height = 1.0f, float depth = 1.0f, int divisions = 1, sRGBA _color = sRGBA());
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -81,7 +108,7 @@ protected:
 	}
 
 	void BindIndices() override;
-	void BindVertices(sRGBA color);
+	void BindVertices(sRGBA);
 };
 
 #endif // MPRIMITIVE3D_H

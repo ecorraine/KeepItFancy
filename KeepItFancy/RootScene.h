@@ -25,7 +25,7 @@ enum class SceneList
 class RootScene : public SCENE
 {
 private:
-	SceneList		m_eSceneIndex = SceneList::TITLE;
+	SceneList	m_eSceneIndex = SceneList::TITLE;
 
 	void ChangeScene();
 

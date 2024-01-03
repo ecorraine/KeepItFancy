@@ -3,6 +3,11 @@
 
 #include "MeshCommons.h"
 
+class SSegment : public LINEBASE
+{
+
+};
+
 ///--------------------------------------------------
 //! SCircle Class
 ///--------------------------------------------------
@@ -12,16 +17,16 @@
  */
 class SCircle : public LINEBASE
 {
-private:
+protected:
 	float		m_fRadius;
 
 public:
 	SCircle() :
-		m_fRadius(0.0f)
+		m_fRadius(1.0f)
 	{}
 	~SCircle() {}
 
-	void Create(float radius = 1.0f, int segments = 32, sRGBA color = sRGBA(0.0f, 1.0f, 0.0f));
+	void Create(float radius = 1.0f, int segments = 32, sRGBA _color = sRGBA(0.0f, 1.0f, 0.0f));
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -33,7 +38,7 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_FlatColor.cso"));
 	}
 
-	void BindVertices(sRGBA color);
+	void BindVertices(sRGBA);
 };
 
 
@@ -47,18 +52,18 @@ protected:
  */
 class Plane : public TRIANGLEBASE
 {
-private:
+protected:
 	float		m_fWidth;
 	float		m_fHeight;
 
 public:
 	Plane() :
-		m_fWidth(0.0f),
-		m_fHeight(0.0f)
+		m_fWidth(1.0f),
+		m_fHeight(1.0f)
 	{}
 	~Plane() {}
 
-	void Create(float width = 1.0f, float height = 1.0f, int divX = 1, int divY = 1, sRGBA color = sRGBA());
+	void Create(float width = 1.0f, float height = 1.0f, int divX = 1, int divY = 1, sRGBA _color = sRGBA());
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -70,7 +75,7 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
 	}
 
-	void BindVertices(sRGBA color);
+	void BindVertices(sRGBA);
 };
 
 #endif // !MPRIMITIVE2D_H

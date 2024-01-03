@@ -1,9 +1,89 @@
 #include "MPrimitive3D.h"
 
+void SSphere::BindVertices(sRGBA _color)
+{
+	m_Vertices.clear();
+
+	sRGBA red = { 1.0f, 0.0f, 0.0f, 1.0f };
+	sRGBA green = { 0.0f, 1.0f, 0.0f, 1.0f };
+	sRGBA blue = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+	// vertex data for the longitude | x ring
+	for (int i = 0; i <= m_iSegments; ++i) {
+		float angle = XM_2PI * static_cast<float>(i) / static_cast<float>(m_iSegments);
+		VERTEX vtx = {};
+		vtx.pos.x = 0.0f;
+		vtx.pos.y = m_fRadius * sinf(angle);
+		vtx.pos.z = m_fRadius * cosf(angle);
+
+		vtx.uv.x = static_cast<float>(i) / static_cast<float>(m_iSegments);
+		vtx.uv.y = 0.0f;
+
+		vtx.color = _color * red;
+
+		vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+
+		m_Vertices.emplace_back(vtx);
+	}
+
+	// vertex data for the latitude | y ring
+	for (int i = 0; i <= m_iSegments; ++i) {
+		float angle = XM_2PI * static_cast<float>(i) / static_cast<float>(m_iSegments);
+		VERTEX vtx = {};
+		vtx.pos.x = m_fRadius * sinf(angle);
+		vtx.pos.y = 0.0f;
+		vtx.pos.z = m_fRadius * cosf(angle);
+
+		vtx.uv.x = static_cast<float>(i) / static_cast<float>(m_iSegments);
+		vtx.uv.y = 0.0f;
+
+		vtx.color = _color * green;
+
+		vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+
+		m_Vertices.emplace_back(vtx);
+	}
+
+	// vertex data for the meridian | z ring
+	for (int i = 0; i <= m_iSegments; ++i) {
+		float angle = XM_2PI * static_cast<float>(i) / static_cast<float>(m_iSegments);
+		VERTEX vtx = {};
+		vtx.pos.x = m_fRadius * sinf(angle);
+		vtx.pos.y = m_fRadius * cosf(angle);
+		vtx.pos.z = 0.0f;
+
+		vtx.uv.x = static_cast<float>(i) / static_cast<float>(m_iSegments);
+		vtx.uv.y = 0.0f;
+
+		vtx.color = _color * blue;
+
+		vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+
+		m_Vertices.emplace_back(vtx);
+	}
+}
+
+void SSphere::Create(float radius, int segments, sRGBA _color)
+{
+	useLight = false;
+
+	m_fRadius = radius;
+	m_iSegments = segments;
+	m_iSides = 3;
+
+	BindVertices(_color);
+	BindIndices();
+
+	CreateDefaultBuffers();
+	LoadDefaultShaders();
+}
+
+
+
 ///--------------------------------------------------
 //! Sphere Class
 ///--------------------------------------------------
-void Sphere::BindVertices(sRGBA color)
+void Sphere::BindVertices(sRGBA _color)
 {
 	m_Vertices.clear();
 
@@ -27,7 +107,7 @@ void Sphere::BindVertices(sRGBA color)
 			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-			vtx.color = { color.r, color.g, color.b, color.a };
+			vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 			NormalizeVectors(vtx.pos, locNormal);
 			vtx.normal = locNormal;
@@ -37,14 +117,14 @@ void Sphere::BindVertices(sRGBA color)
 	}
 }
 
-void Sphere::Create(float radius, int divisions, sRGBA color)
+void Sphere::Create(float radius, int divisions, sRGBA _color)
 {
 	m_fRadius = radius;
 
 	// 分割数を保存
 	m_iDivX = m_iDivY = divisions;
 
-	BindVertices(color);
+	BindVertices(_color);
 	BindIndices();
 
 	CreateDefaultBuffers();
@@ -56,7 +136,7 @@ void Sphere::Create(float radius, int divisions, sRGBA color)
 ///--------------------------------------------------
 //! Cube Class
 ///--------------------------------------------------
-void Cube::BindVertices(sRGBA color)
+void Cube::BindVertices(sRGBA _color)
 {
 	m_Vertices.clear();
 
@@ -77,7 +157,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -99,7 +179,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(0.0f, 0.0f, 1.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -121,7 +201,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(z) / static_cast<float>(m_iDivZ);
 					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(-1.0f, 0.0f, 0.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -143,7 +223,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(z) / static_cast<float>(m_iDivZ);
 					vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(1.0f, 0.0f, 0.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -165,7 +245,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 					vtx.uv.y = static_cast<float>(z) / static_cast<float>(m_iDivZ);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -187,7 +267,7 @@ void Cube::BindVertices(sRGBA color)
 					vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 					vtx.uv.y = static_cast<float>(z) / static_cast<float>(m_iDivZ);
 
-					vtx.color = { color.r, color.g, color.b, color.a };
+					vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 					locNormal = XMFLOAT3(0.0f, -1.0f, 0.0f);
 					NormalizeVectors(vtx.pos, locNormal);
@@ -241,7 +321,7 @@ void Cube::BindIndices()
 	}
 }
 
-void Cube::Create(float width, float height, float depth, int divisions, sRGBA color)
+void Cube::Create(float width, float height, float depth, int divisions, sRGBA _color)
 {
 	m_fWidth = width;
 	m_fHeight = height;
@@ -250,7 +330,7 @@ void Cube::Create(float width, float height, float depth, int divisions, sRGBA c
 	// 分割数を保存
 	m_iDivX = m_iDivY = m_iDivZ = divisions;
 
-	BindVertices(color);
+	BindVertices(_color);
 	BindIndices();
 
 	CreateDefaultBuffers();

@@ -3,14 +3,27 @@
 void LINEBASE::BindIndices()
 {
 	m_Faces.clear();
-	for (int i = 0; i < m_iSegments; ++i) {
-		FACE face = {};
-		face.idx[0] = i;
-		face.idx[1] = i + 1;
+	for (int currentSide = 0; currentSide < m_iSides; ++currentSide) {
+		if (currentSide < 1) {
+			for (int i = 0; i < m_iSegments; ++i) {
+				FACE face = {};
+				face.idx[0] = i;
+				face.idx[1] = i + 1;
 
-		m_Faces.emplace_back(face);
+				m_Faces.emplace_back(face);
+			}
+		}
+		else {
+			for (int i = 0; i < m_iSegments; ++i) {
+				FACE face = {};
+				face.idx[0] = i + (m_iSegments * currentSide + 1);
+				face.idx[1] = i + (m_iSegments * currentSide + 1) + 1;
+
+				m_Faces.emplace_back(face);
+			}
+		}
 	}
-	assert(m_Faces.size() == m_iSegments);
+	assert(m_Faces.size() == (m_iSegments * m_iSides));
 }
 
 void LINEBASE::Draw(RasterType cullmode)

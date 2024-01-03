@@ -8,7 +8,7 @@ std::shared_ptr<RootScene> g_pScene;
 void GAME::InitGame(APPLICATION* pApp)
 {
 	HRESULT hr;
-	//----- DirectX11の初期化処理を呼び出し -----//
+	// Initialize DirectX
 	try
 	{
 		hr = DirectX11::InitializeDirectX(pApp, false);
@@ -26,11 +26,11 @@ void GAME::InitGame(APPLICATION* pApp)
 	FPS::InitFPS();
 	CPU::InitCPU();
 
-	// シーンを作成して初期化
+	// initialize scene
 	g_pScene = std::make_shared<RootScene>();
 	g_pScene->Init();
 
-	// ビュー（ＲＴＶとＤＳＶ）を作成してビューポートに送る
+	// create RTV and DSV then send them to viewport
 	auto rtv = g_pScene->CreateObj<RenderTarget>("RTV");
 	rtv->CreateRTVFromScreen();
 	auto dsv = g_pScene->CreateObj<DepthStencil>("DSV");

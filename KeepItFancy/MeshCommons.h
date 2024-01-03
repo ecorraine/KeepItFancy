@@ -7,6 +7,7 @@ class LINEBASE : public MESH
 {
 public:
 	LINEBASE() :
+		m_iSides(1),
 		m_iSegments(1)
 	{}
 	~LINEBASE()
@@ -21,9 +22,10 @@ protected:
 		unsigned int idx[2];
 	};
 
-	std::vector<FACE>		m_Faces;
+	std::vector<FACE>	m_Faces;
 
-	unsigned int			m_iSegments;		// 分割数
+	unsigned int		m_iSides;			//!< 立体化のため、繰り返すの数
+	unsigned int		m_iSegments;		//!< 分割数
 
 	void CreateDefaultBuffers()
 	{
@@ -60,11 +62,11 @@ protected:
 		unsigned int idx[3];
 	};
 
-	std::vector<FACE>		m_Faces;
+	std::vector<FACE>	m_Faces;
 
-	unsigned int			m_iDivX;			//!< X方向の分割数
-	unsigned int			m_iDivY;			//!< Y方向の分割数
-	unsigned int			m_iDivZ;			//!< Z方向の分割数
+	unsigned int		m_iDivX;			//!< X方向の分割数
+	unsigned int		m_iDivY;			//!< Y方向の分割数
+	unsigned int		m_iDivZ;			//!< Z方向の分割数
 
 	void CreateDefaultBuffers()
 	{

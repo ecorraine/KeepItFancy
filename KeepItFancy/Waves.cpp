@@ -1,6 +1,6 @@
 #include "Waves.h"
 
-void Waves::BindVertices(sRGBA color)
+void Waves::BindVertices(sRGBA _color)
 {
 	m_Vertices.clear();
 
@@ -14,7 +14,7 @@ void Waves::BindVertices(sRGBA color)
 			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-			vtx.color = { color.r, color.g, color.b, color.a };
+			vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 			vtx.normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 
@@ -23,7 +23,7 @@ void Waves::BindVertices(sRGBA color)
 	}
 }
 
-void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
+void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 {
 	m_fWidth = width;
 	m_fDepth = depth;
@@ -32,7 +32,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA color)
 	m_iDivX = divX;
 	m_iDivY = divY;
 
-	BindVertices(color);
+	BindVertices(_color);
 	BindIndices();
 
 	m_pCS = AddComponent<ComputeShader>();

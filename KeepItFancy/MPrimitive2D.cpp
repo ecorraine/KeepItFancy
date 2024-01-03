@@ -3,7 +3,7 @@
 ///--------------------------------------------------
 //! Circle Class
 ///--------------------------------------------------
-void SCircle::BindVertices(sRGBA color)
+void SCircle::BindVertices(sRGBA _color)
 {
 	m_Vertices.clear();
 	// vertex data for the circle(ring)
@@ -17,7 +17,7 @@ void SCircle::BindVertices(sRGBA color)
 		vtx.uv.x = static_cast<float>(i) / static_cast<float>(m_iSegments);
 		vtx.uv.y = 0.0f;
 
-		vtx.color = { color.r, color.g, color.b, color.a };
+		vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 		vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
@@ -41,14 +41,14 @@ void SCircle::BindIndices()
 }
 */
 
-void SCircle::Create(float radius, int segments, sRGBA color)
+void SCircle::Create(float radius, int segments, sRGBA _color)
 {
 	useLight = false;
 
 	m_fRadius = radius;
 	m_iSegments = segments;
 
-	BindVertices(color);
+	BindVertices(_color);
 	BindIndices();
 
 	CreateDefaultBuffers();
@@ -57,7 +57,7 @@ void SCircle::Create(float radius, int segments, sRGBA color)
 
 
 
-void Plane::BindVertices(sRGBA color)
+void Plane::BindVertices(sRGBA _color)
 {
 	m_Vertices.clear();
 
@@ -71,7 +71,7 @@ void Plane::BindVertices(sRGBA color)
 			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-			vtx.color = { color.r, color.g, color.b, color.a };
+			vtx.color = { _color.r, _color.g, _color.b, _color.a };
 
 			vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
@@ -80,7 +80,7 @@ void Plane::BindVertices(sRGBA color)
 	}
 }
 
-void Plane::Create(float width, float height, int divX, int divY, sRGBA color)
+void Plane::Create(float width, float height, int divX, int divY, sRGBA _color)
 {
 	m_fWidth = width;
 	m_fHeight = height;
@@ -88,7 +88,7 @@ void Plane::Create(float width, float height, int divX, int divY, sRGBA color)
 	m_iDivX = divX;
 	m_iDivY = divY;
 
-	BindVertices(color);
+	BindVertices(_color);
 	BindIndices();
 
 	CreateDefaultBuffers();

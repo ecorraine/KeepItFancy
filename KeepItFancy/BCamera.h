@@ -6,8 +6,6 @@ using namespace DirectX;
 
 #include "defines.h"
 
-class Cube;
-
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! CAMERA Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

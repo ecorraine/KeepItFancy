@@ -108,23 +108,6 @@ public:
 		return (locScale * GetRotationMatrix() * locTrans);
 	}
 
-	//! \fn Vector3 GetForwardVector()
-	/*! \brief returns the Forward Vector of the GameObject
-	 *  \brief 前方向ベクトル取得
-	 *  \return Vector3
-	 */
-	DirectX::SimpleMath::Vector3 GetForwardVector()
-	{
-		float radianY = DirectX::XMConvertToRadians(m_Rotation.y);
-
-		SimpleMath::Vector3 mForwardVector;
-		mForwardVector.x = sinf(radianY);
-		mForwardVector.y = 0.0f;
-		mForwardVector.z = cosf(radianY);
-
-		return mForwardVector;
-	}
-
 	//! \fn Vector3 GetForward()
 	/*! \brief returns the Forward Vector of the GameObject
 	 *  \brief 前方向ベクトル取得
@@ -143,7 +126,26 @@ public:
 		return forward;
 	}
 
+	//! \fn Vector3 GetForwardVector()
+	/*! \brief returns the Z-Axis Forward Vector
+	 *  \brief Z軸前方向ベクトル取得
+	 *  \return Vector3
+	 */
+	DirectX::SimpleMath::Vector3 GetForwardVector()
+	{
+		float radianY = DirectX::XMConvertToRadians(m_Rotation.y);
+		float radianX = DirectX::XMConvertToRadians(m_Rotation.x);
+
+		SimpleMath::Vector3 mForwardVector;
+		mForwardVector.x = sinf(radianY);
+		mForwardVector.y = sinf(radianX);
+		mForwardVector.z = cosf(radianY) * cosf(radianX);
+
+		return mForwardVector;
+	}
+
 	const DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
+	void SetRotation(const DirectX::XMFLOAT3& _rotation) { m_Rotation = _rotation; }
 
 	//! \fn void SetWVPMatrix(SHADER* pShader)
 	/*! \brief bind World Matrix to Vertex Shader

@@ -223,16 +223,18 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	dsDesc.DepthEnable = true;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	dsDesc.StencilEnable = true;
+	dsDesc.StencilEnable = false;
 	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 	// front facing
 	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
 	// back facing
 	dsDesc.BackFace = dsDesc.FrontFace;
+
+	// create individual depth stencil state
 	bool dsPattern[] = { false, true, true };
 	D3D11_DEPTH_WRITE_MASK maskPattern[] =
 	{

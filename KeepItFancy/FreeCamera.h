@@ -1,28 +1,15 @@
 #ifndef FREECAMERA_H
 #define FREECAMERA_H
 
-#include "GameObject.h"
-#include "BCamera.h"
-#include "KeyInput.h"
+#include "MPrimitive3D.h"
 
-class FreeCamera
+class FreeCamera final : public SSphere
 {
-private:
-	GameObject*			m_pHost;
-	static CAMERA*		m_Camera;
-	float				m_fTilt = 0.0f;
-	float				m_fPan = 0.0f;
-	float				m_fAngle = 0.0f;					//!< カメラの角度
-
 public:
-	FreeCamera();
+	FreeCamera() {}
 	~FreeCamera() {}
 
-	static CAMERA* GetCamera()
-	{
-		return m_Camera;
-	}
-
+	void Create(float radius = 0.25f, int segments = 32, sRGBA _color = sRGBA(1.0f, 1.0f, 1.0f));
 	void Draw();
 	void Update(float tick);
 };

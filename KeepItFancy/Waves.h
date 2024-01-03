@@ -23,12 +23,9 @@ public:
 	~Waves()
 	{
 		delete m_pCS;
-		//SAFE_RELEASE(pOutputBuffer);
-		//SAFE_RELEASE(pOutputBufferUAV);
-		//SAFE_RELEASE(m_cpStagingBuffer);
 	}
 
-	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA color = sRGBA(173, 216, 230, 24));
+	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA _color = sRGBA(173, 216, 230, 24));
 	void BindComputeShaders();
 	void Update(float tick);
 
@@ -42,6 +39,6 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_SimpleCaustics.cso"));
 	}
 
-	void BindVertices(sRGBA color);
+	void BindVertices(sRGBA);
 };
 

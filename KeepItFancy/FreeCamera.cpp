@@ -26,6 +26,8 @@ void FreeCamera::Draw()
 
 void FreeCamera::Update(float tick)
 {
+	const float speed = 10.0f * tick;
+
 	if (KEYINPUT::KeyPress(VK_HOME))
 	{
 		SetRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -35,41 +37,41 @@ void FreeCamera::Update(float tick)
 	DirectX::XMFLOAT3 frontVec = GetForwardVector();
 
 	if (KEYINPUT::KeyPress(VK_PRIOR))
-		CAMERA::GetCamera()->m_fZoom -= 2.0f * tick;
+		CAMERA::GetCamera()->m_fZoom -= speed;
 	if (KEYINPUT::KeyPress(VK_NEXT))
-		CAMERA::GetCamera()->m_fZoom += 2.0f * tick;
+		CAMERA::GetCamera()->m_fZoom += speed;
 
 	// Pitch | Tilt
 	if (KEYINPUT::KeyPress('I'))
 	{
-		m_Rotation.x -= 1.0f;
+		m_Rotation.x -= speed;
 	}
 	if (KEYINPUT::KeyPress('K'))
 	{
-		m_Rotation.x += 1.0f;
+		m_Rotation.x += speed;
 	}
 	// Yaw | Panning
 	if (KEYINPUT::KeyPress(VK_LEFT))
 	{
-		m_Rotation.y -= 1.0f;
+		m_Rotation.y -= speed;
 	}
 	if (KEYINPUT::KeyPress(VK_RIGHT))
 	{
-		m_Rotation.y += 1.0f;
+		m_Rotation.y += speed;
 	}
 
 	// 移動処理
 	if (KEYINPUT::KeyPress(VK_UP))
 	{
-		m_Position.x += frontVec.x * 1.0f * tick;
-		m_Position.y += frontVec.y * 1.0f * tick;
-		m_Position.z += frontVec.z * 1.0f * tick;
+		m_Position.x += frontVec.x * speed;
+		m_Position.y += frontVec.y * speed;
+		m_Position.z += frontVec.z * speed;
 	}
 	if (KEYINPUT::KeyPress(VK_DOWN))
 	{
-		m_Position.x -= frontVec.x * 1.0f * tick;
-		m_Position.y -= frontVec.y * 1.0f * tick;
-		m_Position.z -= frontVec.z * 1.0f * tick;
+		m_Position.x -= frontVec.x * speed;
+		m_Position.y -= frontVec.y * speed;
+		m_Position.z -= frontVec.z * speed;
 	}
 #endif // PERSPECTIVE
 
@@ -86,7 +88,7 @@ void FreeCamera::Update(float tick)
 	// set camera position at the back
 	DirectX::XMFLOAT3 camPos = CAMERA::GetCamera()->GetPosition();
 	camPos.x = (m_Position.x) + (backVec.x * CAMERA::GetCamera()->m_fZoom);
-	camPos.y = (m_Position.y) + (backVec.y * CAMERA::GetCamera()->m_fZoom) + 3.0f;
+	camPos.y = (m_Position.y) + (backVec.y * CAMERA::GetCamera()->m_fZoom);
 	camPos.z = (m_Position.z) + (backVec.z * CAMERA::GetCamera()->m_fZoom);
 
 	static DirectX::XMFLOAT3 lastCamPos;

@@ -9,8 +9,8 @@ void CAMERA::InitCamera()
 	CreateProjectionMatrix();
 
 	// カメラビューを作成
-	m_fZoom = 5.0f;
-	SetCamPos(XMFLOAT3(0.0f, 3.0f, -m_fZoom));
+	m_fZoom = 3.0f;
+	SetCamPos(XMFLOAT3(0.0f, 0.0f, -m_fZoom));
 	SetFocus(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	SetUpVector(XMFLOAT3(0.0f, 1.0f, 0.0f));
 	CreateViewMatrix();

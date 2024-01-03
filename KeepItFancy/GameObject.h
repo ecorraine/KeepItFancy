@@ -145,6 +145,7 @@ public:
 	}
 
 	const DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
+	void SetPosition(const DirectX::XMFLOAT3& _position) { m_Position = _position; }
 	void SetRotation(const DirectX::XMFLOAT3& _rotation) { m_Rotation = _rotation; }
 
 	//! \fn void SetWVPMatrix(SHADER* pShader)

@@ -9,7 +9,7 @@ public:
 	FreeCamera() {}
 	~FreeCamera() {}
 
-	void Create(float radius = 0.25f, int segments = 32, sRGBA _color = sRGBA(1.0f, 1.0f, 1.0f));
+	void Create(float radius = 0.1f, int segments = 32, sRGBA _color = sRGBA(1.0f, 1.0f, 1.0f));
 	void Draw();
 	void Update(float tick);
 };

@@ -81,5 +81,5 @@ void Waves::Update(float tick)
 {
 	cbData[2] = { tick, 0.0f, 0.0f, 0.0f };
 	m_pCS->SendToBuffer(0, &cbData);
-	m_pPS->SendToBuffer(0, &cbData[2]);
+	m_pPS->SendToBuffer(1, &cbData[2]);
 }

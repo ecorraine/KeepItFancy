@@ -26,7 +26,8 @@ void FreeCamera::Draw()
 
 void FreeCamera::Update(float tick)
 {
-	const float speed = 10.0f * tick;
+	const float moveSpeed = 10.0f * tick;
+	const float turnSpeed = 50.0f * tick;
 
 	if (KEYINPUT::KeyPress(VK_HOME))
 	{
@@ -37,41 +38,41 @@ void FreeCamera::Update(float tick)
 	DirectX::XMFLOAT3 frontVec = GetForwardVector();
 
 	if (KEYINPUT::KeyPress(VK_PRIOR))
-		CAMERA::GetCamera()->m_fZoom -= speed;
+		CAMERA::GetCamera()->m_fZoom -= moveSpeed;
 	if (KEYINPUT::KeyPress(VK_NEXT))
-		CAMERA::GetCamera()->m_fZoom += speed;
+		CAMERA::GetCamera()->m_fZoom += moveSpeed;
 
 	// Pitch | Tilt
 	if (KEYINPUT::KeyPress('I'))
 	{
-		m_Rotation.x -= speed;
+		m_Rotation.x -= turnSpeed;
 	}
 	if (KEYINPUT::KeyPress('K'))
 	{
-		m_Rotation.x += speed;
+		m_Rotation.x += turnSpeed;
 	}
 	// Yaw | Panning
 	if (KEYINPUT::KeyPress(VK_LEFT))
 	{
-		m_Rotation.y -= speed;
+		m_Rotation.y -= turnSpeed;
 	}
 	if (KEYINPUT::KeyPress(VK_RIGHT))
 	{
-		m_Rotation.y += speed;
+		m_Rotation.y += turnSpeed;
 	}
 
 	// 移動処理
 	if (KEYINPUT::KeyPress(VK_UP))
 	{
-		m_Position.x += frontVec.x * speed;
-		m_Position.y += frontVec.y * speed;
-		m_Position.z += frontVec.z * speed;
+		m_Position.x += frontVec.x * moveSpeed;
+		m_Position.y += frontVec.y * moveSpeed;
+		m_Position.z += frontVec.z * moveSpeed;
 	}
 	if (KEYINPUT::KeyPress(VK_DOWN))
 	{
-		m_Position.x -= frontVec.x * speed;
-		m_Position.y -= frontVec.y * speed;
-		m_Position.z -= frontVec.z * speed;
+		m_Position.x -= frontVec.x * moveSpeed;
+		m_Position.y -= frontVec.y * moveSpeed;
+		m_Position.z -= frontVec.z * moveSpeed;
 	}
 #endif // PERSPECTIVE
 

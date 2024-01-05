@@ -19,7 +19,9 @@ void RootScene::Init()
 	CAMERA::g_Camera.InitCamera();
 	FreeCamera* pCamera = CreateObj<FreeCamera>("Camera");
 	pCamera->Create();
-	pCamera->SetPosition(XMFLOAT3(0.0f, 1.0f, 0.0f));
+	pCamera->SetPosition(XMFLOAT3(0.0f, 1.0f, -1.0f));
+	pCamera->SetRotation(XMFLOAT3(-30.0f, 0.0f, 0.0f));
+
 	Sphere* pSky = CreateObj<Sphere>("Sky");
 	//pSky->useLight = false;
 	pSky->Create(50.0f, 500);

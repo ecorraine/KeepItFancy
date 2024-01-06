@@ -8,6 +8,8 @@ class SSegment : public LINEBASE
 
 };
 
+
+
 ///--------------------------------------------------
 //! SCircle Class
 ///--------------------------------------------------
@@ -22,7 +24,7 @@ protected:
 
 public:
 	SCircle() :
-		m_fRadius(1.0f)
+		m_fRadius(0.0f)
 	{}
 	~SCircle() {}
 
@@ -58,8 +60,8 @@ protected:
 
 public:
 	Plane() :
-		m_fWidth(1.0f),
-		m_fHeight(1.0f)
+		m_fWidth(0.0f),
+		m_fHeight(0.0f)
 	{}
 	~Plane() {}
 

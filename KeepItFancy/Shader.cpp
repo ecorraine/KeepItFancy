@@ -229,7 +229,6 @@ void SHADER::SetSRV(UINT bufferSlot, ID3D11ShaderResourceView* pSRV)
 		DirectX11::GetContext()->CSSetShaderResources(bufferSlot, 1, cpSRV.GetAddressOf());
 		break;
 	}
-	cpSRV->Release();
 }
 
 //--------------------------------------------------

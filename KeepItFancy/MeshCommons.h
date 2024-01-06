@@ -3,6 +3,13 @@
 
 #include "BMesh.h"
 
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! LINEBASE Class
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! \class LINEBASE MeshCommons.h "MeshCommons.h"
+/*! \brief Base Class for Segment-type Meshes
+ *  \brief 線形メッシュ親クラス
+ */
 class LINEBASE : public MESH
 {
 public:
@@ -37,11 +44,17 @@ protected:
 
 public:
 	virtual void Draw(RasterType cullmode = RasterType::WIREFRAME_NO_CULL);
-
 };
 
 
 
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! TRIANGLEBASE Class
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! \class TRIANGLEBASE MeshCommons.h "MeshCommons.h"
+/*! \brief Base Class for Triangle-type Meshes
+ *  \brief 三角形メッシュ親クラス
+ */
 class TRIANGLEBASE : public MESH
 {
 public:

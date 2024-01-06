@@ -144,9 +144,10 @@ public:
 		return mForwardVector;
 	}
 
-	const DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
 	void SetPosition(const DirectX::XMFLOAT3& _position) { m_Position = _position; }
+	const DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
 	void SetRotation(const DirectX::XMFLOAT3& _rotation) { m_Rotation = _rotation; }
+	const DirectX::XMFLOAT3 GetRotation() const { return m_Rotation; }
 
 	//! \fn void SetWVPMatrix(SHADER* pShader)
 	/*! \brief bind World Matrix to Vertex Shader

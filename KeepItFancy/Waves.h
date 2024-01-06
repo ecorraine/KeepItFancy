@@ -25,7 +25,7 @@ public:
 		delete m_pCS;
 	}
 
-	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA _color = sRGBA(173, 216, 230));
+	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA _color = sRGBA(173, 216, 230, 24));
 	void BindComputeShaders();
 	void Update(float tick);
 

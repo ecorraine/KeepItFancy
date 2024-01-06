@@ -3,6 +3,13 @@
 
 #include "MeshCommons.h"
 
+///--------------------------------------------------
+//! SSphere Class
+///--------------------------------------------------
+//! \class SSphere MPrimitive3D.h "MPrimitive3D.h"
+/*! \brief Segment-type Sphere Mesh Class
+ *  \brief 線形球体メッシュクラス
+ */
 class SSphere : public LINEBASE
 {
 protected:
@@ -10,7 +17,7 @@ protected:
 
 public:
 	SSphere() :
-		m_fRadius(1.0f)
+		m_fRadius(0.0f)
 	{}
 	~SSphere() {}
 
@@ -29,12 +36,14 @@ protected:
 	void BindVertices(sRGBA);
 };
 
+
+
 ///--------------------------------------------------
 //! Sphere Class
 ///--------------------------------------------------
 //! \class Sphere MPrimitive3D.h "MPrimitive3D.h"
-/*! \brief Sphere Mesh Class
- *  \brief 球体メッシュクラス
+/*! \brief Triangle-type Sphere Mesh Class
+ *  \brief 三角形球体メッシュクラス
  */
 class Sphere : public TRIANGLEBASE
 {
@@ -47,7 +56,7 @@ public:
 	{}
 	~Sphere() {}
 
-	void Create(float radius, int divisions = 8, sRGBA _color = sRGBA());
+	void Create(float radius = 1.0f, int divisions = 8, sRGBA _color = sRGBA());
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -61,6 +70,8 @@ protected:
 
 	void BindVertices(sRGBA);
 };
+
+
 
 ///--------------------------------------------------
 //! Cube Class

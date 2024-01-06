@@ -59,7 +59,6 @@ protected:
 	virtual void ProcessTessellation() {}
 	virtual void BindComputeShaders() {}
 
-public:
 	static void SetCulling(RasterType cullmode)
 	{
 		switch (cullmode)
@@ -83,6 +82,14 @@ public:
 			RasterType::CULL_BACK;
 			break;
 		}
+	}
+
+public:
+	void SetSRV(const char* file)
+	{
+		TEXTURE* texture = new TEXTURE();
+		texture->CreateTexture(file);
+		m_cpSRV = texture->GetSRV();
 	}
 };
 

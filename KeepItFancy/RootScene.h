@@ -3,6 +3,10 @@
 
 #include "BScene.h"
 
+#include "imgui/Inc/imgui.h"
+#include "imgui/Inc/imgui_impl_win32.h"
+#include "imgui/Inc/imgui_impl_dx11.h"
+
 //! \enum Scene List
 /*! \brief List of Scenes
  *  \brief ゲームシーンの列挙型

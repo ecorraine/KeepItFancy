@@ -1,6 +1,6 @@
 #include "BUF_Light.hlsli"
 
-Texture2D		tex			: register(t0);
+Texture2D		texBase		: register(t0);
 SamplerState	g_Sampler	: register(s0);
 
 struct PS_IN
@@ -15,6 +15,8 @@ struct PS_IN
 float4 main(PS_IN pin) : SV_TARGET
 {
 	float4 outColor = pin.color;
+	float4 tex = texBase.Sample(g_Sampler, pin.uv);
+	outColor.rgb *= tex.rgb;
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);

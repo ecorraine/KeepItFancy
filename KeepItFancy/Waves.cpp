@@ -35,9 +35,6 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 	BindVertices(_color);
 	BindIndices();
 
-	m_pCS = AddComponent<ComputeShader>();
-	m_pCS->LoadShader(SHADER_PATH("CS_NoiseWave.cso"));
-
 	CreateDefaultBuffers();
 	LoadDefaultShaders();
 

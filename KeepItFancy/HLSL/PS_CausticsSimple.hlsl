@@ -1,13 +1,8 @@
 #include "F_Noise.hlsli"
 #include "BUF_Light.hlsli"
 
-cbuffer Data : register(b1)
-{
-	float4 g_time;
-};
-
-Texture2D		tex		: register(t0);
-SamplerState	samp	: register(s0);
+Texture2D		texBase		: register(t0);
+SamplerState	g_Sampler	: register(s0);
 
 struct PS_IN
 {
@@ -16,6 +11,11 @@ struct PS_IN
 	float4 color	: COLOR0;
 	float3 normal	: NORMAL0;
 	float3 worldPos : POSITION0;
+};
+
+cbuffer Data : register(b1)
+{
+	float4 g_time;
 };
 
 const float3 causticsColor = float3(0.2f, 0.5f, 0.8f);
@@ -27,6 +27,8 @@ float4 main(PS_IN pin) : SV_TARGET
 	float time = g_time.x;
 	
 	float4 outColor = pin.color;
+	float4 tex = texBase.Sample(g_Sampler, pin.uv);
+	outColor.rgb *= tex.rgb;
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);

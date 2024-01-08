@@ -2,13 +2,8 @@
 #include "F_Noise.hlsli"
 #include "BUF_Light.hlsli"
 
-cbuffer Data : register(b1)
-{
-	float4 g_time;
-};
-
-Texture2D		tex		: register(t0);
-SamplerState	samp	: register(s0);
+Texture2D		texBase		: register(t0);
+SamplerState	g_Sampler	: register(s0);
 
 struct PS_IN
 {
@@ -19,11 +14,18 @@ struct PS_IN
 	float3 worldPos : POSITION0;
 };
 
+cbuffer Data : register(b1)
+{
+	float4 g_time;
+};
+
 float4 main(PS_IN pin) : SV_TARGET
 {
 	float time = g_time.x;
-	
+
 	float4 outColor = pin.color;
+	float4 tex = texBase.Sample(g_Sampler, pin.uv);
+	outColor.rgb *= tex.rgb;
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);
@@ -37,10 +39,10 @@ float4 main(PS_IN pin) : SV_TARGET
 	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
 	float reflection = saturate(dot(viewDir, normal));
 
-	float2 uvCoord = pin.uv * 8;
-	float caustics = CellNoiseTilable(uvCoord, time * 0.1f);
-	outColor *= caustics * 0.5f;
-	outColor *= reflection;
+	float2 uvCoord = pin.uv * 10;
+	float caustics = CellNoiseTilable(uvCoord, time * 0.5f);
+	outColor *= caustics * 1.5f;
+	outColor *= shadow * reflection;
 	
 	return outColor;
 }

@@ -34,6 +34,9 @@ protected:
 
 	std::vector<VERTEX>					m_Vertices;
 
+private:
+	bool m_isUsingTexture = false;
+
 public:
 	~MESH()
 	{
@@ -87,8 +90,11 @@ protected:
 public:
 	void SetSRV(const char* file)
 	{
+		m_isUsingTexture = true;
+
 		TEXTURE* texture = new TEXTURE();
 		texture->CreateTexture(file);
+
 		m_cpSRV = texture->GetSRV();
 	}
 };

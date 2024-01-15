@@ -4,6 +4,10 @@
 #include "Component.h"
 #include "KeyInput.h"
 
+#include "imgui/Inc/imgui.h"
+#include "imgui/Inc/imgui_impl_win32.h"
+#include "imgui/Inc/imgui_impl_dx11.h"
+
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! SCENE Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

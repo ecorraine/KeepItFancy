@@ -97,6 +97,27 @@ public:
 
 		m_cpSRV = texture->GetSRV();
 	}
+
+	void ChangeShader(SHADER::ShaderType shadertype, const char* _file)
+	{
+		switch (shadertype)
+		{
+		case SHADER::VertexS:
+			m_pVS->LoadShader(_file);
+			break;
+		case SHADER::HullS:
+			break;
+		case SHADER::DomainS:
+			break;
+		case SHADER::GeometryS:
+			break;
+		case SHADER::PixelS:
+			m_pPS->LoadShader(_file);
+			break;
+		case SHADER::ComputeS:
+			break;
+		}
+	}
 };
 
 #endif // !BMESH_H

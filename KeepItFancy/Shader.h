@@ -15,7 +15,7 @@
  */
 class SHADER : public COMPONENT
 {
-protected:
+public:
 	//! \enum Shader Type
 	/*! \brief Shader Type to be classified on create. */
 	enum ShaderType
@@ -27,6 +27,8 @@ protected:
 		PixelS,
 		ComputeS
 	};
+
+protected:
 	ShaderType m_eShaderType;
 
 	virtual HRESULT CreateShader(void*, UINT) = 0;

@@ -20,17 +20,28 @@ void ScTitle::Update(float tick)
 	m_fTime += tick;
 
 	Waves* pWaves = GetObj<Waves>("Waves");
+	ImGui::Begin("Wave Plane");
+	const char* items[] = { "SimpleCaustics", "SimpleVoronoi" };
+	static int selection = 1;
+	ImGui::Combo("Pixel Shader", &selection, items, IM_ARRAYSIZE(items));
+
+	switch (selection)
+	{
+	case 0:
+		pWaves->ChangeShader(SHADER::PixelS, SHADER_PATH("PS_CausticsSimple.cso"));
+		break;
+	case 1:
+		pWaves->ChangeShader(SHADER::PixelS, SHADER_PATH("PS_CausticsVoronoi.cso"));
+		break;
+	}
+	ImGui::End();
+
 	pWaves->Update(m_fTime);
 }
 
 void ScTitle::Draw()
 {
-	DirectX11::SetBlendState(BlendType::ALPHA);
 
 	Waves* pWaves = GetObj<Waves>("Waves");
 	pWaves->Draw();
-
-	DirectX11::ClearBlendState();
-
-	DirectX11::SetDepthStencilState(DepthStencilState::DEPTH_STENCIL_WRITE);
 }

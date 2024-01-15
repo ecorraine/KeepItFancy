@@ -45,10 +45,20 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), pOutputBuffer.GetAddressOf()));
 	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), pOutputBufferUAV.GetAddressOf()));
 
+	cbData[0] = {
+		offsetof(VERTEX, pos),
+		offsetof(VERTEX, uv),
+		offsetof(VERTEX, color),
+		offsetof(VERTEX, normal)
+	};
+
 	const rsize_t vertexSize = m_Vertices.size();
-	XMFLOAT4 structOffsetSize = { offsetof(VERTEX, pos), offsetof(VERTEX, uv), offsetof(VERTEX, color), offsetof(VERTEX, normal) };
-	cbData[0] = structOffsetSize;
-	cbData[1] = { static_cast<float>(m_iDivX), static_cast<float>(m_iDivY), static_cast<float>(m_iDivZ), static_cast<float>(vertexSize) };
+	cbData[1] = {
+		static_cast<float>(m_iDivX),
+		static_cast<float>(m_iDivY),
+		static_cast<float>(m_iDivZ),
+		static_cast<float>(vertexSize)
+	};
 }
 
 void Waves::BindComputeShaders()

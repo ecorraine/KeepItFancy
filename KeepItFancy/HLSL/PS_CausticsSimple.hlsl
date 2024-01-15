@@ -42,7 +42,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	float shadowFactor = saturate(dot(-lightDir.xyz, pin.normal));
 
 	// Calculate caustics using a mathematical function
-	float causticsIntensity = abs(cos(pin.worldPos.x * 10.0f + time) * sin(pin.worldPos.z * 10.0f + time));
+	float causticsIntensity = abs(cos(pin.worldPos.x * 10.0f) * sin(pin.worldPos.z * 10.0f));
 	// Simulate reflections based on the view direction
 	float reflectionIntensity = saturate(dot(viewDir, normal));
 	

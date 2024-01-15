@@ -23,17 +23,17 @@ VS_OUT main(VS_IN vin)
 {
 	VS_OUT vout = (VS_OUT)0;
 
-	//---------- 座標変換 ----------
+	// 座標変換
 	vout.pos		= float4(vin.pos, 1.0f);
 	vout.pos		= mul(vout.pos, world);
 	vout.worldPos	= vout.pos.xyz;
 	vout.pos		= mul(vout.pos, view);
 	vout.pos		= mul(vout.pos, proj);
 
+	vout.normal		= normalize(mul(vin.normal, (float3x3) world));
+
 	vout.uv			= vin.uv;
 	vout.color		= vin.color;
 
-	vout.normal		= normalize(mul(vin.normal, (float3x3) world));
-	
 	return vout;
 }

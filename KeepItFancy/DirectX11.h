@@ -211,15 +211,15 @@ public:
 	 */
 	static void SetBlendState(BlendType eBlendType)
 	{
-		float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		UINT sampleMask = 0xFFFFFFFF;
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		UINT sampleMask = 0xffffffff;
 		GetContext()->OMSetBlendState(g_d11BlendState[(int)eBlendType], blendFactor, sampleMask);
 	}
 
 	static void ClearBlendState()
 	{
 		float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		UINT sampleMask = 0xFFFFFFFF;
+		UINT sampleMask = 0xffffffff;
 		GetContext()->OMSetBlendState(nullptr, blendFactor, sampleMask);
 	}
 

@@ -1,6 +1,5 @@
 #include "F_Common.hlsli"
 #include "F_Noise.hlsli"
-#include "BUF_Light.hlsli"
 
 Texture2D		texBase		: register(t0);
 SamplerState	g_Sampler	: register(s0);
@@ -14,33 +13,43 @@ struct PS_IN
 	float3 worldPos : POSITION0;
 };
 
+cbuffer Light : register(b0)
+{
+	float4	cameraPos;
+	float4	lightDir;
+	float4	lightDiffuse;
+	float4	lightAmbient;
+};
+
 cbuffer Data : register(b1)
 {
-	float4 g_time;
+	float	g_time;
+	float3	dummy;
 };
 
 float4 main(PS_IN pin) : SV_TARGET
 {
-	float time = g_time.x;
+	float time = g_time;
 
 	float4 outColor = pin.color;
+
 	float4 tex = texBase.Sample(g_Sampler, pin.uv);
-	outColor.rgb *= tex.rgb;
+	outColor *= tex;
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
 
 	float diffuse = saturate(dot(normal, light));
-	outColor.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;
+	outColor *= (diffuse * lightDiffuse) + lightAmbient;
 
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
 	
 	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
 	float reflection = saturate(dot(viewDir, normal));
 
-	float2 uvCoord = pin.uv * 10;
-	float caustics = CellNoiseTilable(uvCoord, time * 0.5f);
+	float2 uvCoord = pin.uv * 6;
+	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
 	outColor *= caustics * 1.5f;
 	outColor *= shadow * reflection;
 	

@@ -21,7 +21,7 @@ public:
 	{}
 	~SSphere() {}
 
-	void Create(float radius = 1.0f, int segments = 32, sRGBA _color = sRGBA(1.0f, 1.0f, 1.0f));
+	void Create(float radius = 1.0f, int segments = 32, sRGBA _color = sRGBA());
 
 protected:
 	virtual void LoadDefaultShaders()

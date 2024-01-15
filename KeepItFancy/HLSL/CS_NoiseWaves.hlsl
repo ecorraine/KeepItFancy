@@ -17,7 +17,7 @@ struct VERTEX
 
 cbuffer MeshData : register(b0)
 {
-	float4 size;
+	float4 offsetSize;
 	float4 count;
 	float4 g_time;
 };
@@ -30,14 +30,14 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	uint index = DTid.x;
 	const uint offset = index * 48;
 
-	float3 pos = asfloat(outputVertices.Load3(offset + 0));
-	float2 uv = asfloat(outputVertices.Load2(offset + 12));
-	float4 color = asfloat(outputVertices.Load4(offset + 20));
-	float3 normal = asfloat(outputVertices.Load3(offset + 36));
+	float3 pos = asfloat(outputVertices.Load3(offset + offsetSize.x));
+	float2 uv = asfloat(outputVertices.Load2(offset + offsetSize.y));
+	float4 color = asfloat(outputVertices.Load4(offset + offsetSize.z));
+	float3 normal = asfloat(outputVertices.Load3(offset + offsetSize.w));
 
 	float time = g_time.x;
 	float amplitude = 0.0005f;
-	float frequency = 3.0f;
+	float frequency = 1.0f;
 	float k = XM_TWOPI * frequency;
 
 	// compute radial wave displacement
@@ -52,8 +52,8 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	pos.y += waveHeight;
 	
 	// Write the updated vertex back to the buffer
-	outputVertices.Store3(offset + 0, asuint(pos));
-	outputVertices.Store2(offset + 12, asuint(uv));
-	outputVertices.Store4(offset + 20, asuint(color));
-	outputVertices.Store3(offset + 36, asuint(normal));
+	outputVertices.Store3(offset + offsetSize.x, asuint(pos));
+	outputVertices.Store2(offset + offsetSize.y, asuint(uv));
+	outputVertices.Store4(offset + offsetSize.z, asuint(color));
+	outputVertices.Store3(offset + offsetSize.w, asuint(normal));
 }

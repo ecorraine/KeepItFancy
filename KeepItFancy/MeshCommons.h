@@ -97,7 +97,7 @@ protected:
 	virtual void GenerateIndices(int SideToDivide, int offset);
 
 public:
-	virtual void Draw(RasterType cullmode = RasterType::CULL_BACK);
+	virtual void Draw(RasterType cullmode = RasterType::SOLID_NO_CULL);
 
 };
 

@@ -13,7 +13,7 @@ float4 main(PS_IN pin) : SV_TARGET
 {
 	float4 outColor = pin.color;
 	float4 tex = texBase.Sample(g_Sampler, pin.uv);
-	outColor.rgb *= tex.rgb;
+	outColor *= tex;
 
 	return outColor;
 }

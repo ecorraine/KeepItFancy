@@ -20,7 +20,7 @@ void RootScene::Init()
 	FreeCamera* pCamera = CreateObj<FreeCamera>("Camera");
 	pCamera->Create();
 	pCamera->SetPosition(XMFLOAT3(0.0f, 1.0f, -1.0f));
-	pCamera->SetRotation(XMFLOAT3(-30.0f, 0.0f, 0.0f));
+	pCamera->SetRotation(XMFLOAT3(-20.0f, 0.0f, 0.0f));
 
 	SkyBox* pSky = CreateObj<SkyBox>("Sky");
 	pSky->Create();

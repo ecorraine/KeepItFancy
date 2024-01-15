@@ -168,89 +168,42 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	}
 
 	//--------------------------------------------------
-	// Rasterizer
-	// initialize the raster description which will determine how and what polygons will be drawn
+	// Texture Sampler
 	//--------------------------------------------------
-	D3D11_RASTERIZER_DESC rasterDesc = {};
-	ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
-	/*
-	rasterDesc.FrontCounterClockwise	= false;
-	rasterDesc.DepthBias				= 0;
-	rasterDesc.DepthBiasClamp			= 0.0f;
-	rasterDesc.SlopeScaledDepthBias		= 0.0f;
-	rasterDesc.DepthClipEnable			= true;
-	rasterDesc.ScissorEnable			= false;
-	rasterDesc.MultisampleEnable		= false;
-	rasterDesc.AntialiasedLineEnable	= false;
-	*/
-	// culling types
-	D3D11_CULL_MODE culling[] = {
-	D3D11_CULL_NONE,					// no culling: draw all triangles
-	D3D11_CULL_FRONT,					// do not draw front-facing triangles
-	D3D11_CULL_BACK	 					// do not draw back-facing triangles
+	D3D11_FILTER filter[] = {
+		D3D11_FILTER_MIN_MAG_MIP_POINT,		// point sampling
+		D3D11_FILTER_MIN_MAG_MIP_LINEAR,	// linear interpolation
+		D3D11_FILTER_ANISOTROPIC			// anisotropic interpolation
 	};
-	// create individual raster state per culling type
-	for (int i = 0; i <= (int)RasterType::CULL_BACK; i++)
+	// create individual sampler state per filter type
+	for (int i = 0; i < (int)SamplerType::ANISOTROPIC; i++)
 	{
-		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.CullMode = culling[i];
-		hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[i]);
+		samplerDesc.Filter = filter[i];
+		hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[i]);
+
 	}
-	// create wireframe type fill
-	rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
 
-	rasterDesc.CullMode = D3D11_CULL_NONE;
-	hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[3]);
+	// create for anisotropic filter
+	samplerDesc.Filter = filter[(int)SamplerType::ANISOTROPIC];
+	//samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 4;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[(int)SamplerType::ANISOTROPIC]);
 
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[4]);
 	if (FAILED(hr))
 	{
-		MessageBoxA(g_App->GetWindow(), "Failed to create Raster State!\nラスタライザー作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
+		MessageBoxA(g_App->GetWindow(), "Failed to create Texture Sampler State!\nサンプラーステート作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
 		throw hr;
 	}
 
-	// initialize the default rasterizer state
-	SetRasterState(RasterType::CULL_BACK);
-
-	//--------------------------------------------------
-	// Depth Stencil State
-	//--------------------------------------------------
-	// https://tositeru.github.io/ImasaraDX11/part/ZBuffer-and-depth-stencil
-	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-	ZeroMemory(&dsDesc, sizeof(dsDesc));
-	dsDesc.DepthEnable = true;
-	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	dsDesc.StencilEnable = false;
-	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
-	// front facing
-	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
-	// back facing
-	dsDesc.BackFace = dsDesc.FrontFace;
-
-	// create individual depth stencil state
-	bool dsPattern[] = { false, true, true };
-	D3D11_DEPTH_WRITE_MASK maskPattern[] =
-	{
-		D3D11_DEPTH_WRITE_MASK_ZERO,
-		D3D11_DEPTH_WRITE_MASK_ZERO,
-		D3D11_DEPTH_WRITE_MASK_ALL
-	};
-	for (int i = 0; i < (int)DepthStencilState::MAX_DEPTHSTENCIL_STATE; ++i)
-	{
-		dsDesc.DepthEnable = dsDesc.StencilEnable = dsPattern[i];
-		dsDesc.DepthWriteMask = maskPattern[i];
-		hr = g_d11Device->CreateDepthStencilState(&dsDesc, &g_d11DepthStencilState[i]);
-		if (FAILED(hr)) { return hr; }
-	}
-	// initialize default depth stencil state
-	SetDepthStencilState(DepthStencilState::DEPTH_STENCIL_WRITE);
+	// initialize default sampler state
+	SetSamplerState(SamplerType::LINEAR);
 
 	//--------------------------------------------------
 	// Blend State
@@ -260,7 +213,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -345,45 +298,90 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 		}
 	}
 	// initialize default bland state
-	SetBlendState(BlendType::NONE);
+	SetBlendState(BlendType::ALPHA);
 
 	//--------------------------------------------------
-	// Texture Sampler
+	// Rasterizer
+	// initialize the raster description which will determine how and what polygons will be drawn
 	//--------------------------------------------------
-	D3D11_SAMPLER_DESC samplerDesc = {};
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	D3D11_RASTERIZER_DESC rasterDesc = {};
+	ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.AntialiasedLineEnable = false;
 
-	D3D11_FILTER filter[] = {
-		D3D11_FILTER_MIN_MAG_MIP_POINT,		// point sampling
-		D3D11_FILTER_MIN_MAG_MIP_LINEAR,	// linear interpolation
-		D3D11_FILTER_ANISOTROPIC			// anisotropic interpolation
+	// culling types
+	D3D11_CULL_MODE culling[] = {
+	D3D11_CULL_NONE,					// no culling: draw all triangles
+	D3D11_CULL_FRONT,					// do not draw front-facing triangles
+	D3D11_CULL_BACK	 					// do not draw back-facing triangles
 	};
-	// create individual sampler state per filter type
-	for (int i = 0; i < (int)SamplerType::ANISOTROPIC; i++)
+	// create individual raster state per culling type
+	for (int i = 0; i <= (int)RasterType::CULL_BACK; i++)
 	{
-		samplerDesc.Filter = filter[i];
-		hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[i]);
-
+		rasterDesc.FillMode = D3D11_FILL_SOLID;
+		rasterDesc.CullMode = culling[i];
+		hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[i]);
 	}
+	// create wireframe type fill
+	rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
 
-	// create for anisotropic filter
-	samplerDesc.Filter = filter[(int)SamplerType::ANISOTROPIC];
-	//samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 4;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = g_d11Device->CreateSamplerState(&samplerDesc, &g_d11SamplerState[(int)SamplerType::ANISOTROPIC]);
+	rasterDesc.CullMode = D3D11_CULL_NONE;
+	hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[3]);
 
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+	hr = GetDevice()->CreateRasterizerState(&rasterDesc, &g_d11RasterState[4]);
 	if (FAILED(hr))
 	{
-		MessageBoxA(g_App->GetWindow(), "Failed to create Texture Sampler State!\nサンプラーステート作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
+		MessageBoxA(g_App->GetWindow(), "Failed to create Raster State!\nラスタライザー作成失敗！", "ERROR", MB_OK | MB_ICONERROR);
 		throw hr;
 	}
 
-	// initialize default sampler state
-	SetSamplerState(SamplerType::POINT);
+	// initialize the default rasterizer state
+	SetRasterState(RasterType::SOLID_NO_CULL);
+
+	//--------------------------------------------------
+	// Depth Stencil State
+	//--------------------------------------------------
+	// https://tositeru.github.io/ImasaraDX11/part/ZBuffer-and-depth-stencil
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	ZeroMemory(&dsDesc, sizeof(dsDesc));
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDesc.StencilEnable = false;
+	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	// front facing
+	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
+	// back facing
+	dsDesc.BackFace = dsDesc.FrontFace;
+
+	// create individual depth stencil state
+	bool dsPattern[] = { false, true, true };
+	D3D11_DEPTH_WRITE_MASK maskPattern[] =
+	{
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+		D3D11_DEPTH_WRITE_MASK_ALL
+	};
+	for (int i = 0; i < (int)DepthStencilState::MAX_DEPTHSTENCIL_STATE; ++i)
+	{
+		dsDesc.DepthEnable = dsDesc.StencilEnable = dsPattern[i];
+		dsDesc.DepthWriteMask = maskPattern[i];
+		hr = g_d11Device->CreateDepthStencilState(&dsDesc, &g_d11DepthStencilState[i]);
+		if (FAILED(hr)) { return hr; }
+	}
+	// initialize default depth stencil state
+	SetDepthStencilState(DepthStencilState::DEPTH_STENCIL_WRITE);
 
 	return hr;
 }

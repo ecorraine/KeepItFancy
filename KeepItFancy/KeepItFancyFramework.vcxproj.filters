@@ -22,9 +22,6 @@
     <Filter Include="2Game">
       <UniqueIdentifier>{7e3fed7a-771a-4491-b9d5-e988c74d251b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2Game\Scenes">
-      <UniqueIdentifier>{47831339-363d-40d1-9064-0d8cdbba585d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="2Game\0Base">
       <UniqueIdentifier>{b885ee68-0203-4a39-9b9a-a3a4d9bf5648}</UniqueIdentifier>
     </Filter>
@@ -58,11 +55,26 @@
     <Filter Include="1ShaderPipeline\4Geometry">
       <UniqueIdentifier>{a1af7519-390c-481a-9bc9-8aa535a58c4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2Game\Primitives">
-      <UniqueIdentifier>{878c5e31-a925-47a6-be66-af9c6a62d71a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="1ShaderPipeline\6Compute">
       <UniqueIdentifier>{490ca38e-4108-4bab-a4f1-1e928950258d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1ShaderPipeline\0AFunctions">
+      <UniqueIdentifier>{b8daf0b2-d69f-47df-9218-18f6723e9691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="9ImGUI">
+      <UniqueIdentifier>{7f6bfd50-d689-4941-97e3-ba83eec67c6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="9ImGUI\helpers">
+      <UniqueIdentifier>{40bc1a0d-4021-44b7-aae5-8362b82d6354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\Objects">
+      <UniqueIdentifier>{1b8c6de6-c8d6-479a-b28e-fc7b20b11aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\1Scenes">
+      <UniqueIdentifier>{47831339-363d-40d1-9064-0d8cdbba585d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2Game\1Primitives">
+      <UniqueIdentifier>{878c5e31-a925-47a6-be66-af9c6a62d71a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +100,7 @@
       <Filter>2Game</Filter>
     </ClCompile>
     <ClCompile Include="RootScene.cpp">
-      <Filter>2Game\Scenes</Filter>
+      <Filter>2Game\1Scenes</Filter>
     </ClCompile>
     <ClCompile Include="BScene.cpp">
       <Filter>2Game\0Base</Filter>
@@ -108,23 +120,41 @@
     <ClCompile Include="BCamera.cpp">
       <Filter>2Game\0Base</Filter>
     </ClCompile>
-    <ClCompile Include="BMesh.cpp">
-      <Filter>2Game\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="MPrimitive2D.cpp">
-      <Filter>2Game\Primitives</Filter>
+      <Filter>2Game\1Primitives</Filter>
     </ClCompile>
     <ClCompile Include="ScTitle.cpp">
-      <Filter>2Game\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Waves.cpp">
-      <Filter>#Source Files</Filter>
+      <Filter>2Game\1Scenes</Filter>
     </ClCompile>
     <ClCompile Include="MPrimitive3D.cpp">
-      <Filter>2Game\Primitives</Filter>
+      <Filter>2Game\1Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui.cpp">
+      <Filter>9ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_demo.cpp">
+      <Filter>9ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_draw.cpp">
+      <Filter>9ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_tables.cpp">
+      <Filter>9ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_widgets.cpp">
+      <Filter>9ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_impl_dx11.cpp">
+      <Filter>9ImGUI\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\Inc\imgui_impl_win32.cpp">
+      <Filter>9ImGUI\helpers</Filter>
     </ClCompile>
     <ClCompile Include="MeshCommons.cpp">
-      <Filter>#Source Files</Filter>
+      <Filter>2Game\1Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Waves.cpp">
+      <Filter>2Game\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +183,7 @@
       <Filter>2Game</Filter>
     </ClInclude>
     <ClInclude Include="RootScene.h">
-      <Filter>2Game\Scenes</Filter>
+      <Filter>2Game\1Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>2Game\0Base</Filter>
@@ -182,11 +212,8 @@
     <ClInclude Include="BCamera.h">
       <Filter>2Game\0Base</Filter>
     </ClInclude>
-    <ClInclude Include="BMesh.h">
-      <Filter>2Game\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="MPrimitive2D.h">
-      <Filter>2Game\Primitives</Filter>
+      <Filter>2Game\1Primitives</Filter>
     </ClInclude>
     <ClInclude Include="myUtilities.hpp">
       <Filter>#Header Files</Filter>
@@ -195,25 +222,60 @@
       <Filter>2Game\0Base</Filter>
     </ClInclude>
     <ClInclude Include="ScTitle.h">
-      <Filter>2Game\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Waves.h">
-      <Filter>#Header Files</Filter>
+      <Filter>2Game\1Scenes</Filter>
     </ClInclude>
     <ClInclude Include="MPrimitive3D.h">
-      <Filter>2Game\Primitives</Filter>
+      <Filter>2Game\1Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imconfig.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imgui.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imgui_internal.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imstb_rectpack.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imstb_textedit.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imstb_truetype.h">
+      <Filter>9ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imgui_impl_dx11.h">
+      <Filter>9ImGUI\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\Inc\imgui_impl_win32.h">
+      <Filter>9ImGUI\helpers</Filter>
     </ClInclude>
     <ClInclude Include="MeshCommons.h">
-      <Filter>#Header Files</Filter>
+      <Filter>2Game\1Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Waves.h">
+      <Filter>2Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="BMesh.h">
+      <Filter>2Game\0Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>2Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="!KeepItFancy-ClassDiagram.cd" />
     <None Include="HLSL\BUF_Light.hlsli">
       <Filter>1ShaderPipeline\0CBuffers</Filter>
     </None>
     <None Include="HLSL\BUF_WVPMatrix.hlsli">
       <Filter>1ShaderPipeline\0CBuffers</Filter>
+    </None>
+    <None Include="HLSL\F_Noise.hlsli">
+      <Filter>1ShaderPipeline\0AFunctions</Filter>
+    </None>
+    <None Include="HLSL\F_Common.hlsli">
+      <Filter>1ShaderPipeline\0AFunctions</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -229,14 +291,17 @@
     <FxCompile Include="HLSL\PS_HalfLambert.hlsl">
       <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="HLSL\CS_NoiseWave.hlsl">
+    <FxCompile Include="HLSL\CS_NoiseWaves.hlsl">
       <Filter>1ShaderPipeline\6Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_CausticsSimple.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_CausticsVoronoi.hlsl">
+      <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
     <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
       <Filter>1ShaderPipeline\6Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="HLSL\PS_SimpleCaustics.hlsl">
-      <Filter>1ShaderPipeline\5Pixel</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -38,11 +38,11 @@ float CellNoiseTilable(float2 uv, float time)
 {
 	float minDistance = 1.0f;
 
-	for (int y = -1; y < 1; ++y)
+	for (int y = -1; y <= 1; ++y)
 	{
-		for (int x = -1; x < 1; ++x)
+		for (int x = -1; x <= 1; ++x)
 		{
-			float2 offset = float2(x, y);
+			float2 offset = float2((float) x, (float)y);
 			float2 cell = hash(floor(uv) + offset);
 			cell = 0.5f + 0.5f * sin(time + 6.2831 * cell);
 			

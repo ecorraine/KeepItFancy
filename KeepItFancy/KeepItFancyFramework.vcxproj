@@ -168,8 +168,14 @@
     <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="DirectX11.cpp" />
     <ClCompile Include="FreeCamera.cpp" />
+    <ClCompile Include="imgui\Inc\imgui.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_demo.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_draw.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_tables.cpp" />
+    <ClCompile Include="imgui\Inc\imgui_widgets.cpp" />
     <ClCompile Include="KeyInput.cpp" />
-    <ClCompile Include="BMesh.cpp" />
     <ClCompile Include="MeshCommons.cpp" />
     <ClCompile Include="MPrimitive2D.cpp" />
     <ClCompile Include="MPrimitive3D.cpp" />
@@ -202,6 +208,14 @@
     <ClInclude Include="DirectX11.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="imgui\Inc\imconfig.h" />
+    <ClInclude Include="imgui\Inc\imgui.h" />
+    <ClInclude Include="imgui\Inc\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\Inc\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\Inc\imgui_internal.h" />
+    <ClInclude Include="imgui\Inc\imstb_rectpack.h" />
+    <ClInclude Include="imgui\Inc\imstb_textedit.h" />
+    <ClInclude Include="imgui\Inc\imstb_truetype.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="BMesh.h" />
     <ClInclude Include="Component.h" />
@@ -219,6 +233,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="srgba.hpp" />
     <ClInclude Include="Texture.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -231,26 +246,25 @@
     <ClInclude Include="Waves.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="!KeepItFancy-ClassDiagram.cd" />
     <None Include="HLSL\BUF_Light.hlsli" />
     <None Include="HLSL\BUF_WVPMatrix.hlsli" />
+    <None Include="HLSL\F_Common.hlsli" />
+    <None Include="HLSL\F_Noise.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\CS_GerstnerWaves.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="HLSL\CS_NoiseWave.hlsl">
+    <FxCompile Include="HLSL\CS_NoiseWaves.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
     </FxCompile>
     <FxCompile Include="HLSL\PS_BlinnPhong.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\PS_CausticsVoronoi.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
@@ -262,7 +276,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="HLSL\PS_SimpleCaustics.hlsl">
+    <FxCompile Include="HLSL\PS_CausticsSimple.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

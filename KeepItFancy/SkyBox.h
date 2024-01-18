@@ -18,7 +18,7 @@ public:
 
 		SetSRV(ASSET_PATH("img/sky.jpg"));
 
-		BindVertices(_color);
+		BindVertices();
 		BindIndices();
 
 		CreateDefaultBuffers();

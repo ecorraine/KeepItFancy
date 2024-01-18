@@ -1,5 +1,5 @@
 #include "Texture.h"
-#include "DirectX_Files/DirectXTex/Inc/DirectXTex.h"
+#include <DirectX_Files/DirectXTex/Inc/DirectXTex.h>
 
 HRESULT TEXTURE::CreateTexture(const char* pFileName)
 {

@@ -6,6 +6,7 @@
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /*! \struct sRGBA srgba.h "srgba.h"
  *  \brief Color structure with operators.
+ *  \brief 色情報構造体
 */
 struct sRGBA {
 	float r, g, b, a;
@@ -180,13 +181,13 @@ struct sRGBA {
 	 *  \param value : sRGBA to apply
 	 *  \return sRGBA
 	 */
-	//sRGBA& operator= (const sRGBA& value) {
-	//	r = value.r;
-	//	g = value.g;
-	//	b = value.b;
-	//	a = value.a;
-	//	return *this;
-	//}
+	sRGBA& operator= (const sRGBA& value) {
+		r = value.r;
+		g = value.g;
+		b = value.b;
+		a = value.a;
+		return *this;
+	}
 	//sRGBA& operator= (const DirectX::XMFLOAT4& value) {
 	//	r = value.x;
 	//	g = value.y;

@@ -3,7 +3,7 @@
 ///--------------------------------------------------
 //! Circle Class
 ///--------------------------------------------------
-void SCircle::BindVertices(sRGBA _color)
+void SCircle::BindVertices()
 {
 	m_Vertices.clear();
 	// vertex data for the circle(ring)
@@ -17,7 +17,7 @@ void SCircle::BindVertices(sRGBA _color)
 		vtx.uv.x = static_cast<float>(i) / static_cast<float>(m_iSegments);
 		vtx.uv.y = 0.0f;
 
-		vtx.color = { _color.r, _color.g, _color.b, _color.a };
+		vtx.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
@@ -41,14 +41,15 @@ void SCircle::BindIndices()
 }
 */
 
-void SCircle::Create(float radius, int segments, sRGBA _color)
+void SCircle::Create(float radius, int segments)
 {
 	useLight = false;
 
 	m_fRadius = radius;
 	m_iSegments = segments;
+	m_color = sRGBA(0.0f, 1.0f, 0.0f);
 
-	BindVertices(_color);
+	BindVertices();
 	BindIndices();
 
 	CreateDefaultBuffers();
@@ -57,38 +58,60 @@ void SCircle::Create(float radius, int segments, sRGBA _color)
 
 
 
-void Plane::BindVertices(sRGBA _color)
+void TPlane::BindVertices()
 {
 	m_Vertices.clear();
+
+	XMFLOAT3 locNormal;
+	if (!useXZAxis)
+	{
+		locNormal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	}
+	else
+	{
+		locNormal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	}
 
 	for (unsigned int y = 0; y <= m_iDivY; y++) {
 		for (unsigned int x = 0; x <= m_iDivX; x++) {
 			VERTEX vtx = {};
 			vtx.pos.x = -m_fWidth / 2.0f + x * m_fWidth / m_iDivX;
-			vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
-			vtx.pos.z = 0.0f;
+			if (!useXZAxis)
+			{
+				vtx.pos.y = -m_fHeight / 2.0f + y * m_fHeight / m_iDivY;
+				vtx.pos.z = 0.0f;
+			}
+			else
+			{
+				vtx.pos.y = 0.0f;
+				vtx.pos.z = -m_fDepth / 2.0f + y * m_fDepth / m_iDivY;
+			}
 
 			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
 			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
 
-			vtx.color = { _color.r, _color.g, _color.b, _color.a };
+			vtx.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-			vtx.normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+			NormalizeVectors(vtx.pos, locNormal);
+			vtx.normal = locNormal;
 
 			m_Vertices.emplace_back(vtx);
 		}
 	}
 }
 
-void Plane::Create(float width, float height, int divX, int divY, sRGBA _color)
+void TPlane::Create(float width, float height, int divX, int divY)
 {
 	m_fWidth = width;
-	m_fHeight = height;
+	if (!useXZAxis)
+	{
+		m_fHeight = height;
+	}
 
 	m_iDivX = divX;
 	m_iDivY = divY;
 
-	BindVertices(_color);
+	BindVertices();
 	BindIndices();
 
 	CreateDefaultBuffers();

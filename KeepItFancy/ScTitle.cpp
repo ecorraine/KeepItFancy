@@ -21,6 +21,7 @@ void ScTitle::Update(float tick)
 
 	Waves* pWaves = GetObj<Waves>("Waves");
 	ImGui::Begin("Wave Plane");
+
 	const char* items[] = { "SimpleCaustics", "SimpleVoronoi" };
 	static int selection = 1;
 	ImGui::Combo("Pixel Shader", &selection, items, IM_ARRAYSIZE(items));
@@ -34,6 +35,11 @@ void ScTitle::Update(float tick)
 		pWaves->ChangeShader(SHADER::PixelS, SHADER_PATH("PS_CausticsVoronoi.cso"));
 		break;
 	}
+
+	static sRGBA newColor = pWaves->GetColor();
+	ImGui::ColorEdit4("Color", (float*)&newColor);
+	pWaves->ChangeColor(newColor);
+	ImGui::Text(" %.2f %.2f %.2f %.2f", pWaves->GetColor().r, pWaves->GetColor().g, pWaves->GetColor().b, pWaves->GetColor().a);
 	ImGui::End();
 
 	pWaves->Update(m_fTime);

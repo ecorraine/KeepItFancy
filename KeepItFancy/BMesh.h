@@ -33,6 +33,7 @@ protected:
 	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
 
 	std::vector<VERTEX>					m_Vertices;
+	sRGBA								m_color = sRGBA();
 
 private:
 	bool m_isUsingTexture = false;
@@ -54,7 +55,7 @@ protected:
 	}
 
 	virtual void BindIndices() = 0;
-	virtual void BindVertices(sRGBA) = 0;
+	virtual void BindVertices() = 0;
 
 	virtual void CreateDefaultBuffers() = 0;
 	virtual void LoadDefaultShaders() = 0;
@@ -97,6 +98,12 @@ public:
 
 		m_cpSRV = texture->GetSRV();
 	}
+
+	void ChangeColor(const sRGBA& _color)
+	{
+		m_color = _color;
+	}
+	const sRGBA GetColor() const { return m_color; }
 
 	void ChangeShader(SHADER::ShaderType shadertype, const char* _file)
 	{

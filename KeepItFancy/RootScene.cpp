@@ -38,6 +38,8 @@ void RootScene::Update(float tick)
 	pCamera->Update(tick);
 
 	ImGui::Begin("Camera");
+	ImGui::Text("方向キー：カメラ移動");
+	ImGui::Text("I、K：カメラ角度調整");
 	ImGui::Text("Position: %.2f, %.2f, %.2f", pCamera->GetPosition().x, pCamera->GetPosition().y, pCamera->GetPosition().z);
 	ImGui::Text("Rotation: %.2f, %.2f, %.2f", pCamera->GetRotation().x, pCamera->GetRotation().y, pCamera->GetRotation().z);
 	ImGui::End();

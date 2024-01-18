@@ -17,7 +17,7 @@
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! \class TEXTURE Texture.h "Texture.h"
 /*! \brief Base Class for Texture.
- *  \brief テクスチャ
+ *  \brief テクスチャ親クラス
  */
 class TEXTURE : public COMPONENT
 {

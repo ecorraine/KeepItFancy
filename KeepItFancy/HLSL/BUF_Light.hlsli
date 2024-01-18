@@ -1,4 +1,3 @@
-// ライト情報を保持する定数バッファ
 cbuffer Light : register(b0)
 {
 	float4 cameraPos;

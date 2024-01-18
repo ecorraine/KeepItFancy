@@ -2,7 +2,7 @@
 #include "BCamera.h"
 #include "KeyInput.h"
 
-void FreeCamera::Create(float radius, int segments, sRGBA _color)
+void FreeCamera::Create(float radius, int segments)
 {
 	useLight = false;
 
@@ -10,7 +10,7 @@ void FreeCamera::Create(float radius, int segments, sRGBA _color)
 	m_iSegments = segments;
 	m_iSides = 3;
 
-	BindVertices(_color);
+	BindVertices();
 	BindIndices();
 
 	CreateDefaultBuffers();

@@ -21,7 +21,7 @@ public:
 	{}
 	~SSphere() {}
 
-	void Create(float radius = 1.0f, int segments = 32, sRGBA _color = sRGBA());
+	void Create(float radius = 1.0f, int segments = 32);
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -33,7 +33,7 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_FlatColor.cso"));
 	}
 
-	void BindVertices(sRGBA);
+	void BindVertices();
 };
 
 
@@ -56,7 +56,7 @@ public:
 	{}
 	~Sphere() {}
 
-	void Create(float radius = 1.0f, int divisions = 8, sRGBA _color = sRGBA());
+	void Create(float radius = 1.0f, int divisions = 8);
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -68,7 +68,7 @@ protected:
 		m_pPS->LoadShader(SHADER_PATH("PS_BlinnPhong.cso"));
 	}
 
-	void BindVertices(sRGBA);
+	void BindVertices();
 };
 
 
@@ -106,7 +106,7 @@ public:
 	{}
 	~Cube() {}
 
-	void Create(float width = 1.0f, float height = 1.0f, float depth = 1.0f, int divisions = 1, sRGBA _color = sRGBA());
+	void Create(float width = 1.0f, float height = 1.0f, float depth = 1.0f, int divisions = 1);
 
 protected:
 	virtual void LoadDefaultShaders()
@@ -119,7 +119,7 @@ protected:
 	}
 
 	void BindIndices() override;
-	void BindVertices(sRGBA);
+	void BindVertices();
 };
 
 #endif // MPRIMITIVE3D_H

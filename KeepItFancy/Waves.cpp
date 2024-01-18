@@ -1,30 +1,9 @@
 #include "Waves.h"
 
-void Waves::BindVertices(sRGBA _color)
+void Waves::Create(float width, float depth, int divX, int divY)
 {
-	m_Vertices.clear();
+	useXZAxis = true;
 
-	for (unsigned int y = 0; y <= m_iDivY; y++) {
-		for (unsigned int x = 0; x <= m_iDivX; x++) {
-			VERTEX vtx = {};
-			vtx.pos.x = -m_fWidth / 2.0f + x * m_fWidth / m_iDivX;
-			vtx.pos.y = 0.0f;
-			vtx.pos.z = -m_fDepth / 2.0f + y * m_fDepth / m_iDivY;
-
-			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
-			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
-
-			vtx.color = { _color.r, _color.g, _color.b, _color.a };
-
-			vtx.normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-			m_Vertices.emplace_back(vtx);
-		}
-	}
-}
-
-void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
-{
 	m_fWidth = width;
 	m_fDepth = depth;
 
@@ -32,7 +11,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 	m_iDivX = divX;
 	m_iDivY = divY;
 
-	BindVertices(_color);
+	BindVertices();
 	BindIndices();
 
 	CreateDefaultBuffers();
@@ -45,7 +24,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), pOutputBuffer.GetAddressOf()));
 	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), pOutputBufferUAV.GetAddressOf()));
 
-	cbData[0] = {
+	cbData[1] = {
 		offsetof(VERTEX, pos),
 		offsetof(VERTEX, uv),
 		offsetof(VERTEX, color),
@@ -53,7 +32,7 @@ void Waves::Create(float width, float depth, int divX, int divY, sRGBA _color)
 	};
 
 	const rsize_t vertexSize = m_Vertices.size();
-	cbData[1] = {
+	cbData[2] = {
 		static_cast<float>(m_iDivX),
 		static_cast<float>(m_iDivY),
 		static_cast<float>(m_iDivZ),
@@ -86,7 +65,13 @@ void Waves::BindComputeShaders()
 
 void Waves::Update(float tick)
 {
-	cbData[2] = { tick, 0.0f, 0.0f, 0.0f };
+	cbData[0] = { tick, 0.0f, 0.0f, 0.0f };
+
+	XMFLOAT4 data[] = {
+		{ m_color.r, m_color.g, m_color.b, m_color.a },
+		cbData[0]
+	};
+
 	m_pCS->SendToBuffer(0, &cbData);
-	m_pPS->SendToBuffer(1, &cbData[2]);
+	m_pPS->SendToBuffer(1, &data);
 }

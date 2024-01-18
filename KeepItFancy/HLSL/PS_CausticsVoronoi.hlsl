@@ -21,17 +21,18 @@ cbuffer Light : register(b0)
 	float4	lightAmbient;
 };
 
-cbuffer Data : register(b1)
+cbuffer CommonData : register(b1)
 {
+	float4	newColor;
 	float	g_time;
-	float3	dummy;
+	float3	padding;
 };
 
 float4 main(PS_IN pin) : SV_TARGET
 {
 	float time = g_time;
 
-	float4 outColor = pin.color;
+	float4 outColor =  newColor;
 
 	float4 tex = texBase.Sample(g_Sampler, pin.uv);
 	outColor *= tex;
@@ -41,7 +42,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	light = -light;
 
 	float diffuse = saturate(dot(normal, light));
-	outColor *= (diffuse * lightDiffuse) + lightAmbient;
+	outColor.rgb *= (diffuse * lightDiffuse) + lightAmbient;
 
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
 	
@@ -51,7 +52,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	float2 uvCoord = pin.uv * 6;
 	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
 	outColor *= caustics * 1.5f;
-	outColor *= shadow * reflection;
-	
+	//outColor *= shadow * reflection;
+
 	return outColor;
 }

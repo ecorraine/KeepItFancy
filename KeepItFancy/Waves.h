@@ -1,7 +1,7 @@
 #pragma once
-#include "MeshCommons.h"
+#include "MPrimitive2D.h"
 
-class Waves : public TRIANGLEBASE
+class Waves final : public TPlane
 {
 private:
 	ComputeShader*						m_pCS = nullptr;
@@ -12,20 +12,15 @@ private:
 
 	XMFLOAT4 cbData[3] = {};
 
-	float								m_fWidth;
-	float								m_fDepth;
 
 public:
-	Waves() :
-		m_fWidth(0),
-		m_fDepth(0)
-	{}
+	Waves() {}
 	~Waves()
 	{
 		delete m_pCS;
 	}
 
-	void Create(float width, float depth, int divX = 10, int divY = 10, sRGBA _color = sRGBA(173, 216, 230));
+	void Create(float width, float depth, int divX = 10, int divY = 10) override;
 	void BindComputeShaders();
 	void Update(float tick);
 
@@ -41,7 +36,5 @@ protected:
 		m_pPS = AddComponent<PixelShader>();
 		m_pPS->LoadShader(SHADER_PATH("PS_CausticsVoronoi.cso"));
 	}
-
-	void BindVertices(sRGBA);
 };
 

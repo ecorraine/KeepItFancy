@@ -1,9 +1,9 @@
-#ifndef SCTITLE_H
-#define SCTITLE_H
+#ifndef SCENEONE_H
+#define SCENEONE_H
 
 #include "BScene.h"
 
-class ScTitle : public SCENE
+class SceneOne : public SCENE
 {
 public:
 	void Init();

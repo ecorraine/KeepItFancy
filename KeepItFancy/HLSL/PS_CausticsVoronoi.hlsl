@@ -13,46 +13,48 @@ struct PS_IN
 	float3 worldPos : POSITION0;
 };
 
-cbuffer Light : register(b0)
-{
-	float4	cameraPos;
-	float4	lightDir;
-	float4	lightDiffuse;
-	float4	lightAmbient;
-};
-
-cbuffer CommonData : register(b1)
+cbuffer CommonData : register(b0)
 {
 	float4	newColor;
 	float	g_time;
-	float3	padding;
+	float	g_isUsingTexture;
+	float	g_Tiling;
+	float	padding;
+};
+
+cbuffer Light : register(b1)
+{
+	float4 cameraPos;
+	float4 lightDir;
+	float4 lightDiffuse;
+	float4 lightAmbient;
 };
 
 float4 main(PS_IN pin) : SV_TARGET
 {
 	float time = g_time;
 
-	float4 outColor =  newColor;
-
-	float4 tex = texBase.Sample(g_Sampler, pin.uv);
-	outColor *= tex;
+	float4 outColor = newColor * pin.color;
+	float4 sampledColor = texBase.Sample(g_Sampler, pin.uv);
+	if (bool(g_isUsingTexture))
+		outColor *= sampledColor;
 
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
-
+/*
 	float diffuse = saturate(dot(normal, light));
 	outColor.rgb *= (diffuse * lightDiffuse) + lightAmbient;
-
+*/
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
 	
 	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
 	float reflection = saturate(dot(viewDir, normal));
 
-	float2 uvCoord = pin.uv * 6;
+	float2 uvCoord = pin.uv * 3;
 	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
-	outColor *= caustics * 1.5f;
-	//outColor *= shadow * reflection;
+	caustics *= shadow * reflection;
+	outColor.rgb *= (1 - caustics) + caustics * 2.5f;
 
 	return outColor;
 }

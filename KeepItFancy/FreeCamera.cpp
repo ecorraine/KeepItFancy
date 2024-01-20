@@ -31,6 +31,7 @@ void FreeCamera::Update(float tick)
 
 	if (KEYINPUT::KeyPress(VK_HOME))
 	{
+		SetPosition(XMFLOAT3(0.0f, 1.0f, -1.0f));
 		SetRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
@@ -112,4 +113,6 @@ void FreeCamera::Update(float tick)
 
 	// apply new camera view matrix
 	CAMERA::GetCamera()->UpdateCamera();
+
+	MESH::Update(tick);
 }

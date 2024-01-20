@@ -34,6 +34,7 @@ protected:
 
 	std::vector<VERTEX>					m_Vertices;
 	sRGBA								m_color = sRGBA();
+	unsigned int						m_UVTiling = 1;
 
 private:
 	bool m_isUsingTexture = false;
@@ -89,6 +90,16 @@ protected:
 	}
 
 public:
+	void Update(float tick) override
+	{
+		XMFLOAT4 data[] = {
+			{ m_color.r, m_color.g, m_color.b, m_color.a },
+			{ tick, static_cast<float>(m_isUsingTexture), static_cast<float>(m_UVTiling), 0.0f }
+		};
+
+		m_pPS->SendToBuffer(0, &data);
+	};
+
 	void SetSRV(const char* file)
 	{
 		m_isUsingTexture = true;
@@ -99,10 +110,7 @@ public:
 		m_cpSRV = texture->GetSRV();
 	}
 
-	void ChangeColor(const sRGBA& _color)
-	{
-		m_color = _color;
-	}
+	void SetColor(const sRGBA& _color) { m_color = _color; }
 	const sRGBA GetColor() const { return m_color; }
 
 	void ChangeShader(SHADER::ShaderType shadertype, const char* _file)

@@ -65,13 +65,9 @@ void Waves::BindComputeShaders()
 
 void Waves::Update(float tick)
 {
-	cbData[0] = { tick, 0.0f, 0.0f, 0.0f };
-
-	XMFLOAT4 data[] = {
-		{ m_color.r, m_color.g, m_color.b, m_color.a },
-		cbData[0]
-	};
+	cbData[0] = { tick, m_fFrequency, m_fAmplitude, 0.0f };
 
 	m_pCS->SendToBuffer(0, &cbData);
-	m_pPS->SendToBuffer(1, &data);
+	
+	MESH::Update(tick);
 }

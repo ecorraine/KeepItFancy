@@ -47,7 +47,9 @@ void LINEBASE::Draw(RasterType cullmode)
 	SetLight(m_pPS);
 	m_pPS->BindShader();
 	if (m_cpSRV)
+	{
 		m_pPS->SetSRV(0, m_cpSRV.Get());
+	}
 
 	SetCulling(cullmode);
 	// render with 2 indices per segment

@@ -11,10 +11,14 @@ private:
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
 
 	XMFLOAT4 cbData[3] = {};
-
+	float m_fFrequency;
+	float m_fAmplitude;
 
 public:
-	Waves() {}
+	Waves() :
+		m_fFrequency(1.0f),
+		m_fAmplitude(0.0003f)
+	{}
 	~Waves()
 	{
 		delete m_pCS;
@@ -23,6 +27,11 @@ public:
 	void Create(float width, float depth, int divX = 10, int divY = 10) override;
 	void BindComputeShaders();
 	void Update(float tick);
+
+	void SetFrequency(const float& _value) { m_fFrequency = _value; }
+	const float GetFrequency() const { return m_fFrequency; }
+	void SetAmplitude(const float& _value) { m_fAmplitude = _value; }
+	const float GetAmplitude() const { return m_fAmplitude; }
 
 protected:
 	virtual void LoadDefaultShaders()

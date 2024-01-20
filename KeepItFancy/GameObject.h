@@ -183,7 +183,7 @@ public:
 				LIGHT::GetLight()->GetLightDiffuse(),
 				LIGHT::GetLight()->GetLightAmbient()
 			};
-			shader->SendToBuffer(0, light);
+			shader->SendToBuffer(1, light);
 		}
 	}
 

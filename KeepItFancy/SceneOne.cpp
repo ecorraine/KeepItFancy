@@ -9,7 +9,7 @@ void SceneOne::Init()
 	pPlane->Create();
 
 	Waves* pWaves = CreateObj<Waves>("Waves");
-	pWaves->Create(3.0f, 3.0f, 50, 50);
+	pWaves->Create(3.0f, 3.0f, 25, 25);
 	pWaves->SetColor(sRGBA(0.2f, 0.5f, 0.8f, 0.8f));
 }
 
@@ -29,7 +29,7 @@ void SceneOne::Update(float tick)
 	ImGui::Begin("Wave Plane");
 
 	/*
-	// needs better fix
+	// needs better fix as this creates new buffers per frame
 	ImGui::SeparatorText("Shaders");
 	const char* items[] = { "SimpleCaustics", "SimpleVoronoi" };
 	static int selection = 1;
@@ -46,20 +46,43 @@ void SceneOne::Update(float tick)
 	*/
 
 	ImGui::SeparatorText("Color");
-	static sRGBA newColor = pWaves->GetColor();
-	ImGui::ColorEdit4("Base Color", (float*)&newColor);
-	pWaves->SetColor(newColor);
+		static sRGBA newColor = pWaves->GetColor();
+		ImGui::ColorEdit4("Base Color", (float*)&newColor);
+		pWaves->SetColor(newColor);
+		pPlane->SetColor(newColor);
 
-	ImGui::SeparatorText("Other Settings");
-	static float freq = pWaves->GetFrequency();
-	ImGui::SliderFloat("Wave Frequency", &freq, 0.0001f, 5.0f);
-	pWaves->SetFrequency(freq);
+	ImGui::Spacing();
 
-	static float ampli = pWaves->GetAmplitude();
-	ImGui::SliderFloat("Wave Amplitude", &ampli, 0.0001f, 0.0005f, "%.4f");
-	pWaves->SetAmplitude(ampli);
+	ImGui::SeparatorText("");
+	if (ImGui::TreeNode("Other Settings"))
+	{
+		static float freq = pWaves->GetFrequency();
+		ImGui::SliderFloat("Wave Frequency", &freq, 0.0001f, 5.0f);
+		pWaves->SetFrequency(freq);
 
-	pPlane->SetColor(newColor);
+		static float ampli = pWaves->GetAmplitude();
+		ImGui::SliderFloat("Wave Amplitude", &ampli, 0.0001f, 0.0005f, "%.4f");
+		pWaves->SetAmplitude(ampli);
+
+		static bool useTess = pWaves->GetTessellationStatus();
+		ImGui::Checkbox("Tessellation", &useTess);
+		pWaves->SetTessellation(useTess);
+
+		if (useTess)
+		{
+			ImGui::SameLine();
+			static float tessFactor = pWaves->GetTessellationFactor();
+			ImGui::SliderFloat("Tessellation Factor", &tessFactor, 1.0f, 64.0f);
+			pWaves->SetTessellationFactor(tessFactor);
+		}
+
+		static bool useWireframe = pWaves->GetWireframeStatus();
+		ImGui::Checkbox("Wireframe", &useWireframe);
+		pWaves->SetWireframe(useWireframe);
+
+		ImGui::TreePop();
+	};
+	ImGui::Spacing();
 	ImGui::Text(" %.2f %.2f %.2f %.2f", pWaves->GetColor().r, pWaves->GetColor().g, pWaves->GetColor().b, pWaves->GetColor().a);
 	ImGui::End();
 

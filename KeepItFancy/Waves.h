@@ -4,8 +4,6 @@
 class Waves final : public TPlane
 {
 private:
-	ComputeShader*						m_pCS = nullptr;
-
 	ComPtr<ID3D11Buffer>				pOutputBuffer = nullptr;
 	ComPtr<ID3D11UnorderedAccessView>	pOutputBufferUAV = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
@@ -19,10 +17,7 @@ public:
 		m_fFrequency(1.0f),
 		m_fAmplitude(0.0003f)
 	{}
-	~Waves()
-	{
-		delete m_pCS;
-	}
+	~Waves() {}
 
 	void Create(float width, float depth, int divX = 10, int divY = 10) override;
 	void BindComputeShaders();
@@ -42,8 +37,23 @@ protected:
 		m_pVS = AddComponent<VertexShader>();
 		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
 
+		m_pHS = AddComponent<HullShader>();
+		m_pHS->LoadShader(SHADER_PATH("HS_Default.cso"));
+
+		m_pDS = AddComponent<DomainShader>();
+		m_pDS->LoadShader(SHADER_PATH("DS_Default.cso"));
+
 		m_pPS = AddComponent<PixelShader>();
 		m_pPS->LoadShader(SHADER_PATH("PS_CausticsVoronoi.cso"));
+	}
+
+	void ProcessTessellation() override
+	{
+		m_pHS->SendToBuffer(1, (void*)&m_fTessellationFactor);
+		m_pHS->BindShader();
+
+		m_pDS->SendToBuffer(1, (void*)&m_fTessellationFactor);
+		m_pDS->BindShader();
 	}
 };
 

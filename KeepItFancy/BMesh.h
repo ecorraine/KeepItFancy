@@ -6,6 +6,19 @@
 #include "srgba.hpp"
 #include "myUtilities.hpp"
 
+///--------------------------------------------------
+//! \enum Topology Type
+/*! \brief List of Topology types to use for rendering
+ *  \brief 描画時に使うトポロジー
+ */
+enum class TopologyType
+{
+	LINELIST,						//!< 線形
+	TRIANGLELIST,					//!< 三角形
+	THREE_CONTROL_POINT_PATCHLIST,	//!< パッチリスト
+	MAX_TOPOLOGY_TYPE
+};
+
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! MESH Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,24 +39,62 @@ public:
 
 protected:
 	VertexShader* m_pVS = nullptr;
+	HullShader* m_pHS = nullptr;
+	DomainShader* m_pDS = nullptr;
 	PixelShader* m_pPS = nullptr;
+	ComputeShader* m_pCS = nullptr;
 
 	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
 	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
 
 	std::vector<VERTEX>					m_Vertices;
-	sRGBA								m_color = sRGBA();
-	unsigned int						m_UVTiling = 1;
 
 private:
-	bool m_isUsingTexture = false;
+	sRGBA	m_baseColor = sRGBA();
+	sRGBA	m_emissiveColor = sRGBA();
+	float	m_fEmissivePower = 1.0f;
+	float	m_fShininess = 0.0f;
+	float	m_fSpecularPower = 0.0f;
+	float	m_fRoughness = 0.0f;
+	float	m_fMetallic = 0.0f;
+	float	m_fAmbientOcclusion = 0.0f;
+	float	m_fUVTiling[2] = { 1, 1 };
+
+protected:
+	float	m_fTessellationFactor = 2.0f;
+	bool	m_useTessellation = false;
+	bool	m_useWireframe = false;
+	bool	m_isUsingTexture = false;
 
 public:
 	~MESH()
 	{
-		delete m_pPS;
-		delete m_pVS;
+		if (m_pPS)
+		{
+			delete m_pPS;
+			m_pPS = nullptr;
+		}
+		if (m_pDS)
+		{
+			delete m_pDS;
+			m_pDS = nullptr;
+		}
+		if (m_pHS)
+		{
+			delete m_pHS;
+			m_pHS = nullptr;
+		}
+		if (m_pVS)
+		{
+			delete m_pVS;
+			m_pVS = nullptr;
+		}
+		if (m_pCS)
+		{
+			delete m_pCS;
+			m_pCS = nullptr;
+		}
 
 		m_Vertices.erase(m_Vertices.begin(), m_Vertices.end());
 		m_Vertices.clear();
@@ -63,6 +114,22 @@ protected:
 
 	virtual void ProcessTessellation() {}
 	virtual void BindComputeShaders() {}
+
+	static void SetTopology(TopologyType topology)
+	{
+		switch (topology)
+		{
+		case TopologyType::LINELIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			break;
+		case TopologyType::TRIANGLELIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			break;
+		case TopologyType::THREE_CONTROL_POINT_PATCHLIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+			break;
+		}
+	}
 
 	static void SetCulling(RasterType cullmode)
 	{
@@ -90,15 +157,24 @@ protected:
 	}
 
 public:
-	void Update(float tick) override
-	{
-		XMFLOAT4 data[] = {
-			{ m_color.r, m_color.g, m_color.b, m_color.a },
-			{ tick, static_cast<float>(m_isUsingTexture), static_cast<float>(m_UVTiling), 0.0f }
-		};
+	void SetColor(const sRGBA& _color) { m_baseColor = _color; }
+	const sRGBA GetColor() const { return m_baseColor; }
 
-		m_pPS->SendToBuffer(0, &data);
-	};
+	const XMFLOAT2 GetUVTiling() const { return XMFLOAT2(m_fUVTiling[0], m_fUVTiling[1]); }
+	void SetUVTiling(const XMFLOAT2& value)
+	{
+		m_fUVTiling[0] = value.x;
+		m_fUVTiling[1] = value.y;
+	}
+
+	const bool GetWireframeStatus() const { return m_useWireframe; }
+	void SetWireframe(bool value) { m_useWireframe = value; }
+
+	const bool GetTessellationStatus() const { return m_useTessellation; }
+	void SetTessellation(bool value) { m_useTessellation = value; }
+
+	const float GetTessellationFactor() const { return m_fTessellationFactor; }
+	void SetTessellationFactor(const float& value) { m_fTessellationFactor = value; }
 
 	void SetSRV(const char* file)
 	{
@@ -110,8 +186,15 @@ public:
 		m_cpSRV = texture->GetSRV();
 	}
 
-	void SetColor(const sRGBA& _color) { m_color = _color; }
-	const sRGBA GetColor() const { return m_color; }
+	void Update(float tick) override
+	{
+		XMFLOAT4 data[] = {
+			{ m_baseColor.r, m_baseColor.g, m_baseColor.b, m_baseColor.a },
+			{ tick, static_cast<float>(m_isUsingTexture), m_fUVTiling[0], m_fUVTiling[1] }
+		};
+
+		m_pPS->SendToBuffer(0, &data);
+	};
 
 	void ChangeShader(SHADER::ShaderType shadertype, const char* _file)
 	{

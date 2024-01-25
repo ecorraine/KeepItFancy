@@ -1,7 +1,7 @@
 #include "MPrimitive2D.h"
 
 ///--------------------------------------------------
-//! Circle Class
+//! Segment-based Circle Class
 ///--------------------------------------------------
 void SCircle::BindVertices()
 {
@@ -47,7 +47,7 @@ void SCircle::Create(float radius, int segments)
 
 	m_fRadius = radius;
 	m_iSegments = segments;
-	m_color = sRGBA(0.0f, 1.0f, 0.0f);
+	SetColor(sRGBA(0.0f, 1.0f, 0.0f));
 
 	BindVertices();
 	BindIndices();
@@ -57,7 +57,9 @@ void SCircle::Create(float radius, int segments)
 }
 
 
-
+///--------------------------------------------------
+//! Triangle-based Plane Class
+///--------------------------------------------------
 void TPlane::BindVertices()
 {
 	m_Vertices.clear();

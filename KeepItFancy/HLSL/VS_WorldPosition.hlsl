@@ -17,8 +17,6 @@ struct VS_OUT
 	float3 worldPos : POSITION0;
 };
 
-
-
 VS_OUT main(VS_IN vin)
 {
 	VS_OUT vout = (VS_OUT)0;

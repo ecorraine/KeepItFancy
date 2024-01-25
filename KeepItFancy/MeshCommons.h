@@ -7,7 +7,7 @@
 //! LINEBASE Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! \class LINEBASE MeshCommons.h "MeshCommons.h"
-/*! \brief Base Class for Segment-type Meshes
+/*! \brief Base Class for Segment-based Meshes
  *  \brief 線形メッシュ親クラス
  */
 class LINEBASE : public MESH
@@ -52,7 +52,7 @@ public:
 //! TRIANGLEBASE Class
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! \class TRIANGLEBASE MeshCommons.h "MeshCommons.h"
-/*! \brief Base Class for Triangle-type Meshes
+/*! \brief Base Class for Triangle-based Meshes
  *  \brief 三角形メッシュ親クラス
  */
 class TRIANGLEBASE : public MESH

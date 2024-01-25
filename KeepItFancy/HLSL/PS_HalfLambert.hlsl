@@ -14,8 +14,7 @@ cbuffer CommonData : register(b0)
 	float4	newColor;
 	float	g_time;
 	float	g_isUsingTexture;
-	float	g_Tiling;
-	float	padding;
+	float2	g_UVTiling;
 };
 
 cbuffer Light : register(b1)

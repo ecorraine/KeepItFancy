@@ -11,10 +11,10 @@ class SSegment : public LINEBASE
 
 
 ///--------------------------------------------------
-//! SCircle Class
+//! Segment-based Circle Class
 ///--------------------------------------------------
 //! \class SCircle MPrimitive2D.h "MPrimitive2D.h"
-/*! \brief Segment-type Circle Mesh Class
+/*! \brief Segment-based Circle Mesh Class
  *  \brief 弓形円メッシュクラス
  */
 class SCircle : public LINEBASE
@@ -46,11 +46,11 @@ protected:
 
 
 ///--------------------------------------------------
-//! TPlane Class
+//! Triangle-based Plane Class
 ///--------------------------------------------------
 //! \class TPlane MPrimitive2D.h "MPrimitive2D.h"
-/*! \brief Regular Triangle-type Plane Mesh Class
- *  \brief 一般三角形平面メッシュクラス
+/*! \brief Triangle-based Plane Mesh Class
+ *  \brief 三角形平面メッシュクラス
  */
 class TPlane : public TRIANGLEBASE
 {

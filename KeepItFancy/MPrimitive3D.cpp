@@ -1,5 +1,8 @@
 #include "MPrimitive3D.h"
 
+///--------------------------------------------------
+//! Segment-based Sphere Class
+///--------------------------------------------------
 void SSphere::BindVertices()
 {
 	m_Vertices.clear();
@@ -77,9 +80,9 @@ void SSphere::Create(float radius, int segments)
 
 
 ///--------------------------------------------------
-//! Sphere Class
+//! Triangle-based Sphere Class
 ///--------------------------------------------------
-void Sphere::BindVertices()
+void TSphere::BindVertices()
 {
 	m_Vertices.clear();
 
@@ -113,7 +116,7 @@ void Sphere::BindVertices()
 	}
 }
 
-void Sphere::Create(float radius, int divisions)
+void TSphere::Create(float radius, int divisions)
 {
 	m_fRadius = radius;
 

@@ -41,7 +41,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	};
 	unsigned int numDriverTypes = ARRAYSIZE(driverTypes);
 
-	unsigned int deviceFlag = 0;
+	unsigned int deviceFlag = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
 	deviceFlag |= D3D11_CREATE_DEVICE_DEBUG;
 #endif // _DEBUG

@@ -4,10 +4,10 @@
 #include "MeshCommons.h"
 
 ///--------------------------------------------------
-//! SSphere Class
+//! Segment-based Sphere Class
 ///--------------------------------------------------
 //! \class SSphere MPrimitive3D.h "MPrimitive3D.h"
-/*! \brief Segment-type Sphere Mesh Class
+/*! \brief Segment-based Sphere Mesh Class
  *  \brief 線形球体メッシュクラス
  */
 class SSphere : public LINEBASE
@@ -39,22 +39,22 @@ protected:
 
 
 ///--------------------------------------------------
-//! Sphere Class
+//! TSphere Class
 ///--------------------------------------------------
-//! \class Sphere MPrimitive3D.h "MPrimitive3D.h"
-/*! \brief Triangle-type Sphere Mesh Class
+//! \class TSphere MPrimitive3D.h "MPrimitive3D.h"
+/*! \brief Triangle-based Sphere Mesh Class
  *  \brief 三角形球体メッシュクラス
  */
-class Sphere : public TRIANGLEBASE
+class TSphere : public TRIANGLEBASE
 {
 protected:
 	float		m_fRadius;
 
 public:
-	Sphere() :
+	TSphere() :
 		m_fRadius(0.0f)
 	{}
-	~Sphere() {}
+	~TSphere() {}
 
 	void Create(float radius = 1.0f, int divisions = 8);
 

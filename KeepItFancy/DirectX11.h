@@ -34,7 +34,7 @@ enum class RasterType
 	CULL_FRONT,				//!< 正面向きの三角形を描画しない
 	CULL_BACK,				//!< 背面向きの三角形を描画しない
 	WIREFRAME_NO_CULL,		//!< 全ての線のみを描画
-	WIREFRAME_CULL_BACK,	//!< 背面向きの線のみを描画
+	WIREFRAME_CULL_BACK,	//!< 背面向きの線のみを描画しない
 	MAX_RASTER_TYPE
 };
 

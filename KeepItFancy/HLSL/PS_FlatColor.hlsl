@@ -14,16 +14,15 @@ cbuffer CommonData : register(b0)
 	float4	newColor;
 	float	g_time;
 	float	g_isUsingTexture;
-	float	g_Tiling;
-	float	padding;
+	float2	g_UVTiling;
 };
 
 float4 main(PS_IN pin) : SV_TARGET
 {
 	float4 outColor = newColor * pin.color;
-	float4 tex = texBase.Sample(g_Sampler, pin.uv);
+	float4 sampledColor = texBase.Sample(g_Sampler, pin.uv);
 	if (bool(g_isUsingTexture))
-		outColor *= tex;
+		outColor *= sampledColor;
 
 	return outColor;
 }

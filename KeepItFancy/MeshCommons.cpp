@@ -1,5 +1,8 @@
 #include "MeshCommons.h"
 
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! LINEBASE Class
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void LINEBASE::BindIndices()
 {
 	m_Faces.clear();
@@ -28,21 +31,13 @@ void LINEBASE::BindIndices()
 
 void LINEBASE::Draw(RasterType cullmode)
 {
-	BindComputeShaders();
-
-	// set buffers
-	unsigned int stride = sizeof(VERTEX);
-	unsigned offset = 0;
-	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
-	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	// set topology to line list for segments
-	DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	if (m_pCS)
+	{
+		BindComputeShaders();
+	}
 
 	SetWVPMatrix(m_pVS);
 	m_pVS->BindShader();
-
-	ProcessTessellation();
 
 	SetLight(m_pPS);
 	m_pPS->BindShader();
@@ -51,13 +46,28 @@ void LINEBASE::Draw(RasterType cullmode)
 		m_pPS->SetSRV(0, m_cpSRV.Get());
 	}
 
-	SetCulling(cullmode);
+	// set buffers
+	unsigned int stride = sizeof(VERTEX);
+	unsigned offset = 0;
+	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
+	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	// set topology to line list for segments
+	SetTopology(TopologyType::LINELIST);
+
+	if (!m_useWireframe)
+		SetCulling(cullmode);
+	else
+		SetCulling(RasterType::WIREFRAME_NO_CULL);
 	// render with 2 indices per segment
 	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 2, 0, 0);
 }
 
 
 
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! TRIANGLEBASE Class
+///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void TRIANGLEBASE::GenerateIndices(int SideToDivide, int offset)
 {
 	FACE face = {};
@@ -92,7 +102,21 @@ void TRIANGLEBASE::BindIndices()
 
 void TRIANGLEBASE::Draw(RasterType cullmode)
 {
-	BindComputeShaders();
+	if (m_pCS)
+	{
+		BindComputeShaders();
+	}
+
+	SetWVPMatrix(m_pVS);
+	m_pVS->BindShader();
+
+	if (m_useTessellation)
+		ProcessTessellation();
+
+	SetLight(m_pPS);
+	m_pPS->BindShader();
+	if (m_cpSRV)
+		m_pPS->SetSRV(0, m_cpSRV.Get());
 
 	// set buffers
 	unsigned int stride = sizeof(VERTEX);
@@ -101,19 +125,15 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// set topology to triangle list for faces
-	DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//if(!m_useTessellation)
+	SetTopology(TopologyType::TRIANGLELIST);
+	//else
+		//SetTopology(TopologyType::THREE_CONTROL_POINT_PATCHLIST);
 
-	SetWVPMatrix(m_pVS);
-	m_pVS->BindShader();
-
-	ProcessTessellation();
-
-	SetLight(m_pPS);
-	m_pPS->BindShader();
-	if (m_cpSRV)
-		m_pPS->SetSRV(0, m_cpSRV.Get());
-
-	SetCulling(cullmode);
+	if (!m_useWireframe)
+		SetCulling(cullmode);
+	else
+		SetCulling(RasterType::WIREFRAME_NO_CULL);
 	// render with 3 indices per face
-	DirectX11::GetContext()->DrawIndexed( m_Faces.size() * 3, 0, 0);
+	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 3, 0, 0);
 }

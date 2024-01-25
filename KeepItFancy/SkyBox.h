@@ -3,7 +3,7 @@
 
 #include "MPrimitive3D.h"
 
-class SkyBox final : public Sphere
+class SkyBox final : public TSphere
 {
 public:
 	SkyBox() {}

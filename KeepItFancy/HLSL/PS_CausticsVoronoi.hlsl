@@ -1,5 +1,4 @@
-#include "F_Common.hlsli"
-#include "F_Noise.hlsli"
+#include "AF_Noise.hlsli"
 
 Texture2D		texBase		: register(t0);
 SamplerState	g_Sampler	: register(s0);
@@ -18,8 +17,7 @@ cbuffer CommonData : register(b0)
 	float4	newColor;
 	float	g_time;
 	float	g_isUsingTexture;
-	float	g_Tiling;
-	float	padding;
+	float2	g_UVTiling;
 };
 
 cbuffer Light : register(b1)
@@ -42,10 +40,10 @@ float4 main(PS_IN pin) : SV_TARGET
 	float3 normal = normalize(pin.normal.xyz);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
-/*
+
 	float diffuse = saturate(dot(normal, light));
 	outColor.rgb *= (diffuse * lightDiffuse) + lightAmbient;
-*/
+
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
 	
 	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
@@ -53,8 +51,8 @@ float4 main(PS_IN pin) : SV_TARGET
 
 	float2 uvCoord = pin.uv * 3;
 	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
-	caustics *= shadow * reflection;
-	outColor.rgb *= (1 - caustics) + caustics * 2.5f;
+	caustics = caustics * shadow * reflection;
+	outColor.rgb = outColor.rgb * (1 - caustics) + caustics * 1.5f;
 
 	return outColor;
 }

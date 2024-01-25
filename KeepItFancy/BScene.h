@@ -68,18 +68,18 @@ template<class T> T* SCENE::AddSubScene()
 ///--------------------------------------------------
 template<class T> T* SCENE::CreateObj(const char* name)
 {
-	// デバッグ中のみ、名称ダブりがないかチェック
 #ifdef _DEBUG
+	// check for objects with existing name || 同じ名称のオブジェクトをチェック
 	Objects::iterator it = m_objects.find(name);
 	if (it != m_objects.end()) {
 		static char buf[256];
-		sprintf_s(buf, sizeof(buf), "Failed to create object!\nオブジェクト作成失敗！\n%s", name);
-		MessageBoxA(NULL, buf, "ERROR", MB_OK | MB_ICONWARNING);
+		sprintf_s(buf, sizeof(buf), "Failed to create new object. %s already exist!\n既存オブジェクトのため、%s作成失敗！\n", name);
+		MessageBoxA(NULL, buf, "ERROR", MB_OK | MB_ICONERROR);
 		return nullptr;
 	}
 #endif // _DEBUG
 
-	// オブジェクト生成
+	// create object || オブジェクト生成
 	std::shared_ptr<T> ptr = std::make_shared<T>();
 	m_objects.insert(std::pair<std::string, std::shared_ptr<COMPONENT>>(name, std::make_shared<TComponent<T>>(ptr)));
 	m_Items.push_back(name);
@@ -89,11 +89,11 @@ template<class T> T* SCENE::CreateObj(const char* name)
 ///--------------------------------------------------
 template<class T> T* SCENE::GetObj(const char* name)
 {
-	// オブジェクトの探索
+	// search for object || オブジェクトの探索
 	Objects::iterator it = m_objects.find(name);
 	if (it == m_objects.end()) return nullptr;
 
-	// 型変換
+	// change type || 型変換
 	std::shared_ptr<TComponent<T>> ptr = std::reinterpret_pointer_cast<TComponent<T>>(it->second);
 	return ptr->m_pObj.get();
 }

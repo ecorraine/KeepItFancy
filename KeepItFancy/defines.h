@@ -17,8 +17,6 @@ constexpr float		RATIO_WIDTH = 16.0f;							//!<
 constexpr float		RATIO_HEIGHT = 9.0f;							//!< 
 constexpr float		ASPECT_RATIO = RATIO_WIDTH / RATIO_HEIGHT;		//!< 画面オフセットに使うアスペクト比
 
-static bool			g_bTesselate = false;
-
 static uint64_t		g_Frequency;
 static double		g_FrameRateCap = 60.0;
 static float		g_fElapsedTime;

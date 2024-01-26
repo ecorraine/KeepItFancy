@@ -15,7 +15,8 @@ enum class TopologyType
 {
 	LINELIST,						//!< 線形
 	TRIANGLELIST,					//!< 三角形
-	THREE_CONTROL_POINT_PATCHLIST,	//!< パッチリスト
+	THREE_CONTROL_POINT_PATCHLIST,	//!< ３点パッチリスト
+	FOUR_CONTROL_POINT_PATCHLIST,	//!< ４点パッチリスト
 	MAX_TOPOLOGY_TYPE
 };
 
@@ -62,7 +63,7 @@ private:
 	float	m_fUVTiling[2] = { 1, 1 };
 
 protected:
-	float	m_fTessellationFactor = 2.0f;
+	float	m_fTessellationFactor = 4.0f;
 	bool	m_useTessellation = false;
 	bool	m_useWireframe = false;
 	bool	m_isUsingTexture = false;
@@ -106,14 +107,30 @@ protected:
 		DXVec3Normalize(normal, vector);
 	}
 
+	virtual void EndTessellation()
+	{
+		if (m_cpSRV)
+		{
+			if (m_pDS)
+				m_pDS->SetSRV(0, nullptr);
+
+			m_pPS->SetSRV(0, nullptr);
+		}
+	}
+
+	virtual void ProcessTessellation()
+	{
+		if (m_cpSRV && m_pDS)
+			m_pDS->SetSRV(0, m_cpSRV.Get());
+	}
+
+	virtual void BindComputeShaders() {}
+
 	virtual void BindIndices() = 0;
 	virtual void BindVertices() = 0;
 
 	virtual void CreateDefaultBuffers() = 0;
 	virtual void LoadDefaultShaders() = 0;
-
-	virtual void ProcessTessellation() {}
-	virtual void BindComputeShaders() {}
 
 	static void SetTopology(TopologyType topology)
 	{
@@ -127,6 +144,9 @@ protected:
 			break;
 		case TopologyType::THREE_CONTROL_POINT_PATCHLIST:
 			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+			break;
+		case TopologyType::FOUR_CONTROL_POINT_PATCHLIST:
+			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 			break;
 		}
 	}

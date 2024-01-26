@@ -38,10 +38,10 @@ protected:
 		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
 
 		m_pHS = AddComponent<HullShader>();
-		m_pHS->LoadShader(SHADER_PATH("HS_Default.cso"));
+		m_pHS->LoadShader(SHADER_PATH("HS_QuadInterpolation.cso"));
 
 		m_pDS = AddComponent<DomainShader>();
-		m_pDS->LoadShader(SHADER_PATH("DS_Default.cso"));
+		m_pDS->LoadShader(SHADER_PATH("DS_QuadInterpolation.cso"));
 
 		m_pPS = AddComponent<PixelShader>();
 		m_pPS->LoadShader(SHADER_PATH("PS_CausticsVoronoi.cso"));
@@ -49,11 +49,14 @@ protected:
 
 	void ProcessTessellation() override
 	{
-		m_pHS->SendToBuffer(1, (void*)&m_fTessellationFactor);
+		m_pHS->SendToBuffer(0, (void*)&m_fTessellationFactor);
 		m_pHS->BindShader();
 
+		SetWVPMatrix(m_pDS);
 		m_pDS->SendToBuffer(1, (void*)&m_fTessellationFactor);
 		m_pDS->BindShader();
+
+		MESH::ProcessTessellation();
 	}
 };
 

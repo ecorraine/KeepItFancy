@@ -31,6 +31,12 @@ void LINEBASE::BindIndices()
 
 void LINEBASE::Draw(RasterType cullmode)
 {
+	// set buffers
+	unsigned int stride = sizeof(VERTEX);
+	unsigned offset = 0;
+	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
+	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
+
 	if (m_pCS)
 	{
 		BindComputeShaders();
@@ -46,13 +52,7 @@ void LINEBASE::Draw(RasterType cullmode)
 		m_pPS->SetSRV(0, m_cpSRV.Get());
 	}
 
-	// set buffers
-	unsigned int stride = sizeof(VERTEX);
-	unsigned offset = 0;
-	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
-	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	// set topology to line list for segments
+	// set topology for segments
 	SetTopology(TopologyType::LINELIST);
 
 	if (!m_useWireframe)
@@ -61,6 +61,8 @@ void LINEBASE::Draw(RasterType cullmode)
 		SetCulling(RasterType::WIREFRAME_NO_CULL);
 	// render with 2 indices per segment
 	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 2, 0, 0);
+
+	EndTessellation();
 }
 
 
@@ -102,6 +104,12 @@ void TRIANGLEBASE::BindIndices()
 
 void TRIANGLEBASE::Draw(RasterType cullmode)
 {
+	// set buffers
+	unsigned int stride = sizeof(VERTEX);
+	unsigned offset = 0;
+	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
+	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
+
 	if (m_pCS)
 	{
 		BindComputeShaders();
@@ -118,17 +126,11 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	if (m_cpSRV)
 		m_pPS->SetSRV(0, m_cpSRV.Get());
 
-	// set buffers
-	unsigned int stride = sizeof(VERTEX);
-	unsigned offset = 0;
-	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
-	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	// set topology to triangle list for faces
-	//if(!m_useTessellation)
-	SetTopology(TopologyType::TRIANGLELIST);
-	//else
-		//SetTopology(TopologyType::THREE_CONTROL_POINT_PATCHLIST);
+	// set topology for faces
+	if (!m_useTessellation)
+		SetTopology(TopologyType::TRIANGLELIST);
+	else
+		SetTopology(TopologyType::FOUR_CONTROL_POINT_PATCHLIST);
 
 	if (!m_useWireframe)
 		SetCulling(cullmode);
@@ -136,4 +138,7 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 		SetCulling(RasterType::WIREFRAME_NO_CULL);
 	// render with 3 indices per face
 	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 3, 0, 0);
+
+	if(m_useTessellation)
+		EndTessellation();
 }

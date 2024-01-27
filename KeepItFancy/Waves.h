@@ -4,11 +4,12 @@
 class Waves final : public TPlane
 {
 private:
-	ComPtr<ID3D11Buffer>				pOutputBuffer = nullptr;
-	ComPtr<ID3D11UnorderedAccessView>	pOutputBufferUAV = nullptr;
+	ComPtr<ID3D11Buffer>				m_cpOutputBufferUAV = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
+	ComPtr<ID3D11ShaderResourceView>	m_cpFractalNoiseSRV = nullptr;
+	ComPtr<ID3D11ShaderResourceView>	m_cpRippleNormalSRV = nullptr;
 
-	XMFLOAT4 cbData[3] = {};
+	XMFLOAT4 cbData[3] = {};	// constant buffer data for compute shader
 	float m_fFrequency;
 	float m_fAmplitude;
 
@@ -29,6 +30,8 @@ public:
 	const float GetAmplitude() const { return m_fAmplitude; }
 
 protected:
+	void ProcessTessellation(void* tessData) override;
+
 	virtual void LoadDefaultShaders()
 	{
 		m_pCS = AddComponent<ComputeShader>();
@@ -38,25 +41,13 @@ protected:
 		m_pVS->LoadShader(SHADER_PATH("VS_WorldPosition.cso"));
 
 		m_pHS = AddComponent<HullShader>();
-		m_pHS->LoadShader(SHADER_PATH("HS_QuadInterpolation.cso"));
+		m_pHS->LoadShader(SHADER_PATH("HS_TriInterpolation.cso"));
 
 		m_pDS = AddComponent<DomainShader>();
-		m_pDS->LoadShader(SHADER_PATH("DS_QuadInterpolation.cso"));
+		m_pDS->LoadShader(SHADER_PATH("DS_TriInterpolation.cso"));
 
 		m_pPS = AddComponent<PixelShader>();
 		m_pPS->LoadShader(SHADER_PATH("PS_CausticsVoronoi.cso"));
-	}
-
-	void ProcessTessellation() override
-	{
-		m_pHS->SendToBuffer(0, (void*)&m_fTessellationFactor);
-		m_pHS->BindShader();
-
-		SetWVPMatrix(m_pDS);
-		m_pDS->SendToBuffer(1, (void*)&m_fTessellationFactor);
-		m_pDS->BindShader();
-
-		MESH::ProcessTessellation();
 	}
 };
 

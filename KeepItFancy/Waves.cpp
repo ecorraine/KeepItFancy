@@ -11,6 +11,9 @@ void Waves::Create(float width, float depth, int divX, int divY)
 	m_iDivX = divX;
 	m_iDivY = divY;
 
+	SetSRV(m_cpFractalNoiseSRV.Get(), ASSET_PATH("img/FractalNoise_Color.jpg"));
+	SetSRV(m_cpRippleNormalSRV.Get(), ASSET_PATH("img/RippleNoise_Normal.png"));
+
 	BindVertices();
 	BindIndices();
 
@@ -21,8 +24,8 @@ void Waves::Create(float width, float depth, int divX, int divY)
 	CHECK_HR(CreateStagingBuffer(sizeof(VERTEX) * m_Vertices.size(), m_cpStagingBuffer.GetAddressOf()));
 
 	// Set up shader resources and UAV
-	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), pOutputBuffer.GetAddressOf()));
-	CHECK_HR(CreateUnorderAccessView(pOutputBuffer.Get(), pOutputBufferUAV.GetAddressOf()));
+	CHECK_HR(CreateVertexBufferUAV(sizeof(VERTEX) * m_Vertices.size(), m_Vertices.data(), m_cpOutputBufferUAV.GetAddressOf()));
+	CHECK_HR(CreateUnorderAccessView(m_cpOutputBufferUAV.Get(), m_cpUAV.GetAddressOf()));
 
 	cbData[1] = {
 		offsetof(VERTEX, pos),
@@ -42,12 +45,11 @@ void Waves::Create(float width, float depth, int divX, int divY)
 
 void Waves::BindComputeShaders()
 {
-	m_pCS->BindShader();
-	DirectX11::GetContext()->CSSetUnorderedAccessViews(0, 1, pOutputBufferUAV.GetAddressOf(), 0);
+	MESH::BindComputeShaders();
 
 	DirectX11::GetContext()->Dispatch(m_Vertices.size(), 1, 1);
 
-	DirectX11::GetContext()->CopyResource(m_cpStagingBuffer.Get(), pOutputBuffer.Get());
+	DirectX11::GetContext()->CopyResource(m_cpStagingBuffer.Get(), m_cpOutputBufferUAV.Get());
 
 	std::vector<VERTEX> UpdatedVertices;
 	UpdatedVertices.resize(m_Vertices.size());
@@ -70,4 +72,11 @@ void Waves::Update(float tick)
 	m_pCS->SendToBuffer(0, &cbData);
 	
 	MESH::Update(tick);
+}
+
+void Waves::ProcessTessellation(void* tessData)
+{
+	MESH::ProcessTessellation(tessData);
+
+	m_pDS->SetSRV(0, m_cpFractalNoiseSRV.Get());
 }

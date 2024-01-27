@@ -7,6 +7,7 @@ void SceneOne::Init()
 {
 	TPlane* pPlane = CreateObj<TPlane>("Plane");
 	pPlane->Create();
+	pPlane->SetBaseSRV(ASSET_PATH("img/HalLogo.jpg"));
 
 	Waves* pWaves = CreateObj<Waves>("Waves");
 	pWaves->Create(3.0f, 3.0f, 25, 25);
@@ -49,7 +50,6 @@ void SceneOne::Update(float tick)
 		static sRGBA newColor = pWaves->GetColor();
 		ImGui::ColorEdit4("Base Color", (float*)&newColor);
 		pWaves->SetColor(newColor);
-		pPlane->SetColor(newColor);
 
 	ImGui::Spacing();
 
@@ -72,7 +72,7 @@ void SceneOne::Update(float tick)
 		{
 			ImGui::SameLine();
 			static float tessFactor = pWaves->GetTessellationFactor();
-			ImGui::SliderFloat("Tessellation Factor", &tessFactor, 1.0f, 64.0f);
+			ImGui::SliderFloat("Tessellation Factor", &tessFactor, 0.0f, 8.0f);
 			pWaves->SetTessellationFactor(tessFactor);
 		}
 

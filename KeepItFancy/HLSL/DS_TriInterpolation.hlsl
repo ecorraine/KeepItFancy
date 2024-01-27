@@ -1,6 +1,9 @@
 #include "AS_HullDomainCommon.hlsli"
 #include "BUF_WVPMatrix.hlsli"
 
+Texture2D		texDMap		: register(t0);
+SamplerState	g_Sampler	: register(s0);
+
 struct DS_OUT
 {
 	float4 pos		: SV_POSITION;
@@ -28,15 +31,6 @@ DS_OUT main(
 	DS_OUT dout = (DS_OUT)0;
 
 	// Barycentric Triangle interpolation
-	float3 position = patch[0].pos.xyz * domain.x
-					+ patch[1].pos.xyz * domain.y
-					+ patch[2].pos.xyz * domain.z;
-
-	dout.pos = mul(float4(position, 1.0f), world);
-	dout.worldPos = dout.pos.xyz;
-	dout.pos = mul(dout.pos, view);
-	dout.pos = mul(dout.pos, proj);
-
 	dout.uv = patch[0].uv * domain.x
 			+ patch[1].uv * domain.y
 			+ patch[2].uv * domain.z;
@@ -44,10 +38,26 @@ DS_OUT main(
 	dout.color = patch[0].color * domain.x
 				+ patch[1].color * domain.y
 				+ patch[2].color * domain.z;
+	
+	float3 position = patch[0].pos.xyz * domain.x
+					+ patch[1].pos.xyz * domain.y
+					+ patch[2].pos.xyz * domain.z;
+
+	float height = texDMap.SampleLevel(g_Sampler, dout.uv, 0).r;
+	if (height > 0.2f)
+	{
+		position.y += height * 0.1f;
+	}
+
+	dout.pos = mul(float4(position, 1.0f), world);
+	dout.worldPos = dout.pos.xyz;
+	dout.pos = mul(dout.pos, view);
+	dout.pos = mul(dout.pos, proj);
 
 	dout.normal = patch[0].normal * domain.x
 				+ patch[1].normal * domain.y
 				+ patch[2].normal * domain.z;
+	dout.normal = normalize(mul(dout.normal, (float3x3) world));
 
 	return dout;
 }

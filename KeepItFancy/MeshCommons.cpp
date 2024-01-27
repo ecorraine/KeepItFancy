@@ -37,19 +37,18 @@ void LINEBASE::Draw(RasterType cullmode)
 	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
 	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	if (m_pCS)
-	{
-		BindComputeShaders();
-	}
+	BindComputeShaders();
 
 	SetWVPMatrix(m_pVS);
+	XMFLOAT4 tessData = { static_cast<float>(m_useTessellation), m_fTessellationFactor, 0.0f, 0.0f };
+	m_pVS->SendToBuffer(1, &tessData);
 	m_pVS->BindShader();
 
 	SetLight(m_pPS);
 	m_pPS->BindShader();
-	if (m_cpSRV)
+	if (m_cpBaseSRV)
 	{
-		m_pPS->SetSRV(0, m_cpSRV.Get());
+		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
 	}
 
 	// set topology for segments
@@ -62,7 +61,7 @@ void LINEBASE::Draw(RasterType cullmode)
 	// render with 2 indices per segment
 	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 2, 0, 0);
 
-	EndTessellation();
+	ClearResources();
 }
 
 
@@ -110,27 +109,26 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	DirectX11::GetContext()->IASetVertexBuffers(0, 1, m_cpVertexBuf.GetAddressOf(), &stride, &offset);
 	DirectX11::GetContext()->IASetIndexBuffer(m_cpIndexBuf.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	if (m_pCS)
-	{
-		BindComputeShaders();
-	}
+	BindComputeShaders();
 
 	SetWVPMatrix(m_pVS);
+	XMFLOAT4 tessData = { static_cast<float>(m_useTessellation), m_fTessellationFactor, 0.0f, 0.0f };
+	m_pVS->SendToBuffer(1, &tessData);
 	m_pVS->BindShader();
 
 	if (m_useTessellation)
-		ProcessTessellation();
+		ProcessTessellation(&tessData);
 
 	SetLight(m_pPS);
 	m_pPS->BindShader();
-	if (m_cpSRV)
-		m_pPS->SetSRV(0, m_cpSRV.Get());
+	if (m_cpBaseSRV)
+		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
 
 	// set topology for faces
 	if (!m_useTessellation)
 		SetTopology(TopologyType::TRIANGLELIST);
 	else
-		SetTopology(TopologyType::FOUR_CONTROL_POINT_PATCHLIST);
+		SetTopology(TopologyType::THREE_POINT_PATCHLIST);
 
 	if (!m_useWireframe)
 		SetCulling(cullmode);
@@ -139,6 +137,5 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	// render with 3 indices per face
 	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 3, 0, 0);
 
-	if(m_useTessellation)
-		EndTessellation();
+	ClearResources();
 }

@@ -4,7 +4,7 @@
 
 void FreeCamera::Create(float radius, int segments)
 {
-	useLight = false;
+	m_useLight = false;
 
 	m_fRadius = radius;
 	m_iSegments = segments;

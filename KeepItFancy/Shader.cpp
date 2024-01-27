@@ -376,7 +376,7 @@ HRESULT ComputeShader::CreateShader(void* pData, UINT fileSize)
 	return DirectX11::GetDevice()->CreateComputeShader(pData, fileSize, nullptr, m_d11ComputeShader.GetAddressOf());
 }
 
-void ComputeShader::BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV)
+void ComputeShader::SetUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV)
 {
 	DirectX11::GetContext()->CSSetUnorderedAccessViews(bufferSlot, 1, pUAV, 0);
 }

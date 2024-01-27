@@ -43,7 +43,7 @@ void SCircle::BindIndices()
 
 void SCircle::Create(float radius, int segments)
 {
-	useLight = false;
+	m_useLight = false;
 
 	m_fRadius = radius;
 	m_iSegments = segments;
@@ -90,7 +90,7 @@ void TPlane::BindVertices()
 			}
 
 			vtx.uv.x = static_cast<float>(x) / static_cast<float>(m_iDivX);
-			vtx.uv.y = static_cast<float>(y) / static_cast<float>(m_iDivY);
+			vtx.uv.y = 1 - static_cast<float>(y) / static_cast<float>(m_iDivY);
 
 			vtx.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 

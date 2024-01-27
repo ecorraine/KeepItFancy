@@ -168,7 +168,7 @@ public:
 	{}
 	~ComputeShader() {}
 	void BindShader();
-	void BindUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV);
+	void SetUAV(UINT bufferSlot, ID3D11UnorderedAccessView** pUAV);
 
 protected:
 	HRESULT CreateShader(void* pData, UINT fileSize);

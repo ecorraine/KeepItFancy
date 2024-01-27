@@ -15,8 +15,8 @@ enum class TopologyType
 {
 	LINELIST,						//!< 線形
 	TRIANGLELIST,					//!< 三角形
-	THREE_CONTROL_POINT_PATCHLIST,	//!< ３点パッチリスト
-	FOUR_CONTROL_POINT_PATCHLIST,	//!< ４点パッチリスト
+	THREE_POINT_PATCHLIST,			//!< ３点パッチリスト
+	FOUR_POINT_PATCHLIST,			//!< ４点パッチリスト
 	MAX_TOPOLOGY_TYPE
 };
 
@@ -47,7 +47,8 @@ protected:
 
 	ComPtr<ID3D11Buffer>				m_cpVertexBuf = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpIndexBuf = nullptr;
-	ComPtr<ID3D11ShaderResourceView>	m_cpSRV = nullptr;			//!< テクスチャ
+	ComPtr<ID3D11UnorderedAccessView>	m_cpUAV = nullptr;			//!< 
+	ComPtr<ID3D11ShaderResourceView>	m_cpBaseSRV = nullptr;		//!< テクスチャ
 
 	std::vector<VERTEX>					m_Vertices;
 
@@ -55,18 +56,18 @@ private:
 	sRGBA	m_baseColor = sRGBA();
 	sRGBA	m_emissiveColor = sRGBA();
 	float	m_fEmissivePower = 1.0f;
-	float	m_fShininess = 0.0f;
-	float	m_fSpecularPower = 0.0f;
-	float	m_fRoughness = 0.0f;
-	float	m_fMetallic = 0.0f;
-	float	m_fAmbientOcclusion = 0.0f;
+	//float	m_fShininess = 0.0f;
+	//float	m_fSpecularPower = 0.0f;
+	//float	m_fRoughness = 0.0f;
+	//float	m_fMetallic = 0.0f;
+	//float	m_fAmbientOcclusion = 0.0f;
 	float	m_fUVTiling[2] = { 1, 1 };
 
 protected:
 	float	m_fTessellationFactor = 4.0f;
-	bool	m_useTessellation = false;
+	bool	m_useTexture = false;
 	bool	m_useWireframe = false;
-	bool	m_isUsingTexture = false;
+	bool	m_useTessellation = false;
 
 public:
 	~MESH()
@@ -107,24 +108,41 @@ protected:
 		DXVec3Normalize(normal, vector);
 	}
 
-	virtual void EndTessellation()
+	virtual void ClearResources()
 	{
-		if (m_cpSRV)
+		if (m_useTessellation)
 		{
-			if (m_pDS)
-				m_pDS->SetSRV(0, nullptr);
+			DirectX11::GetContext()->DSSetShader(nullptr, nullptr, 0);
+			DirectX11::GetContext()->HSSetShader(nullptr, nullptr, 0);
+		}
 
+		if (m_pDS)
+			m_pDS->SetSRV(0, nullptr);
+
+		if (m_cpBaseSRV)
 			m_pPS->SetSRV(0, nullptr);
+	}
+
+	virtual void ProcessTessellation(void* tessData)
+	{
+		if (m_pHS && m_pDS)
+		{
+			m_pHS->SendToBuffer(0, tessData);
+			m_pHS->BindShader();
+
+			SetWVPMatrix(m_pDS);
+			m_pDS->BindShader();
 		}
 	}
 
-	virtual void ProcessTessellation()
+	virtual void BindComputeShaders()
 	{
-		if (m_cpSRV && m_pDS)
-			m_pDS->SetSRV(0, m_cpSRV.Get());
+		if (m_pCS)
+		{
+			m_pCS->BindShader();
+			m_pCS->SetUAV(0, m_cpUAV.GetAddressOf());
+		}
 	}
-
-	virtual void BindComputeShaders() {}
 
 	virtual void BindIndices() = 0;
 	virtual void BindVertices() = 0;
@@ -142,10 +160,10 @@ protected:
 		case TopologyType::TRIANGLELIST:
 			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			break;
-		case TopologyType::THREE_CONTROL_POINT_PATCHLIST:
+		case TopologyType::THREE_POINT_PATCHLIST:
 			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 			break;
-		case TopologyType::FOUR_CONTROL_POINT_PATCHLIST:
+		case TopologyType::FOUR_POINT_PATCHLIST:
 			DirectX11::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 			break;
 		}
@@ -196,21 +214,29 @@ public:
 	const float GetTessellationFactor() const { return m_fTessellationFactor; }
 	void SetTessellationFactor(const float& value) { m_fTessellationFactor = value; }
 
-	void SetSRV(const char* file)
+	void SetBaseSRV(const char* file)
 	{
-		m_isUsingTexture = true;
+		m_useTexture = true;
 
 		TEXTURE* texture = new TEXTURE();
 		texture->CreateTexture(file);
 
-		m_cpSRV = texture->GetSRV();
+		m_cpBaseSRV = texture->GetSRV();
+	}
+
+	void SetSRV(ID3D11ShaderResourceView* pSRV, const char* file)
+	{
+		TEXTURE* texture = new TEXTURE();
+		texture->CreateTexture(file);
+
+		pSRV = texture->GetSRV();
 	}
 
 	void Update(float tick) override
 	{
 		XMFLOAT4 data[] = {
 			{ m_baseColor.r, m_baseColor.g, m_baseColor.b, m_baseColor.a },
-			{ tick, static_cast<float>(m_isUsingTexture), m_fUVTiling[0], m_fUVTiling[1] }
+			{ tick, static_cast<float>(m_useTexture), m_fUVTiling[0], m_fUVTiling[1] }
 		};
 
 		m_pPS->SendToBuffer(0, &data);

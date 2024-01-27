@@ -11,12 +11,12 @@ public:
 
 	void Create(float radius = 50.0f, int divisions = 500, sRGBA _color = sRGBA())
 	{
-		//useLight = false;
+		m_useLight = false;
 
 		m_fRadius = radius;
 		m_iDivX = m_iDivY = divisions;
 
-		SetSRV(ASSET_PATH("img/sky.jpg"));
+		SetBaseSRV(ASSET_PATH("img/sky.png"));
 
 		BindVertices();
 		BindIndices();

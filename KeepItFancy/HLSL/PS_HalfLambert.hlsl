@@ -9,15 +9,15 @@ struct PS_IN
 	float3 normal	: NORMAL0;
 };
 
-cbuffer CommonData : register(b0)
+cbuffer PSCommonData : register(b0)
 {
-	float4	newColor;
+	float4	baseColor;
 	float	g_time;
-	float	g_isUsingTexture;
+	float	g_useTexture;
 	float2	g_UVTiling;
 };
 
-cbuffer Light : register(b1)
+cbuffer LightData : register(b1)
 {
 	float4 cameraPos;
 	float4 lightDir;
@@ -27,9 +27,9 @@ cbuffer Light : register(b1)
 
 float4 main(PS_IN pin) : SV_TARGET
 {
-	float4 outColor = newColor * pin.color;
+	float4 outColor = baseColor * pin.color;
 	float4 sampledColor = texBase.Sample(g_Sampler, pin.uv);
-	if (bool(g_isUsingTexture))
+	if (bool(g_useTexture))
 		outColor *= sampledColor;
 
 	float3 normal = normalize(pin.normal.xyz);

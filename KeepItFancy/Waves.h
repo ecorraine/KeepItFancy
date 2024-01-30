@@ -6,7 +6,7 @@ class Waves final : public TPlane
 private:
 	ComPtr<ID3D11Buffer>				m_cpOutputBufferUAV = nullptr;
 	ComPtr<ID3D11Buffer>				m_cpStagingBuffer = nullptr;
-	ComPtr<ID3D11ShaderResourceView>	m_cpFractalNoiseSRV = nullptr;
+	ComPtr<ID3D11ShaderResourceView>	m_cpHeightMapSRV = nullptr;
 	ComPtr<ID3D11ShaderResourceView>	m_cpRippleNormalSRV = nullptr;
 
 	XMFLOAT4 cbData[3] = {};	// constant buffer data for compute shader
@@ -30,6 +30,7 @@ public:
 	const float GetAmplitude() const { return m_fAmplitude; }
 
 protected:
+	void SendSRVtoBuffer() override;
 	void ProcessTessellation(void* tessData) override;
 
 	virtual void LoadDefaultShaders()

@@ -47,9 +47,9 @@ void LINEBASE::Draw(RasterType cullmode)
 	SetLight(m_pPS);
 	m_pPS->BindShader();
 	if (m_cpBaseSRV)
-	{
 		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
-	}
+
+	SendSRVtoBuffer();
 
 	// set topology for segments
 	SetTopology(TopologyType::LINELIST);
@@ -123,6 +123,8 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	m_pPS->BindShader();
 	if (m_cpBaseSRV)
 		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
+
+	SendSRVtoBuffer();
 
 	// set topology for faces
 	if (!m_useTessellation)

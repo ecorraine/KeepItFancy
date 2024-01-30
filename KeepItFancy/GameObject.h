@@ -29,7 +29,16 @@ using namespace DirectX;
  */
 class GameObject
 {
+private:
+	/*
+	using Items = std::list<std::string>;
+	using Objects = std::map<std::string, std::list<COMPONENT*>>;
+
+	static Objects	m_shaders;
+	*/
+
 protected:
+	//Items	m_Items;
 	std::list<COMPONENT*>	m_Component;
 	std::list<GameObject*>	m_ChildGameObject;
 
@@ -44,6 +53,25 @@ public:
 	///--------------------------------------------------
 	template <class T> T* AddComponent()
 	{
+		/*
+#ifdef _DEBUG
+		// check for objects with existing name || 同じ名称のオブジェクトをチェック
+		Objects::iterator it = m_shaders.find(name);
+		if (it != m_shaders.end()) {
+			static char buf[256];
+			sprintf_s(buf, sizeof(buf), "Failed to create new object. %s already exist!\n既存オブジェクトのため、%s作成失敗！\n", name);
+			MessageBoxA(NULL, buf, "ERROR", MB_OK | MB_ICONERROR);
+			return nullptr;
+		}
+#endif // _DEBUG
+
+		// create object || オブジェクト生成
+		std::shared_ptr<T> ptr = std::make_shared<T>();
+		m_shaders.insert(std::pair<std::string, std::list<COMPONENT>>(name, std::make_shared<TComponent<T>>(ptr)));
+		m_Items.push_back(name);
+		return ptr.get();
+		*/
+
 		T* ptr = new T();
 		m_Component.push_back(ptr);
 
@@ -81,7 +109,7 @@ public:
 	DirectX::XMMATRIX GetRotationMatrix()
 	{
 		ALIGN16 XMMATRIX locRot{};
-		if (useCanvas)
+		if (m_useCanvas)
 		{
 		}
 		else
@@ -158,9 +186,9 @@ public:
 		XMFLOAT4X4 wvp[3];
 		XMStoreFloat4x4(&wvp[0], XMMatrixTranspose(GetWorldMatrix()));
 
-		if (useCanvas)
+		if (m_useCanvas)
 		{
-			// projection = view
+			// set projection = view
 			XMStoreFloat4x4(&wvp[1], XMMatrixIdentity());
 			wvp[2] = wvp[1];
 		}
@@ -175,7 +203,7 @@ public:
 
 	void SetLight(SHADER* shader)
 	{
-		if (useLight)
+		if (m_useLight)
 		{
 			XMFLOAT4 light[] = {
 				{ CAMERA::GetCamera()->GetPosition().x, CAMERA::GetCamera()->GetPosition().y, CAMERA::GetCamera()->GetPosition().z, 0.0f },
@@ -190,9 +218,8 @@ public:
 	virtual void Draw() {};
 	virtual void Update(float tick) {};
 
-	bool useCanvas = false;
-	bool useLight = true;
-	bool useTesselation = false;
+	bool m_useLight = true;
+	bool m_useCanvas = false;
 };
 
 #endif // !COMPONENT_H

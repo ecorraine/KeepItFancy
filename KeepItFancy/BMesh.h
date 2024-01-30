@@ -100,6 +100,9 @@ public:
 
 		m_Vertices.erase(m_Vertices.begin(), m_Vertices.end());
 		m_Vertices.clear();
+
+		m_Component.clear();
+
 	}
 
 protected:
@@ -214,6 +217,18 @@ public:
 	const float GetTessellationFactor() const { return m_fTessellationFactor; }
 	void SetTessellationFactor(const float& value) { m_fTessellationFactor = value; }
 
+	//! \fn void SendSRVtoBuffer()
+	/*! \brief extra SRVs that needs to be sent to shader buffers should be called in this function
+	 *  \brief 追加ＳＲＶを各シェーダーのバッファに送る処理をこの関数内に設定
+	 */
+	virtual void SendSRVtoBuffer() {}
+
+	//! \fn void SetBaseSRV(const char* file)
+	/*! \brief sets the base SRV where the pixel shader determines the default output color | white by default
+	 *  \brief use the fn SetSRV(...) to set any extra SRVs
+	 *  \brief ピクセルシェーダーでデフォルトの出力色を決める基本SRV設定
+	 *  \brief 追加ＳＲＶを設定する場合はSetSRV(...)を使用
+	 */
 	void SetBaseSRV(const char* file)
 	{
 		m_useTexture = true;
@@ -224,6 +239,10 @@ public:
 		m_cpBaseSRV = texture->GetSRV();
 	}
 
+	//! \fn void SetSRV(ID3D11ShaderResourceView* pSRV, const char* file)
+	/*! \brief any extra SRVs should be set using this function
+	 *  \brief 追加ＳＲＶをこの関数で設定
+	 */
 	void SetSRV(ID3D11ShaderResourceView* pSRV, const char* file)
 	{
 		TEXTURE* texture = new TEXTURE();

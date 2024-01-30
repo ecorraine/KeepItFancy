@@ -310,7 +310,6 @@ HRESULT VertexShader::CreateShader(void* pData, UINT fileSize)
 	hr = DirectX11::GetDevice()->CreateInputLayout(pInputLayout, shaderDesc.InputParameters, pData, fileSize, m_d11InputLayout.GetAddressOf());
 
 	delete[] pInputLayout;
-	//cpReflection->Release();
 
 	return hr;
 }

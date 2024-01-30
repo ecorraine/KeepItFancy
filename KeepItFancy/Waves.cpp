@@ -11,8 +11,9 @@ void Waves::Create(float width, float depth, int divX, int divY)
 	m_iDivX = divX;
 	m_iDivY = divY;
 
-	SetSRV(m_cpFractalNoiseSRV.Get(), ASSET_PATH("img/FractalNoise_Color.jpg"));
-	SetSRV(m_cpRippleNormalSRV.Get(), ASSET_PATH("img/RippleNoise_Normal.png"));
+	SetBaseSRV(ASSET_PATH("img/whiteSquare.png"));
+	m_cpHeightMapSRV = SetCustomSRV(ASSET_PATH("img/ValueNoise_Color.jpg"));
+	m_cpRippleNormalSRV = SetCustomSRV(ASSET_PATH("img/RippleNoise_Normal.png"));
 
 	BindVertices();
 	BindIndices();
@@ -74,9 +75,15 @@ void Waves::Update(float tick)
 	MESH::Update(tick);
 }
 
+void Waves::SendSRVtoBuffer()
+{
+	m_pPS->SetSRV(1, m_cpHeightMapSRV.Get());
+	m_pPS->SetSRV(2, m_cpRippleNormalSRV.Get());
+}
+
 void Waves::ProcessTessellation(void* tessData)
 {
 	MESH::ProcessTessellation(tessData);
 
-	m_pDS->SetSRV(0, m_cpFractalNoiseSRV.Get());
+	m_pDS->SetSRV(0, m_cpHeightMapSRV.Get());
 }

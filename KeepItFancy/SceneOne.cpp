@@ -29,7 +29,7 @@ void SceneOne::Update(float tick)
 	Waves* pWaves = GetObj<Waves>("Waves");
 	ImGui::Begin("Wave Plane");
 
-	/*
+	
 	// needs better fix as this creates new buffers per frame
 	ImGui::SeparatorText("Shaders");
 	const char* items[] = { "SimpleCaustics", "SimpleVoronoi" };
@@ -44,7 +44,7 @@ void SceneOne::Update(float tick)
 		pWaves->ChangeShader(SHADER::PixelS, SHADER_PATH("PS_CausticsVoronoi.cso"));
 		break;
 	}
-	*/
+	
 
 	ImGui::SeparatorText("Color");
 		static sRGBA newColor = pWaves->GetColor();

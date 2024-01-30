@@ -225,7 +225,7 @@ public:
 
 	//! \fn void SetBaseSRV(const char* file)
 	/*! \brief sets the base SRV where the pixel shader determines the default output color | white by default
-	 *  \brief use the fn SetSRV(...) to set any extra SRVs
+	 *  \brief use the fn SetCustomSRV(...) to set any extra SRVs
 	 *  \brief ピクセルシェーダーでデフォルトの出力色を決める基本SRV設定
 	 *  \brief 追加ＳＲＶを設定する場合はSetSRV(...)を使用
 	 */
@@ -239,16 +239,17 @@ public:
 		m_cpBaseSRV = texture->GetSRV();
 	}
 
-	//! \fn void SetSRV(ID3D11ShaderResourceView* pSRV, const char* file)
+	//! \fn void SetCustomSRV(ID3D11ShaderResourceView* pSRV, const char* file)
 	/*! \brief any extra SRVs should be set using this function
 	 *  \brief 追加ＳＲＶをこの関数で設定
 	 */
-	void SetSRV(ID3D11ShaderResourceView* pSRV, const char* file)
+	ID3D11ShaderResourceView* SetCustomSRV(const char* file)
 	{
+
 		TEXTURE* texture = new TEXTURE();
 		texture->CreateTexture(file);
 
-		pSRV = texture->GetSRV();
+		return texture->GetSRV();
 	}
 
 	void Update(float tick) override

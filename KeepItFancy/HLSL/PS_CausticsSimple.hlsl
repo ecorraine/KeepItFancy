@@ -1,6 +1,8 @@
 #include "AF_Noise.hlsli"
 
 Texture2D		texBase		: register(t0);
+Texture2D		texHeight	: register(t1);
+Texture2D		texNormal	: register(t2);
 SamplerState	g_Sampler	: register(s0);
 
 struct PS_IN
@@ -12,15 +14,15 @@ struct PS_IN
 	float3 worldPos : POSITION0;
 };
 
-cbuffer CommonData : register(b0)
+cbuffer PSCommonData : register(b0)
 {
-	float4	newColor;
+	float4	baseColor;
 	float	g_time;
-	float	g_isUsingTexture;
+	float	g_useTexture;
 	float2	g_UVTiling;
 };
 
-cbuffer Light : register(b1)
+cbuffer LightData : register(b1)
 {
 	float4 cameraPos;
 	float4 lightDir;
@@ -28,15 +30,11 @@ cbuffer Light : register(b1)
 	float4 lightAmbient;
 };
 
-const float3 causticsColor = float3(0.2f, 0.5f, 0.8f);
-const float3 reflectionColor = float3(0.8f, 0.9f, 1.0f);
-const float3 shadowColor = float3(0.1f, 0.1f, 0.1f);
-
 float4 main(PS_IN pin) : SV_TARGET
 {
-	float4 outColor = newColor * pin.color;
+	float4 outColor = baseColor * pin.color;
 	float4 sampledColor = texBase.Sample(g_Sampler, pin.uv);
-	if (bool(g_isUsingTexture))
+	if (bool(g_useTexture))
 		outColor *= sampledColor;
 
 	float3 normal = normalize(pin.normal.xyz);
@@ -46,21 +44,23 @@ float4 main(PS_IN pin) : SV_TARGET
 	float diffuse = saturate(dot(normal, light));
 	outColor.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;
 
-	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
-	
-	float shadowFactor = saturate(dot(-lightDir.xyz, pin.normal));
+	float time = g_time;
 
-	// Calculate caustics using a mathematical function
-	float causticsIntensity = abs(cos(pin.worldPos.x * 10.0f) * sin(pin.worldPos.z * 10.0f));
-	// Simulate reflections based on the view direction
-	float reflectionIntensity = saturate(dot(viewDir, normal));
-	
-	// Blend colors for a more water-like appearance
-	float3 waterColor = lerp(causticsColor, reflectionColor, reflectionIntensity);
-	waterColor = lerp(waterColor, shadowColor, shadowFactor);
-	
-	// Combine the caustics color with the original color
-	outColor.rgb = outColor.rgb * (1.0f - causticsIntensity) + (waterColor.rgb * causticsIntensity);
+	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
+	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
+	float reflection = saturate(dot(viewDir, normal));
+
+	float4 heightMap = texHeight.Sample(g_Sampler, pin.uv);
+	float4 normalMap1 = texNormal.Sample(g_Sampler, pin.uv - time * 0.001f);
+	float4 normalMap2 = texNormal.Sample(g_Sampler, pin.uv - time * 0.003f);
+	float4 normalFinal = normalize(lerp(normalMap1, normalMap2, 0.5f));
+	normalFinal = normalFinal * 5.0f * shadow * reflection;
+	outColor.rgb = outColor.rgb * 2.0f * normalFinal.r;
+
+	// simple caustics
+	float caustics = abs(cos(pin.worldPos.x * 10.0f) + sin(pin.worldPos.z * 10.0f + time * 0.1f));
+
+	outColor.rgb = outColor.rgb * caustics + (1 - caustics * 0.6f);
 
 	return outColor;
 }

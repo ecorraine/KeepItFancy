@@ -1,6 +1,8 @@
 #include "AF_Noise.hlsli"
 
 Texture2D		texBase		: register(t0);
+Texture2D		texHeight	: register(t1);
+Texture2D		texNormal	: register(t2);
 SamplerState	g_Sampler	: register(s0);
 
 struct PS_IN
@@ -30,8 +32,6 @@ cbuffer LightData : register(b1)
 
 float4 main(PS_IN pin) : SV_TARGET
 {
-	float time = g_time;
-
 	float4 outColor = baseColor * pin.color;
 	float4 sampledColor = texBase.Sample(g_Sampler, pin.uv);
 	if (bool(g_useTexture))
@@ -44,15 +44,24 @@ float4 main(PS_IN pin) : SV_TARGET
 	float diffuse = saturate(dot(normal, light));
 	outColor.rgb *= (diffuse * lightDiffuse) + lightAmbient;
 
-	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
-	
-	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
-	float reflection = saturate(dot(viewDir, normal));
+	float time = g_time;
 
+	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
+	float3 halfDir = normalize(viewDir + light);
+	float reflection = saturate(dot(normal, halfDir));
+
+	float4 heightMap = texHeight.Sample(g_Sampler, pin.uv);
+	float4 normalMap1 = texNormal.Sample(g_Sampler, pin.uv - time * 0.001f);
+	float4 normalMap2 = texNormal.Sample(g_Sampler, pin.uv - time * 0.003f);
+	float4 normalFinal = normalize(lerp(normalMap1, normalMap2, 0.5f));
+	normalFinal = normalFinal * 5.0f * reflection;
+	outColor.rgb = outColor.rgb * 2.0f * normalFinal.r;
+	// tile
 	float2 uvCoord = pin.uv * 3;
+	// generate voronoi cell noise
 	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
-	caustics = caustics * shadow * reflection;
-	outColor.rgb = outColor.rgb * (1 - caustics) + caustics * 1.5f;
+
+	outColor.rgb = outColor.rgb * (1 - caustics) + caustics;
 
 	return outColor;
 }

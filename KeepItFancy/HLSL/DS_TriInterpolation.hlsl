@@ -1,7 +1,7 @@
 #include "AS_HullDomainCommon.hlsli"
 #include "BUF_WVPMatrix.hlsli"
 
-Texture2D		texDMap		: register(t0);
+Texture2D		texHeight	: register(t0);
 SamplerState	g_Sampler	: register(s0);
 
 struct DS_OUT
@@ -43,10 +43,10 @@ DS_OUT main(
 					+ patch[1].pos.xyz * domain.y
 					+ patch[2].pos.xyz * domain.z;
 
-	float height = texDMap.SampleLevel(g_Sampler, dout.uv, 0).r;
-	if (height > 0.2f)
+	float height = texHeight.SampleLevel(g_Sampler, dout.uv, 0).r;
+	if (height < 0.2f)
 	{
-		position.y += height * 0.1f;
+		position.y -= height * 0.1f;
 	}
 
 	dout.pos = mul(float4(position, 1.0f), world);

@@ -119,6 +119,9 @@ protected:
 			DirectX11::GetContext()->HSSetShader(nullptr, nullptr, 0);
 		}
 
+		if (m_pHS)
+			m_pHS->SetSRV(0, nullptr);
+
 		if (m_pDS)
 			m_pDS->SetSRV(0, nullptr);
 

@@ -32,12 +32,12 @@ float4 main(PS_IN pin) : SV_TARGET
 	if (bool(g_useTexture))
 		outColor *= sampledColor;
 
-	float3 normal = normalize(pin.normal.xyz);
+	float3 normal = normalize(pin.normal);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
-	float diffuse = saturate(dot(normal, light));
+	float shadow = saturate(dot(normal, light));
 
-	outColor.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;
+	outColor.rgb *= (shadow * lightDiffuse.rgb) + lightAmbient.rgb;
 
 	return outColor;
 }

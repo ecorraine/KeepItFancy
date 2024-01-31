@@ -1,5 +1,8 @@
 #include "AS_HullDomainCommon.hlsli"
 
+Texture2D		texHeight	: register(t0);
+SamplerState	g_Sampler	: register(s0);
+
 struct VS_OUT
 {
 	float4 pos		: SV_POSITION;
@@ -21,7 +24,8 @@ cbuffer TessellationData : register(b0)
 {
 	float	g_useTesselate;
 	float	g_TessFactor;
-	float2	padding;
+	float	g_NoiseScale;
+	float	padding;
 };
 
 TRI_OUTPUT PatchTri(
@@ -30,9 +34,11 @@ TRI_OUTPUT PatchTri(
 {
 	TRI_OUTPUT output = (TRI_OUTPUT)0;
 
-	output.edgeTess[0]	= g_TessFactor;
-	output.edgeTess[1]	= g_TessFactor;
-	output.edgeTess[2]	= g_TessFactor;
+	float noiseFactor = texHeight.SampleLevel(g_Sampler, patch[0].uv, 0).r;
+
+	output.edgeTess[0]	= g_TessFactor * (1.0 + noiseFactor);
+	output.edgeTess[1]	= g_TessFactor * (1.0 + noiseFactor);
+	output.edgeTess[2]	= g_TessFactor * (1.0 + noiseFactor);
 
 	output.insideTess = g_TessFactor;
 

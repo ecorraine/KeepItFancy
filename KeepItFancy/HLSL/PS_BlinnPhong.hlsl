@@ -33,18 +33,18 @@ float4 main(PS_IN pin) : SV_TARGET
 	if (bool(g_useTexture))
 		outColor *= sampledColor;
 
-	float3 normal = normalize(pin.normal.xyz);
+	float3 normal = normalize(pin.normal);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
-	float diffuse = saturate(dot(normal, light));
+	float shadow = saturate(dot(normal, light));
 
-	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
+	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos);
 	float3 halfDir = normalize(viewDir + light);
 
 	float NdotH = saturate(dot(normal, halfDir));
 	float3 specular = pow(NdotH, 16);
 	
-	outColor.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb + specular;
+	outColor.rgb *= (shadow * lightDiffuse.rgb) + lightAmbient.rgb + specular;
 
 	return outColor;
 }

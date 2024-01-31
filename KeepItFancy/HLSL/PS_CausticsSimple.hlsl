@@ -37,25 +37,25 @@ float4 main(PS_IN pin) : SV_TARGET
 	if (bool(g_useTexture))
 		outColor *= sampledColor;
 
-	float3 normal = normalize(pin.normal.xyz);
+	float3 normal = normalize(pin.normal);
 	float3 light = normalize(lightDir.xyz);
 	light = -light;
+	float shadow = saturate(dot(normal, light));
 
-	float diffuse = saturate(dot(normal, light));
-	outColor.rgb *= (diffuse * lightDiffuse.rgb) + lightAmbient.rgb;
+	outColor.rgb *= (shadow * lightDiffuse.rgb) + lightAmbient.rgb;
+
+	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos);
+	float reflection = saturate(dot(viewDir, normal));
 
 	float time = g_time;
-
-	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos.xyz);
-	float shadow = saturate(dot(-lightDir.xyz, pin.normal));
-	float reflection = saturate(dot(viewDir, normal));
 
 	float4 heightMap = texHeight.Sample(g_Sampler, pin.uv);
 	float4 normalMap1 = texNormal.Sample(g_Sampler, pin.uv - time * 0.001f);
 	float4 normalMap2 = texNormal.Sample(g_Sampler, pin.uv - time * 0.003f);
 	float4 normalFinal = normalize(lerp(normalMap1, normalMap2, 0.5f));
-	normalFinal = normalFinal * 5.0f * shadow * reflection;
-	outColor.rgb = outColor.rgb * 2.0f * normalFinal.r;
+	normalFinal *= 5.0f * shadow * reflection;
+	
+	outColor.rgb *= 2.0f * normalFinal.r;
 
 	// simple caustics
 	float caustics = abs(cos(pin.worldPos.x * 10.0f) + sin(pin.worldPos.z * 10.0f + time * 0.1f));

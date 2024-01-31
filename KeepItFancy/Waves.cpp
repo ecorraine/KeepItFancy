@@ -85,5 +85,6 @@ void Waves::ProcessTessellation(void* tessData)
 {
 	MESH::ProcessTessellation(tessData);
 
+	m_pHS->SetSRV(0, m_cpHeightMapSRV.Get());
 	m_pDS->SetSRV(0, m_cpHeightMapSRV.Get());
 }

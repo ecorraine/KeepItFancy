@@ -36,9 +36,9 @@ TRI_OUTPUT PatchTri(
 
 	float noiseFactor = texHeight.SampleLevel(g_Sampler, patch[0].uv, 0).r;
 
-	output.edgeTess[0]	= g_TessFactor * (1.0 + noiseFactor);
-	output.edgeTess[1]	= g_TessFactor * (1.0 + noiseFactor);
-	output.edgeTess[2]	= g_TessFactor * (1.0 + noiseFactor);
+	output.edgeTess[0]	= g_TessFactor * (1.0 + noiseFactor * g_NoiseScale);
+	output.edgeTess[1]	= g_TessFactor * (1.0 + noiseFactor * g_NoiseScale);
+	output.edgeTess[2]	= g_TessFactor * (1.0 + noiseFactor * g_NoiseScale);
 
 	output.insideTess = g_TessFactor;
 

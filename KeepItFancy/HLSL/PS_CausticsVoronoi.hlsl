@@ -45,7 +45,9 @@ float4 main(PS_IN pin) : SV_TARGET
 	outColor.rgb *= (shadow * lightDiffuse.rgb) + lightAmbient.rgb;
 
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos);
-	float reflection = saturate(dot(viewDir, normal));
+	float3 halfDir = normalize(viewDir + light);
+	float reflection = saturate(dot(halfDir, normal));
+	float reverse = saturate(dot(-halfDir, normal));
 
 	float time = g_time;
 
@@ -53,16 +55,16 @@ float4 main(PS_IN pin) : SV_TARGET
 	float4 normalMap1 = texNormal.Sample(g_Sampler, pin.uv - time * 0.001f);
 	float4 normalMap2 = texNormal.Sample(g_Sampler, pin.uv - time * 0.003f);
 	float4 normalFinal = normalize(lerp(normalMap1, normalMap2, 0.5f));
-	normalFinal *= 5.0f * shadow * reflection;
+	// normalFinal = normalFinal;
 
-	outColor.rgb *= 2.0f * normalFinal.r;
+	outColor.rgb += normalFinal.r;
 	
 	// tile
-	float2 uvCoord = pin.uv * 3;
+	float2 uvCoord = float2(pin.uv.x * g_UVTiling.x, pin.uv.y * g_UVTiling.y);
 	// generate voronoi cell noise
 	float caustics = CellNoiseTilable(uvCoord, time * 0.3f);
 
-	outColor.rgb = outColor.rgb * (1 - caustics) + caustics;
+	outColor.rgb = outColor.rgb + caustics * reflection;
 
 	return outColor;
 }

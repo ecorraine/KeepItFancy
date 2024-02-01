@@ -12,7 +12,7 @@ void Waves::Create(float width, float depth, int divX, int divY)
 	m_iDivY = divY;
 
 	SetBaseSRV(ASSET_PATH("img/whiteSquare.png"));
-	m_cpHeightMapSRV = SetCustomSRV(ASSET_PATH("img/ValueNoise_Color.jpg"));
+	m_cpHeightMapSRV = SetCustomSRV(ASSET_PATH("img/ValueNoise_Color.png"));
 	m_cpRippleNormalSRV = SetCustomSRV(ASSET_PATH("img/RippleNoise_Normal.png"));
 
 	BindVertices();

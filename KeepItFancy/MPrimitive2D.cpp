@@ -94,7 +94,8 @@ void TPlane::BindVertices()
 
 			vtx.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-			//NormalizeVectors(vtx.pos, locNormal);
+			if (useXZAxis)
+				NormalizeVectors(vtx.pos, locNormal);
 			vtx.normal = locNormal;
 
 			m_Vertices.emplace_back(vtx);

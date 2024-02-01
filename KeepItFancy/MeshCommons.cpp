@@ -112,7 +112,7 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	BindComputeShaders();
 
 	SetWVPMatrix(m_pVS);
-	XMFLOAT4 tessData = { static_cast<float>(m_useTessellation), m_fTessellationFactor, 0.0f, 0.0f };
+	XMFLOAT4 tessData = { static_cast<float>(m_useTessellation), m_fTessellationFactor, m_fNoiseFactor, 0.0f };
 	m_pVS->SendToBuffer(1, &tessData);
 	m_pVS->BindShader();
 

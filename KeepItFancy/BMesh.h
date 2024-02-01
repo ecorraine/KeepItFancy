@@ -65,6 +65,7 @@ private:
 
 protected:
 	float	m_fTessellationFactor = 4.0f;
+	float	m_fNoiseFactor = 1.0f;
 	bool	m_useTexture = false;
 	bool	m_useWireframe = false;
 	bool	m_useTessellation = false;
@@ -220,6 +221,9 @@ public:
 	const float GetTessellationFactor() const { return m_fTessellationFactor; }
 	void SetTessellationFactor(const float& value) { m_fTessellationFactor = value; }
 
+	const float GetNoiseFactor() const { return m_fNoiseFactor; }
+	void SetNoiseFactor(const float& value) { m_fNoiseFactor = value; }
+
 	//! \fn void SendSRVtoBuffer()
 	/*! \brief extra SRVs that needs to be sent to shader buffers should be called in this function
 	 *  \brief 追加ＳＲＶを各シェーダーのバッファに送る処理をこの関数内に設定
@@ -230,7 +234,7 @@ public:
 	/*! \brief sets the base SRV where the pixel shader determines the default output color | white by default
 	 *  \brief use the fn SetCustomSRV(...) to set any extra SRVs
 	 *  \brief ピクセルシェーダーでデフォルトの出力色を決める基本SRV設定
-	 *  \brief 追加ＳＲＶを設定する場合はSetSRV(...)を使用
+	 *  \brief 追加ＳＲＶを設定する場合はSetCustomSRV(...)を使用
 	 */
 	void SetBaseSRV(const char* file)
 	{
@@ -248,7 +252,6 @@ public:
 	 */
 	ID3D11ShaderResourceView* SetCustomSRV(const char* file)
 	{
-
 		TEXTURE* texture = new TEXTURE();
 		texture->CreateTexture(file);
 

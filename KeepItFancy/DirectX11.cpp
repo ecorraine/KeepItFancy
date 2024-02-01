@@ -210,7 +210,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	//--------------------------------------------------
 	D3D11_BLEND_DESC blendDesc = {};
 	ZeroMemory(&blendDesc, sizeof(blendDesc));
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendEnable = true;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
@@ -298,7 +298,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 		}
 	}
 	// initialize default bland state
-	SetBlendState(BlendType::ALPHA);
+	SetBlendState(BlendType::NONE);
 
 	//--------------------------------------------------
 	// Rasterizer
@@ -359,11 +359,12 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 	// front facing
 	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
 	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
 	// back facing
 	dsDesc.BackFace = dsDesc.FrontFace;
+	dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 
 	// create individual depth stencil state
 	bool dsPattern[] = { false, true, true };

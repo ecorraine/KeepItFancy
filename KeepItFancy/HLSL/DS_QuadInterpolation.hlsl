@@ -36,8 +36,8 @@ DS_OUT main(
 	float4 color2 = lerp(patch[2].color, patch[3].color, domain.x);
 	dout.color = lerp(color1, color2, domain.y);
 
-	float3 pos1 = lerp(patch[0].pos.xyz, patch[2].pos.xyz, domain.x);
-	float3 pos2 = lerp(patch[3].pos.xyz, patch[1].pos.xyz, domain.x);
+	float3 pos1 = lerp(patch[1].pos.xyz, patch[2].pos.xyz, domain.x);
+	float3 pos2 = lerp(patch[0].pos.xyz, patch[3].pos.xyz, domain.x);
 	dout.pos = float4(lerp(pos1, pos2, domain.y), 1.0f);
 
 	dout.pos = mul(dout.pos, world);

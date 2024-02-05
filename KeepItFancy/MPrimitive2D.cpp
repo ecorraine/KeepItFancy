@@ -47,7 +47,7 @@ void SCircle::Create(float radius, int segments)
 
 	m_fRadius = radius;
 	m_iSegments = segments;
-	SetColor(sRGBA(0.0f, 1.0f, 0.0f));
+	SetBaseColor(sRGBA(0.0f, 1.0f, 0.0f));
 
 	BindVertices();
 	BindIndices();

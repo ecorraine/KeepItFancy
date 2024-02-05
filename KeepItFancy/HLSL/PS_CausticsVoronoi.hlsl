@@ -47,7 +47,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	float3 viewDir = normalize(cameraPos.xyz - pin.worldPos);
 	float3 halfDir = normalize(viewDir + light);
 	float reflection = saturate(dot(halfDir, normal));
-	float reverse = saturate(dot(-halfDir, normal));
+	// float reverse = saturate(dot(-halfDir, normal));
 
 	float time = g_time;
 

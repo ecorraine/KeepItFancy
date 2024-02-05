@@ -75,7 +75,7 @@ void Waves::Update(float tick)
 	MESH::Update(tick);
 }
 
-void Waves::SendSRVtoBuffer()
+void Waves::SendDatatoBuffer()
 {
 	m_pPS->SetSRV(1, m_cpHeightMapSRV.Get());
 	m_pPS->SetSRV(2, m_cpRippleNormalSRV.Get());

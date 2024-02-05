@@ -30,7 +30,7 @@ public:
 	const float GetAmplitude() const { return m_fAmplitude; }
 
 protected:
-	void SendSRVtoBuffer() override;
+	void SendDatatoBuffer() override;
 	void ProcessTessellation(void* tessData) override;
 
 	virtual void LoadDefaultShaders()

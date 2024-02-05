@@ -202,8 +202,8 @@ protected:
 	}
 
 public:
-	void SetColor(const sRGBA& _color) { m_baseColor = _color; }
-	const sRGBA GetColor() const { return m_baseColor; }
+	void SetBaseColor(const sRGBA& _color) { m_baseColor = _color; }
+	const sRGBA GetBaseColor() const { return m_baseColor; }
 
 	const XMFLOAT2 GetUVTiling() const { return XMFLOAT2(m_fUVTiling[0], m_fUVTiling[1]); }
 	void SetUVTiling(const XMFLOAT2& value)
@@ -224,11 +224,11 @@ public:
 	const float GetNoiseFactor() const { return m_fNoiseFactor; }
 	void SetNoiseFactor(const float& value) { m_fNoiseFactor = value; }
 
-	//! \fn void SendSRVtoBuffer()
+	//! \fn void SendDatatoBuffer()
 	/*! \brief extra SRVs that needs to be sent to shader buffers should be called in this function
 	 *  \brief 追加ＳＲＶを各シェーダーのバッファに送る処理をこの関数内に設定
 	 */
-	virtual void SendSRVtoBuffer() {}
+	virtual void SendDatatoBuffer() {}
 
 	//! \fn void SetBaseSRV(const char* file)
 	/*! \brief sets the base SRV where the pixel shader determines the default output color | white by default

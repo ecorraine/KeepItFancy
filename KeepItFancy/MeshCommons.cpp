@@ -49,7 +49,7 @@ void LINEBASE::Draw(RasterType cullmode)
 	if (m_cpBaseSRV)
 		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
 
-	SendSRVtoBuffer();
+	SendDatatoBuffer();
 
 	// set topology for segments
 	SetTopology(TopologyType::LINELIST);
@@ -58,8 +58,8 @@ void LINEBASE::Draw(RasterType cullmode)
 		SetCulling(cullmode);
 	else
 		SetCulling(RasterType::WIREFRAME_NO_CULL);
-	// render with 2 indices per segment
-	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 2, 0, 0);
+
+	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 2, 0, 0);		// render with 2 indices per segment
 
 	ClearResources();
 }
@@ -124,7 +124,7 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 	if (m_cpBaseSRV)
 		m_pPS->SetSRV(0, m_cpBaseSRV.Get());
 
-	SendSRVtoBuffer();
+	SendDatatoBuffer();
 
 	// set topology for faces
 	if (!m_useTessellation)
@@ -136,8 +136,8 @@ void TRIANGLEBASE::Draw(RasterType cullmode)
 		SetCulling(cullmode);
 	else
 		SetCulling(RasterType::WIREFRAME_NO_CULL);
-	// render with 3 indices per face
-	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 3, 0, 0);
+
+	DirectX11::GetContext()->DrawIndexed(m_Faces.size() * 3, 0, 0);		// render with 3 indices per face
 
 	ClearResources();
 }

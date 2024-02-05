@@ -55,6 +55,6 @@ void CAMERA::CreateViewMatrix()
 	ALIGN16 XMVECTOR locUp = XMLoadFloat3(&m_UpVector);
 
 	ALIGN16 XMMATRIX camera;
-	camera = XMMatrixLookAtLH(locPos, locFocus, locUp);					// ビュー行列作成
+	camera = XMMatrixLookAtLH(locPos, locFocus, locUp);			// ビュー行列作成
 	XMStoreFloat4x4(&m_ViewMtx, XMMatrixTranspose(camera));		// 変数に保存
 }

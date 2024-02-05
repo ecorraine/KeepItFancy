@@ -41,7 +41,8 @@ void Terrain::Create(float width, float depth, int divX, int divY)
 		static_cast<float>(vertexSize)
 	};
 
-	SetColor(sRGBA(0.0f, 1.0f, 0.0f));
+	SetBaseColor(sRGBA(218, 96, 20));
+	m_colorOverlay = sRGBA(0.0f, 1.0f, 0.0f);
 }
 
 void Terrain::BindComputeShaders()
@@ -74,6 +75,11 @@ void Terrain::Update(float tick)
 	m_pCS->SendToBuffer(0, &cbData);
 
 	MESH::Update(tick);
+}
+
+void Terrain::SendDatatoBuffer()
+{
+	m_pPS->SendToBuffer(2, (void*)&m_colorOverlay);
 }
 
 void Terrain::ProcessTessellation(void* tessData)

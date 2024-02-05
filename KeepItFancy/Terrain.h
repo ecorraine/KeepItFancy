@@ -9,6 +9,7 @@ private:
 	ComPtr<ID3D11ShaderResourceView>	m_cpHeightMapSRV = nullptr;
 
 	XMFLOAT4 cbData[3] = {};	// constant buffer data for compute shader
+	sRGBA m_colorOverlay = sRGBA();
 	float m_fFrequency;
 	float m_fAmplitude;
 
@@ -23,13 +24,16 @@ public:
 	void BindComputeShaders();
 	void Update(float tick);
 
+	void SetTerrainColor(const sRGBA& _color) { m_colorOverlay = _color; }
+	const sRGBA GetTerrainColor() const { return m_colorOverlay; }
+	
 	void SetFrequency(const float& _value) { m_fFrequency = _value; }
 	const float GetFrequency() const { return m_fFrequency; }
 	void SetAmplitude(const float& _value) { m_fAmplitude = _value; }
 	const float GetAmplitude() const { return m_fAmplitude; }
 
 protected:
-	//void SendSRVtoBuffer() override;
+	void SendDatatoBuffer() override;
 	void ProcessTessellation(void* tessData) override;
 
 	virtual void LoadDefaultShaders()
@@ -47,7 +51,7 @@ protected:
 		m_pDS->LoadShader(SHADER_PATH("DS_TriInterpolation.cso"));
 
 		m_pPS = AddComponent<PixelShader>();
-		m_pPS->LoadShader(SHADER_PATH("PS_HalfLambert.cso"));
+		m_pPS->LoadShader(SHADER_PATH("PS_HLTerrain.cso"));
 	}
 
 };

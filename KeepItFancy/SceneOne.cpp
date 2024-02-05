@@ -11,15 +11,16 @@ void SceneOne::Init()
 	pPlane->SetBaseSRV(ASSET_PATH("img/HalLogo.jpg"));
 
 	Terrain* pTerrain = CreateObj<Terrain>("Terrain");
-	pTerrain->Create(20.0f, 20.0f, 20, 20);
+	pTerrain->Create(30.0f, 30.0f, 60, 60);
 	pTerrain->SetFrequency(2.5f);
 	pTerrain->SetPosition(XMFLOAT3(0.0f, -1.3f, 0.0f));
 	pTerrain->SetRotation(XMFLOAT3(0.0f, 180.0f, 0.0f));
 
 	Waves* pWaves = CreateObj<Waves>("Waves");
-	pWaves->Create(12.0f, 12.0f, 120, 120);
-	pWaves->SetColor(sRGBA(51, 128, 204, 128));
-	pWaves->SetUVTiling(XMFLOAT2(6.0f, 6.0f));
+	pWaves->SetPosition(XMFLOAT3(0.0f, 0.0f, 5.0f));
+	pWaves->Create(20.0f, 20.0f, 200, 200);
+	pWaves->SetBaseColor(sRGBA(51, 128, 204, 128));
+	pWaves->SetUVTiling(XMFLOAT2(10.0f, 10.0f));
 }
 
 void SceneOne::Release()
@@ -47,6 +48,15 @@ void SceneOne::Update(float tick)
 		pTerrain->SetWireframe(useWireframe);
 		ImGui::Spacing();
 
+		ImGui::SeparatorText("Color");
+		static sRGBA landColor = pTerrain->GetBaseColor();
+		ImGui::ColorEdit4("Land Color", (float*)&landColor);
+		pTerrain->SetBaseColor(landColor);
+		static sRGBA overlayColor = pTerrain->GetTerrainColor();
+		ImGui::ColorEdit4("Terrain Color", (float*)&overlayColor);
+		pTerrain->SetTerrainColor(overlayColor);
+		ImGui::Spacing();
+
 		ImGui::SeparatorText("Other Settings");
 		static float freq = pTerrain->GetFrequency();
 		ImGui::SetNextItemWidth(150.0f);
@@ -63,8 +73,7 @@ void SceneOne::Update(float tick)
 		ImGui::Spacing();
 
 		// needs better fix as this creates new buffers per frame
-		/*
-		ImGui::SeparatorText("Shaders");
+		/*ImGui::SeparatorText("Shaders");
 		const char* items[] = { "SimpleCaustics", "SimpleVoronoi" };
 		static int selection = 1;
 		ImGui::Combo("Pixel Shader", &selection, items, IM_ARRAYSIZE(items));
@@ -76,13 +85,12 @@ void SceneOne::Update(float tick)
 		case 1:
 			pWaves->ChangeShader(SHADER::PixelS, SHADER_PATH("PS_CausticsVoronoi.cso"));
 			break;
-		}
-		*/
+		}*/
 
 		ImGui::SeparatorText("Color");
-		static sRGBA newColor = pWaves->GetColor();
+		static sRGBA newColor = pWaves->GetBaseColor();
 		ImGui::ColorEdit4("Base Color", (float*)&newColor);
-		pWaves->SetColor(newColor);
+		pWaves->SetBaseColor(newColor);
 		ImGui::Spacing();
 
 		ImGui::SeparatorText("Caustics Tiling");
@@ -124,7 +132,7 @@ void SceneOne::Update(float tick)
 		ImGui::Spacing();
 	}
 
-	ImGui::Text(" %.2f %.2f %.2f %.2f", pWaves->GetColor().r, pWaves->GetColor().g, pWaves->GetColor().b, pWaves->GetColor().a);
+	ImGui::Text(" %.2f %.2f %.2f %.2f", pWaves->GetBaseColor().r, pWaves->GetBaseColor().g, pWaves->GetBaseColor().b, pWaves->GetBaseColor().a);
 	ImGui::End();
 
 	pWaves->Update(m_fTime);

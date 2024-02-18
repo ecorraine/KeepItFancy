@@ -157,13 +157,15 @@ LRESULT APPLICATION::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE:
-		{
+			{
 			int msgBox = MessageBoxA(hWnd, "Exit Application?\n終了しますか?", "Exit", MB_YESNO | MB_ICONINFORMATION);
 			if (msgBox == IDYES)
 				PostMessage(hWnd, WM_CLOSE, wParam, lParam);
+			}
+			break;
 		}
 		break;
-		}
+
 	case WM_KEYUP:
 		break;
 

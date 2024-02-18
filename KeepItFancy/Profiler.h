@@ -31,7 +31,7 @@ public:
 	static void CalculateFrames();
 
 	//! \fn double GetFrameTime()
-	/*! \brief returns the Delta Time as float
+	/*! \brief returns the Delta Time as double
 	 *  \brief
 	 *  \return m_dDeltaTime
 	 */
@@ -69,10 +69,10 @@ public:
 	 */
 	static void CountFrames();
 
-	//! \fn double GetFrameTime()
-	/*! \brief returns the Delta Time as float
+	//! \fn double FPSCap(double fpsCap = g_FrameRateCap)
+	/*! \brief cap frame rate at specified value
 	 *  \brief
-	 *  \return m_dDeltaTime
+	 *  \return 
 	 */
 	static double FPSCap(double fpsCap = g_FrameRateCap)
 	{

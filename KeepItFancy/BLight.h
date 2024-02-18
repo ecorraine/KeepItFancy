@@ -22,6 +22,10 @@ public:
 		return &instance;
 	}
 
+	const DirectX::XMFLOAT4 GetLightPosition() const
+	{
+		return DirectX::XMFLOAT4(m_Position.x, m_Position.y, m_Position.z, 0.0f);
+	}
 	const DirectX::XMFLOAT4 GetLightDirection() const
 	{
 		return DirectX::XMFLOAT4(m_Direction.x, m_Direction.y, m_Direction.z, 0.0f);

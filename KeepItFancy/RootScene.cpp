@@ -1,4 +1,5 @@
 #include "RootScene.h"
+#include "Profiler.h"
 #include "FreeCamera.h"
 #include "SkyBox.h"
 #include "SceneOne.h"
@@ -39,6 +40,7 @@ void RootScene::Update(float tick)
 	FreeCamera* pCamera = GetObj<FreeCamera>("Camera");
 	pCamera->Update(tick);
 
+#ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::SeparatorText(u8"操作");
 	ImGui::Text(u8"方向キー：カメラ移動");
@@ -47,6 +49,7 @@ void RootScene::Update(float tick)
 	ImGui::Text("Position: %.2f, %.2f, %.2f", pCamera->GetPosition().x, pCamera->GetPosition().y, pCamera->GetPosition().z);
 	ImGui::Text("Rotation: %.2f, %.2f, %.2f", pCamera->GetRotation().x, pCamera->GetRotation().y, pCamera->GetRotation().z);
 	ImGui::End();
+#endif // _DEBUG
 
 	/*
 	int idx = (int)m_eSceneIndex;

@@ -247,7 +247,7 @@ public:
 		}
 	}
 
-	static void Swap() { GetSwapChain()->Present(0, 0); }	// (0, 0) = VSync Off
+	static void Swap() { GetSwapChain()->Present(1, 0); }	// (0, 0) = VSync Off
 };
 
 #endif // !DIRECTX11_H

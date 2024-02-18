@@ -131,7 +131,7 @@ HRESULT DirectX11::InitializeDirectX(APPLICATION* pApp, bool isFullscreen)
 	scDesc.SampleDesc.Count = 1;										// マルチサンプルの数
 	scDesc.SampleDesc.Quality = 0;										// マルチサンプルのクオリティ
 	scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;				// バックバッファの使用方法
-	scDesc.BufferCount = 1;												// バックバッファの数
+	scDesc.BufferCount = 2;												// バックバッファの数
 	scDesc.OutputWindow = g_App->GetWindow();							// 関連付けるウインドウ
 	scDesc.Windowed = isFullscreen ? FALSE : TRUE;						// ウインドウモードを設定
 	scDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;

@@ -72,4 +72,9 @@ inline void LogToFile(const char* errorMessage)
 	}
 }
 
+inline DirectX::XMVECTOR XMFtoVectorSet(DirectX::XMFLOAT4 value)
+{
+	return DirectX::XMVectorSet(value.x, value.y, value.z, value.w);
+}
+
 #endif // MYUTILITIES_H

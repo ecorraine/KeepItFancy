@@ -3,12 +3,18 @@
 #include "MPrimitive3D.h"
 #include "Terrain.h"
 #include "Waves.h"
+#include "AnObject.h"
 
 void SceneOne::Init()
 {
+#ifdef _DEBUG
 	TPlane* pPlane = CreateObj<TPlane>("Plane");
 	pPlane->Create();
 	pPlane->SetBaseSRV(ASSET_PATH("img/HalLogo.jpg"));
+
+	AnObject* pObject = CreateObj<AnObject>("Object");
+	pObject->Create();
+#endif // _DEBUG
 
 	Terrain* pTerrain = CreateObj<Terrain>("Terrain");
 	pTerrain->Create(30.0f, 30.0f, 60, 60);
@@ -20,7 +26,8 @@ void SceneOne::Init()
 	pWaves->SetPosition(XMFLOAT3(0.0f, 0.0f, 5.0f));
 	pWaves->Create(20.0f, 20.0f, 200, 200);
 	pWaves->SetBaseColor(sRGBA(51, 128, 204, 128));
-	pWaves->SetUVTiling(XMFLOAT2(10.0f, 10.0f));
+	pWaves->SetUVTiling(XMFLOAT2(20.0f, 20.0f));
+	pWaves->SetTessellation(true);
 }
 
 void SceneOne::Release()
@@ -32,13 +39,18 @@ void SceneOne::Update(float tick)
 {
 	m_fTime += tick;
 
-	TPlane* pPlane = GetObj<TPlane>("Plane");
-	pPlane->Update(tick);
-
 	Terrain* pTerrain = GetObj<Terrain>("Terrain");
 	pTerrain->Update(tick);
 
 	Waves* pWaves = GetObj<Waves>("Waves");
+	pWaves->Update(m_fTime);
+
+#ifdef _DEBUG
+	TPlane* pPlane = GetObj<TPlane>("Plane");
+	pPlane->Update(tick);
+
+	AnObject* pObject = GetObj<AnObject>("Object");
+	pObject->Update(tick);
 
 	ImGui::Begin("Customize Panel");
 	if (ImGui::CollapsingHeader("Terrain Plane"))
@@ -135,14 +147,22 @@ void SceneOne::Update(float tick)
 	ImGui::Text(" %.2f %.2f %.2f %.2f", pWaves->GetBaseColor().r, pWaves->GetBaseColor().g, pWaves->GetBaseColor().b, pWaves->GetBaseColor().a);
 	ImGui::End();
 
-	pWaves->Update(m_fTime);
+	//ImGui::Begin("test");
+	//ImGui::End();
+
+#endif // _DEBUG
+
 }
 
 void SceneOne::Draw()
 {
+#ifdef _DEBUG
+	//TPlane* pPlane = GetObj<TPlane>("Plane");
+	//pPlane->Draw();
 
-	TPlane* pPlane = GetObj<TPlane>("Plane");
-	pPlane->Draw();
+	//AnObject* pObject = GetObj<AnObject>("Object");
+	//pObject->Draw();
+#endif // _DEBUG
 
 	Terrain* pTerrain = GetObj<Terrain>("Terrain");
 	pTerrain->Draw();

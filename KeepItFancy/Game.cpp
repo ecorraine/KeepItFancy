@@ -97,9 +97,13 @@ void GAME::UpdateGame(float tick)
 	TIME::CalculateFrames();
 	FPS::CountFrames();
 	CPU::CountFrames();
+
+#ifdef _DEBUG
 	ImGui::Begin("System");
 	ImGui::Text("%d FPS | CPU Usage: %d \nRun Time: %.2f secs | %.3f (ms)\n", FPS::GetFPSCount(), CPU::GetCpuPercentage(), g_fElapsedTime, tick * 1000);
 	ImGui::End();
+#endif // _DEBUG
+
 	g_pScene->_update(tick);
 
 	KEYINPUT::UpdateKeyInput();

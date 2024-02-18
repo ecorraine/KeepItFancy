@@ -16,7 +16,6 @@ using namespace DirectX;
 class CAMERA
 {
 public:
-	CAMERA() {}
 	~CAMERA() {}
 
 	static CAMERA g_Camera;
@@ -84,30 +83,21 @@ public:
 	 *  \brief カメラの位置を設置 ｜ LookAtと同じ座標はダメ
 	 *  \param xmfCameraPosition : DirectX::XMFLOAT3
 	 */
-	void SetCamPos(const XMFLOAT3& xmfCameraPosition)
-	{
-		m_CameraPos = xmfCameraPosition;
-	}
+	void SetCamPos(const XMFLOAT3& xmfCameraPosition) { m_CameraPos = xmfCameraPosition; }
 
 	//! \fn void SetFocus(const XMFLOAT3& xmfLookAt)
 	/*! \brief
 	 *  \brief カメラの注視点を設置 ｜ CameraPosと同じ座標はダメ
 	 *  \param xmfLookAt : DirectX::XMFLOAT3
 	 */
-	void SetFocus(const XMFLOAT3& xmfLookAt)
-	{
-		m_LookAt = xmfLookAt;
-	}
+	void SetFocus(const XMFLOAT3& xmfLookAt) { m_LookAt = xmfLookAt; }
 
 	//! \fn void SetUpVector(const XMFLOAT3& xmfUpVector)
 	/*! \brief
 	 *  \brief カメラの上方向を設置
 	 *  \param xmfUpVector : 固定値 DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)
 	 */
-	void SetUpVector(const XMFLOAT3& xmfUpVector)
-	{
-		m_UpVector = xmfUpVector;
-	}
+	void SetUpVector(const XMFLOAT3& xmfUpVector) { m_UpVector = xmfUpVector; }
 
 	void UpdateCamera();
 

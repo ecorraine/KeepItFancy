@@ -55,12 +55,12 @@ float4 main(PS_IN pin) : SV_TARGET
 	float4 normalFinal = normalize(lerp(normalMap1, normalMap2, 0.5f));
 	normalFinal *= 5.0f * shadow * reflection;
 	
-	outColor.rgb *= 2.0f * normalFinal.r;
+	outColor.rgb = outColor.rgb + outColor.rgb * normalFinal.r;
 
 	// simple caustics
 	float caustics = abs(cos(pin.worldPos.x * 10.0f) + sin(pin.worldPos.z * 10.0f + time * 0.1f));
 
-	outColor.rgb = outColor.rgb * caustics + (1 - caustics * 0.6f);
+	// outColor.rgb = outColor.rgb * caustics + (1 - caustics);
 
 	return outColor;
 }

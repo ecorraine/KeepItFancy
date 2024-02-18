@@ -13,8 +13,8 @@
 ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 constexpr uint32_t	SCREEN_WIDTH = 1280;							//!< 画面の幅
 constexpr uint32_t	SCREEN_HEIGHT = 720;							//!< 画面の高さ
-constexpr float		RATIO_WIDTH = 16.0f;							//!< 
-constexpr float		RATIO_HEIGHT = 9.0f;							//!< 
+constexpr float		RATIO_WIDTH = 16.0f;							//!< アスペクト比・幅
+constexpr float		RATIO_HEIGHT = 9.0f;							//!< アスペクト比・高さ
 constexpr float		ASPECT_RATIO = RATIO_WIDTH / RATIO_HEIGHT;		//!< 画面オフセットに使うアスペクト比
 
 static uint64_t		g_Frequency;
